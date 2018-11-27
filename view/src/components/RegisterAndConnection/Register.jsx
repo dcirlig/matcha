@@ -5,6 +5,8 @@ import axios from "axios";
 import { FormErrors } from "../../constants/utils";
 import "../../index.css";
 import Header from "../Navigation/Navigation";
+import matchaLogo from '../../images/matcha_logo_full.png';
+import { Input, Button } from 'mdbreact';
 
 const INITIAL_STATE = {
   firstname: "",
@@ -133,7 +135,7 @@ class RegisterPage extends Component {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
     this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
@@ -165,122 +167,233 @@ class RegisterPage extends Component {
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
-        <div className="container">
+        <Link to="/"><img id="logo" src={matchaLogo} alt={"logo"} /></Link>
+        <div className="subscriptionForm grey-text">
           <form>
-            <div className="form-row">
-              <div
-                className={`form-group col-md-6
-                 ${this.errorClass(this.state.formErrors.firstname)}`}
-              >
-                <label htmlFor="userFirstName">First Name *</label>
-                <input
-                  name="firstname"
-                  type="text"
-                  className="form-control"
-                  id="userFirstName"
-                  placeholder="First Name"
+            <div className={`${this.errorClass(this.state.formErrors.email)}`}>
+              <label className="subscriptionForm__field">
+                <Input
+                  name="email"
+                  type="email"
+                  className="subscriptionForm__input"
+                  id="userEmail"
+                  label="Email*"
                   onChange={e => this.onChange(e)}
-                  value={firstname}
+                  value={email}
                 />
-              </div>
-              <div
-                className={`form-group col-md-6
-                 ${this.errorClass(this.state.formErrors.lastname)}`}
-              >
-                <label htmlFor="userLastName">Last Name *</label>
-                <input
-                  name="lastname"
-                  type="text"
-                  className="form-control"
-                  id="userLastName"
-                  placeholder="Last Name"
-                  onChange={e => this.onChange(e)}
-                  value={lastname}
-                />
-              </div>
+              </label>
             </div>
-            <div
-              className={`form-group 
-                 ${this.errorClass(this.state.formErrors.email)}`}
-            >
-              <label htmlFor="userEmail">Email *</label>
-              <input
-                name="email"
-                type="email"
-                className="form-control"
-                id="userEmail"
-                placeholder="Email"
-                onChange={e => this.onChange(e)}
-                value={email}
-              />
-            </div>
-            <div className="form-row">
-              <div
-                className={`form-group col-md-4
-                 ${this.errorClass(this.state.formErrors.username)}`}
-              >
-                <label htmlFor="userUsername">Username *</label>
-                <input
+            <div className={`${this.errorClass(this.state.formErrors.username)}`}>
+              <label className="subscriptionForm__field">
+                <Input
                   name="username"
                   type="text"
-                  className="form-control"
+                  className="subscriptionForm__input"
                   id="userUsername"
-                  placeholder="Username"
+                  label="Username*"
                   onChange={e => this.onChange(e)}
                   value={username}
                 />
-              </div>
-              <div
-                className={`form-group col-md-6
-                 ${this.errorClass(this.state.formErrors.passwd)}`}
-              >
-                <label htmlFor="userPassword">Password *</label>
-                <input
+              </label>
+            </div>
+            <div className={`${this.errorClass(this.state.formErrors.firstname)}`}>
+              <label className="subscriptionForm__field">
+                <Input
+                  name="firstname"
+                  type="text"
+                  className="subscriptionForm__input"
+                  id="userFirstName"
+                  label="First Name*"
+                  onChange={e => this.onChange(e)}
+                  value={firstname}
+                />
+              </label>
+            </div>
+            <div className={`${this.errorClass(this.state.formErrors.lastname)}`}>
+              <label className="subscriptionForm__field">
+                <Input
+                  name="lastname"
+                  type="text"
+                  className="subscriptionForm__input"
+                  id="userLastName"
+                  label="Last Name*"
+                  onChange={e => this.onChange(e)}
+                  value={lastname}
+                />
+              </label>
+            </div>
+            <div className={`${this.errorClass(this.state.formErrors.passwd)}`}>
+              <label className="subscriptionForm__field">
+                <Input
                   name="passwd"
                   type="password"
-                  className="form-control"
+                  className="subscriptionForm__input"
                   id="userPassword"
-                  placeholder="Password"
+                  label="Password*"
                   onChange={e => this.onChange(e)}
                   value={passwd}
                 />
-              </div>
-              <div
-                className={`form-group col-md-2
-                 ${this.errorClass(this.state.formErrors.gender)}`}
-              >
-                <label htmlFor="userGender">Gender</label>
+              </label>
+            </div>
+            <div className={`${this.errorClass(this.state.formErrors.gender)}`}>
+              <label className="subscriptionForm__field">
                 <select
                   name="gender"
                   id="userGender"
-                  className="form-control"
+                  label="Gender"
+                  className="subscriptionForm__input"
                   onChange={e => this.onChange(e)}
                 >
-                  <option value="female">Female</option>
-                  <option value="male">Male</option>
+                  <option className="subscriptionForm__input">Select gender*</option>
+                  <option className="subscriptionForm__input" value="female">Female</option>
+                  <option className="subscriptionForm__input" value="male">Male</option>
                 </select>
-              </div>
+              </label>
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
               <p>{this.response(error, success)}</p>
             </div>
-            <button
+            <Button
               disabled={!this.state.formValid}
               type="submit"
-              className="btn btn-primary"
+              className="big-button"
               onClick={this.onSubmit}
+              rounded gradient="peach"
             >
               Register
-            </button>
+              </Button>
             <p>
-              You have an account? <Link to={routes.SIGN_IN}>Sign In</Link>
+              You already have an account? <Link to={routes.SIGN_IN}>Sign In</Link>
             </p>
           </form>
+
         </div>
       </div>
     );
   }
 }
+
+
+
+//       <div>
+//         <Header isLoggedIn={this.state.isLoggedIn} />
+//         <div className="container">
+//           <form className="subscriptionForm grey-text">
+//             <div className="form-row">
+//               <div
+//                 className={`form-group col-md-6
+//                  ${this.errorClass(this.state.formErrors.firstname)}`}
+//               >
+//                 <label htmlFor="userFirstName">First Name *</label>
+//                 <Input
+//                   name="firstname"
+//                   type="text"
+//                   className="form-control"
+//                   id="userFirstName"
+//                   placeholder="First Name"
+//                   onChange={e => this.onChange(e)}
+//                   value={firstname}
+//                 />
+//               </div>
+//               <div
+//                 className={`form-group col-md-6
+//                  ${this.errorClass(this.state.formErrors.lastname)}`}
+//               >
+//                 <label htmlFor="userLastName">Last Name *</label>
+//                 <Input
+//                   name="lastname"
+//                   type="text"
+//                   className="form-control"
+//                   id="userLastName"
+//                   placeholder="Last Name"
+//                   onChange={e => this.onChange(e)}
+//                   value={lastname}
+//                 />
+//               </div>
+//             </div>
+//             <div
+//               className={`form-group 
+//                  ${this.errorClass(this.state.formErrors.email)}`}
+//             >
+//               <label htmlFor="userEmail">Email *</label>
+//               <Input
+//                 name="email"
+//                 type="email"
+//                 className="form-control"
+//                 id="userEmail"
+//                 placeholder="Email"
+//                 onChange={e => this.onChange(e)}
+//                 value={email}
+//               />
+//             </div>
+//             <div className="form-row">
+//               <div
+//                 className={`form-group col-md-4
+//                  ${this.errorClass(this.state.formErrors.username)}`}
+//               >
+//                 <label htmlFor="userUsername">Username *</label>
+//                 <Input
+//                   name="username"
+//                   type="text"
+//                   className="form-control"
+//                   id="userUsername"
+//                   placeholder="Username"
+//                   onChange={e => this.onChange(e)}
+//                   value={username}
+//                 />
+//               </div>
+//               <div
+//                 className={`form-group col-md-6
+//                  ${this.errorClass(this.state.formErrors.passwd)}`}
+//               >
+//                 <label htmlFor="userPassword">Password *</label>
+//                 <Input
+//                   name="passwd"
+//                   type="password"
+//                   className="form-control"
+//                   id="userPassword"
+//                   placeholder="Password"
+//                   onChange={e => this.onChange(e)}
+//                   value={passwd}
+//                 />
+//               </div>
+//               <div
+//                 className={`form-group col-md-2
+//                  ${this.errorClass(this.state.formErrors.gender)}`}
+//               >
+//                 <label htmlFor="userGender">Gender</label>
+//                 <select
+//                   name="gender"
+//                   id="userGender"
+//                   className="form-control"
+//                   onChange={e => this.onChange(e)}
+//                 >
+//                   <option value="female">Female</option>
+//                   <option value="male">Male</option>
+//                 </select>
+//               </div>
+//             </div>
+//             <div className="panel panel-default">
+//               <FormErrors formErrors={this.state.formErrors} />
+//               <p>{this.response(error, success)}</p>
+//             </div>
+//             <button
+//               disabled={!this.state.formValid}
+//               type="submit"
+//               className="btn btn-primary"
+//               onClick={this.onSubmit}
+//             >
+//               Register
+//             </button>
+//             <p>
+//               You already have an account? <Link to={routes.SIGN_IN}>Sign In</Link>
+//             </p>
+//           </form>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 export default RegisterPage;

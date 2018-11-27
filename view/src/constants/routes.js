@@ -5,3 +5,4 @@ export const RESET_PASSWORD = "/password/reset";
 export const RESET_CONFIRM_PASSWORD = "/password/reset/confirm/:token";
 export const USER_PROFIL_PAGE = "/users/:username";
 export const LOG_OUT = "/logout";
+export const HOME_PAGE = "/";

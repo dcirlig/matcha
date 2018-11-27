@@ -7,7 +7,7 @@ var resetPassword = require("./controllers/resetCtrl");
 var resetConfirmPassword = require("./controllers/resetConfirmCtrl");
 var profilCtrl = require("./controllers/profilCtrl");
 //Routes
-exports.router = (function() {
+exports.router = (function () {
   var Router = express.Router();
 
   // Users routes

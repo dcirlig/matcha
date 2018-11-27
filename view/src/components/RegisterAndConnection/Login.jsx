@@ -6,6 +6,8 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../index.css";
 import Header from "../Navigation/Navigation";
+import matchaLogo from '../../images/matcha_logo_full.png';
+import { Input, Button } from 'mdbreact';
 
 const INITIAL_STATE = {
   username: "",
@@ -88,16 +90,18 @@ class LoginPage extends Component {
       .post(`/api/users/login`, this.state)
 
       .then(res => {
+        console.log(res.data);
         if (res.data.success) {
-          sessionStorage.setItem("userData", res.data.username);
-          this.setState({ redirect: true });
           this.setState({ success: res.data.success });
+          this.setState({ redirect: true });
+          sessionStorage.setItem("userData", res.data.username);
+
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
-    this.setState({ ...INITIAL_STATE });
+      .catch(err => { });
+    // this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
 
@@ -109,6 +113,7 @@ class LoginPage extends Component {
     const { username, passwd, redirect, error, succes } = this.state;
 
     if (redirect) {
+      console.log(username);
       return <Redirect to={`/users/${username}`} />;
     }
 
@@ -119,56 +124,50 @@ class LoginPage extends Component {
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
-        <div className="container col-md-6">
+        <Link to="/"><img id="logo" src={matchaLogo} alt={"logo"} /></Link>
+        <div className="subscriptionForm grey-text">
           <form>
-            <div
-              className={`form-group row
-                 ${this.errorClass(this.state.formErrors.username)}`}
-            >
-              <label htmlFor="userUsername" className="col-sm-2 col-form-label">
-                Username
+            <div className={`${this.errorClass(this.state.formErrors.username)}`}>
+              <label className="subscriptionForm__field">
+                <Input
+                  name="username"
+                  type="text"
+                  className="subscriptionForm__input"
+                  id="userUsername"
+                  label="Username"
+                  onChange={e => this.onChange(e)}
+                  value={username}
+                />
               </label>
-              <input
-                name="username"
-                type="text"
-                className="form-control"
-                id="userUsername"
-                placeholder="Username"
-                onChange={e => this.onChange(e)}
-                value={username}
-              />
             </div>
-            <div
-              className={`form-group row
-                 ${this.errorClass(this.state.formErrors.passwd)}`}
-            >
-              <label htmlFor="userPassword" className="col-sm-2 col-form-label">
-                Password
+            <div className={`${this.errorClass(this.state.formErrors.passwd)}`}>
+              <label className="subscriptionForm__field">
+
+                <Input
+                  name="passwd"
+                  type="password"
+                  className="subscriptionForm__input"
+                  id="userPassword"
+                  label="Password"
+                  onChange={e => this.onChange(e)}
+                  value={passwd}
+                />
               </label>
-              <input
-                name="passwd"
-                type="password"
-                className="form-control"
-                id="userPassword"
-                placeholder="Password"
-                onChange={e => this.onChange(e)}
-                value={passwd}
-              />
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
               <p>{this.response(error, succes)}</p>
             </div>
-            <div className="center-block col-md-4">
-              <button
-                disabled={!this.state.formValid}
-                type="submit"
-                className="btn btn-primary"
-                onClick={this.onSubmit}
-              >
-                Login
-              </button>
-            </div>
+            <Button
+              disabled={!this.state.formValid}
+              type="submit"
+              rounded gradient="peach"
+              className="big-button"
+              onClick={this.onSubmit}
+            >
+              Login
+              </Button>
+
             <p>
               <Link to={routes.RESET_PASSWORD}>Forgot your password ?</Link>
             </p>

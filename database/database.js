@@ -2,8 +2,8 @@ var mysql = require("mysql");
 
 var con = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "123456"
+  user: "rootnode",
+  password: "rootnode"
 });
 
 con.connect(function(err) {
@@ -15,8 +15,8 @@ con.connect(function(err) {
 
     con = mysql.createConnection({
       host: "localhost",
-      user: "root",
-      password: "123456",
+      user: "rootnode",
+      password: "rootnode",
       database: "db_matcha"
     });
 

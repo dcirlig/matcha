@@ -5,15 +5,25 @@ import ConfirmEmailPage from "./components/RegisterAndConnection/Verify";
 import ResetPasswordPage from "./components/ResetPassword/ResetPassword";
 import ResetConfirmPasswordPage from "./components/ResetPassword/ResetConfirmPassword";
 import UserProfilPage from "./components/Profil/UserProfilPage";
+import HomePage from "./components/Navigation/HomePage";
 import * as routes from "./constants/routes";
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LogOut from "./components/RegisterAndConnection/Logout";
+import 'font-awesome/css/font-awesome.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css'; 
+import 'mdbreact/dist/css/mdb.css';
+import './styles/styles.scss';
 
 const App = () => (
   <Router>
     <div>
       <Switch>
+        <Route
+          exact
+          path={routes.HOME_PAGE}
+          render={props => <HomePage {...props} />}
+        />
         <Route
           exact
           path={routes.SIGN_IN}
