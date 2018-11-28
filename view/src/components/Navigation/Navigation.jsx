@@ -5,24 +5,6 @@ import matchaLogo from '../../images/matcha_logo.png';
 import matchaName from '../../images/matcha_logo_detoure.png';
 import * as routes from "../../constants/routes";
 
-// function LoginHeader() {
-//   return (
-//     <div>
-//       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-//         <div className="collapse navbar-collapse" id="navbarText1">
-//           <ul className="navbar-nav ml-auto">
-//             <li className="nav-item active">
-//               <Link className="nav-link" to={routes.LOG_OUT}>
-//                 Log Out
-//               </Link>
-//             </li>
-//           </ul>
-//         </div>
-//       </nav>
-//     </div>
-//   );
-// }
-
 class LoginHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -41,6 +23,7 @@ class LoginHeader extends React.Component {
     });
   }
   render() {
+    const username = sessionStorage.getItem("userData");
     return (
       <div>
         <Navbar className="navbar-features" dark expand="md" scrolling>
@@ -54,7 +37,7 @@ class LoginHeader extends React.Component {
           <Collapse isOpen={this.state.collapse} navbar>
             <NavbarNav left>
               <NavItem>
-                <NavLink to="/profile" activeClassName="is-active">My Profile</NavLink>
+                <NavLink to={`/users/${username}`} activeClassName="is-active">My Profile</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink to="/explorer" activeClassName="is-active">Explorer</NavLink>
@@ -71,29 +54,6 @@ class LoginHeader extends React.Component {
     );
   }
 }
-
-// function LogoutHeader() {
-//   return (
-//     <div>
-//       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-//         <div className="collapse navbar-collapse" id="navbarText">
-//           <ul className="navbar-nav ml-auto">
-//             <li className="nav-item active">
-//               <Link className="nav-link" to={routes.SIGN_IN}>
-//                 Sign In
-//               </Link>
-//             </li>
-//             <li className="nav-item">
-//               <Link className="nav-link" to={routes.SIGN_UP}>
-//                 Sign Up
-//               </Link>
-//             </li>
-//           </ul>
-//         </div>
-//       </nav>
-//     </div>
-//   );
-// }
 
 class LogoutHeader extends React.Component {
   constructor(props) {

@@ -64,7 +64,7 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
-    background: url("https://www.iconsdb.com/icons/preview/white/arrow-24-xxl.png") no-repeat center center /
+    background: url(../images/arrow.png) no-repeat center center /
       24px;
     width: 32px;
     height: 32px;
@@ -74,7 +74,7 @@
   
   .previousButton:hover,
   .nextButton:hover {
-    background: url("https://www.iconsdb.com/icons/preview/white/arrow-24-xxl.png") no-repeat center center /
+    background: url(../images/arrow.png) no-repeat center center /
       28px;
     padding: 25px 25px 25px 25px;
   }

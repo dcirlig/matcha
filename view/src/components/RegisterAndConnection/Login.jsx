@@ -8,6 +8,7 @@ import "../../index.css";
 import Header from "../Navigation/Navigation";
 import matchaLogo from '../../images/matcha_logo_full.png';
 import { Input, Button } from 'mdbreact';
+import LoginModal from './RegisterModal';
 
 const INITIAL_STATE = {
   username: "",
@@ -30,6 +31,7 @@ class LoginPage extends Component {
     this.state = { ...INITIAL_STATE };
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
   onChange = e => {
@@ -109,6 +111,10 @@ class LoginPage extends Component {
     return error.length === 0 ? "" : "has-error";
   }
 
+  handleClearErrorMessage() {
+    this.setState({ error: undefined })
+  }
+
   render() {
     const { username, passwd, redirect, error, succes } = this.state;
 
@@ -142,7 +148,6 @@ class LoginPage extends Component {
             </div>
             <div className={`${this.errorClass(this.state.formErrors.passwd)}`}>
               <label className="subscriptionForm__field">
-
                 <Input
                   name="passwd"
                   type="password"
@@ -169,13 +174,17 @@ class LoginPage extends Component {
               </Button>
 
             <p>
-              <Link to={routes.RESET_PASSWORD}>Forgot your password ?</Link>
+              <Link className="linkTo" to={routes.RESET_PASSWORD}>Forgot your password ?</Link>
             </p>
             <p>
-              Don't have an account? <Link to={routes.SIGN_UP}>Sign Up</Link>
+              <b>Don't have an account?</b> <Link className="linkTo" to={routes.SIGN_UP}>Sign Up</Link>
             </p>
           </form>
         </div>
+        <LoginModal
+          errorMessage={this.state.error}
+          handleClearErrorMessage={this.handleClearErrorMessage}
+        />
       </div>
     );
   }

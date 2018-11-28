@@ -25,3 +25,12 @@ button:disabled {
   font-size: 1.8rem;
   margin-bottom: 10px;
 }
+
+.linkTo {
+  color: $coral;
+  font-weight: bold;
+}
+
+.linkTo:hover{
+  color: $light-pink; 
+}

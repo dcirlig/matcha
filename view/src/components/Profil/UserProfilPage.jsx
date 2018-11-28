@@ -5,23 +5,34 @@ import { Redirect } from "react-router-dom";
 import axios from "axios";
 
 class UserProfilPage extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
       isLoggedIn: true,
       redirect: false,
-      userData: ""
+      userData: "",
     };
   }
 
   componentDidMount() {
+    this._isMounted = true;
     axios
       .get(`/api/users/${this.props.match.params.username}`)
 
       .then(res => {
-        this.setState({ userData: res.data.userData });
+        if (this._isMounted) {
+          console.log(res.data.userData)
+          this.setState({ userData: res.data.userData });
+          console.log(this.state.userData.username)
+          console.log(sessionStorage.getItem("userData"))
+        }
       })
-      .catch(err => {});
+      .catch(err => { });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
@@ -30,14 +41,14 @@ class UserProfilPage extends Component {
       return <Redirect to={routes.SIGN_IN} />;
     }
 
-    if (
-      this.props.match.params.username !== sessionStorage.getItem("userData")
-    ) {
-      // return <Redirect to={`/notFound`} />;
+    else if (
+      this.state.userData === undefined) {
+      return <Redirect to={routes.NOT_FOUND} />;
     }
 
     return (
       <div>
+
         <Header isLoggedIn={this.state.isLoggedIn} />
       </div>
     );

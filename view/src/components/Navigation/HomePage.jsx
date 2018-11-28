@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from "react";
 import Slider from 'react-animated-slider';
 import 'react-animated-slider/build/horizontal.css';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from "react-router-dom";
 import { Helmet } from 'react-helmet';
 import Header from "../Navigation/Navigation";
 import * as routes from "../../constants/routes";
@@ -34,28 +34,39 @@ const content = [
     },
 ]
 
-const HomePage = () => (
-    <div>
-        <Header isLoggedIn={false} />
-        <Helmet>
-            <style>{'body { background-color: #EE7260 }'}</style>
-        </Helmet>
-        <Slider autoplay={3000} className="slider-wrapper">
-            {content.map((item, index) => (
-                <div
-                    key={index}
-                    className="slider-content"
-                    style={{ background: `url('${item.image}') no-repeat center center` }}
-                >
-                    <div className="inner">
-                        <h1>{item.title}</h1>
-                        <p>{item.description}</p>
-                        <Link to={item.link}><button className="sliderButton">{item.button}</button></Link>
-                    </div>
-                </div>
-            ))}
-        </Slider>
-    </div>
-)
+class HomePage extends Component {
+    render() {
+        const isLoggedIn = sessionStorage.getItem("userData");
+
+        if (isLoggedIn) {
+            return <Redirect to={`/users/${isLoggedIn}`} />;
+        }
+
+
+        return (
+            <div>
+                <Header isLoggedIn={false} />
+                <Helmet>
+                    <style>{'body { background-color: #EE7260 }'}</style>
+                </Helmet>
+                <Slider autoplay={3000} className="slider-wrapper">
+                    {content.map((item, index) => (
+                        <div
+                            key={index}
+                            className="slider-content"
+                            style={{ background: `url('${item.image}') no-repeat center center` }}
+                        >
+                            <div className="inner">
+                                <h1>{item.title}</h1>
+                                <p>{item.description}</p>
+                                <Link to={item.link}><button className="sliderButton">{item.button}</button></Link>
+                            </div>
+                        </div>
+                    ))}
+                </Slider>
+            </div>
+        )
+    }
+}
 
 export default HomePage;

@@ -7,6 +7,7 @@ import "../../index.css";
 import Header from "../Navigation/Navigation";
 import matchaLogo from '../../images/matcha_logo_full.png';
 import { Input, Button } from 'mdbreact';
+import RegisterModal from './RegisterModal';
 
 const INITIAL_STATE = {
   firstname: "",
@@ -40,6 +41,7 @@ class RegisterPage extends Component {
     this.state = { ...INITIAL_STATE };
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
   onChange = e => {
@@ -87,7 +89,7 @@ class RegisterPage extends Component {
         passwdValid = value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/);
         fieldValidationErrors.passwd = passwdValid
           ? ""
-          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter and the length >= 4";
+          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter and the length must be >= 4";
         break;
       default:
         break;
@@ -142,6 +144,10 @@ class RegisterPage extends Component {
 
   errorClass(error) {
     return error.length === 0 ? "" : "has-error";
+  }
+
+  handleClearErrorMessage() {
+    this.setState({ error: undefined })
   }
 
   render() {
@@ -244,9 +250,9 @@ class RegisterPage extends Component {
                   className="subscriptionForm__input"
                   onChange={e => this.onChange(e)}
                 >
-                  <option className="subscriptionForm__input">Select gender*</option>
-                  <option className="subscriptionForm__input" value="female">Female</option>
-                  <option className="subscriptionForm__input" value="male">Male</option>
+                  <option className="subscriptionForm__field">Select gender*</option>
+                  <option className="subscriptionForm__field" value="female">Female</option>
+                  <option className="subscriptionForm__field" value="male">Male</option>
                 </select>
               </label>
             </div>
@@ -264,11 +270,15 @@ class RegisterPage extends Component {
               Register
               </Button>
             <p>
-              You already have an account? <Link to={routes.SIGN_IN}>Sign In</Link>
+              <b>You already have an account?</b> <Link className="linkTo" to={routes.SIGN_IN}>Sign In</Link>
             </p>
           </form>
 
         </div>
+        <RegisterModal
+          errorMessage={this.state.error}
+          handleClearErrorMessage={this.handleClearErrorMessage}
+        />
       </div>
     );
   }
