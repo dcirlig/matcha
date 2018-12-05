@@ -6,9 +6,9 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../index.css";
 import Header from "../Navigation/Navigation";
-import matchaLogo from '../../images/matcha_logo_full.png';
-import { Input, Button } from 'mdbreact';
-import LoginModal from './RegisterModal';
+import matchaLogo from "../../images/matcha_logo_full.png";
+import { Input, Button } from "mdbreact";
+import LoginModal from "./RegisterModal";
 
 const INITIAL_STATE = {
   username: "",
@@ -97,12 +97,11 @@ class LoginPage extends Component {
           this.setState({ success: res.data.success });
           this.setState({ redirect: true });
           sessionStorage.setItem("userData", res.data.username);
-
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => { });
+      .catch(err => {});
     // this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
@@ -112,7 +111,7 @@ class LoginPage extends Component {
   }
 
   handleClearErrorMessage() {
-    this.setState({ error: undefined })
+    this.setState({ error: undefined });
   }
 
   render() {
@@ -130,10 +129,14 @@ class LoginPage extends Component {
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
-        <Link to="/"><img id="logo" src={matchaLogo} alt={"logo"} /></Link>
+        <Link to="/">
+          <img id="logo" src={matchaLogo} alt={"logo"} />
+        </Link>
         <div className="subscriptionForm grey-text">
           <form>
-            <div className={`${this.errorClass(this.state.formErrors.username)}`}>
+            <div
+              className={`${this.errorClass(this.state.formErrors.username)}`}
+            >
               <label className="subscriptionForm__field">
                 <Input
                   name="username"
@@ -166,18 +169,24 @@ class LoginPage extends Component {
             <Button
               disabled={!this.state.formValid}
               type="submit"
-              rounded gradient="peach"
+              rounded
+              gradient="peach"
               className="big-button"
               onClick={this.onSubmit}
             >
               Login
-              </Button>
+            </Button>
 
             <p>
-              <Link className="linkTo" to={routes.RESET_PASSWORD}>Forgot your password ?</Link>
+              <Link className="linkTo" to={routes.RESET_PASSWORD}>
+                Forgot your password ?
+              </Link>
             </p>
             <p>
-              <b>Don't have an account?</b> <Link className="linkTo" to={routes.SIGN_UP}>Sign Up</Link>
+              <b>Don't have an account?</b>{" "}
+              <Link className="linkTo" to={routes.SIGN_UP}>
+                Sign Up
+              </Link>
             </p>
           </form>
         </div>

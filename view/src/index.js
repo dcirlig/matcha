@@ -6,16 +6,16 @@ import ResetPasswordPage from "./components/ResetPassword/ResetPassword";
 import ResetConfirmPasswordPage from "./components/ResetPassword/ResetConfirmPassword";
 import UserProfilPage from "./components/Profil/UserProfilPage";
 import HomePage from "./components/Navigation/HomePage";
-import Footer from './components/Navigation/Footer';
-import NotFoundPage from './components/Navigation/NotFoundPage';
+import Footer from "./components/Navigation/Footer";
+import NotFoundPage from "./components/Navigation/NotFoundPage";
 import * as routes from "./constants/routes";
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LogOut from "./components/RegisterAndConnection/Logout";
-import 'font-awesome/css/font-awesome.min.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
-import 'mdbreact/dist/css/mdb.css';
-import './styles/styles.scss';
+import "font-awesome/css/font-awesome.min.css";
+import "bootstrap-css-only/css/bootstrap.min.css";
+import "mdbreact/dist/css/mdb.css";
+import "./styles/styles.scss";
 
 const App = () => (
   <Router>
@@ -61,9 +61,7 @@ const App = () => (
           path={routes.LOG_OUT}
           render={props => <LogOut {...props} />}
         />
-        <Route
-          render={props => <NotFoundPage {...props} />}
-        />
+        <Route render={props => <NotFoundPage {...props} />} />
       </Switch>
       <Footer />
     </div>

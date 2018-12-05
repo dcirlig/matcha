@@ -5,9 +5,9 @@ import axios from "axios";
 import { FormErrors } from "../../constants/utils";
 import "../../index.css";
 import Header from "../Navigation/Navigation";
-import matchaLogo from '../../images/matcha_logo_full.png';
-import { Input, Button } from 'mdbreact';
-import RegisterModal from './RegisterModal';
+import matchaLogo from "../../images/matcha_logo_full.png";
+import { Input, Button } from "mdbreact";
+import RegisterModal from "./RegisterModal";
 
 const INITIAL_STATE = {
   firstname: "",
@@ -137,7 +137,7 @@ class RegisterPage extends Component {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => { });
+      .catch(err => {});
     this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
@@ -147,7 +147,7 @@ class RegisterPage extends Component {
   }
 
   handleClearErrorMessage() {
-    this.setState({ error: undefined })
+    this.setState({ error: undefined });
   }
 
   render() {
@@ -173,7 +173,9 @@ class RegisterPage extends Component {
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
-        <Link to="/"><img id="logo" src={matchaLogo} alt={"logo"} /></Link>
+        <Link to="/">
+          <img id="logo" src={matchaLogo} alt={"logo"} />
+        </Link>
         <div className="subscriptionForm grey-text">
           <form>
             <div className={`${this.errorClass(this.state.formErrors.email)}`}>
@@ -189,7 +191,9 @@ class RegisterPage extends Component {
                 />
               </label>
             </div>
-            <div className={`${this.errorClass(this.state.formErrors.username)}`}>
+            <div
+              className={`${this.errorClass(this.state.formErrors.username)}`}
+            >
               <label className="subscriptionForm__field">
                 <Input
                   name="username"
@@ -202,7 +206,9 @@ class RegisterPage extends Component {
                 />
               </label>
             </div>
-            <div className={`${this.errorClass(this.state.formErrors.firstname)}`}>
+            <div
+              className={`${this.errorClass(this.state.formErrors.firstname)}`}
+            >
               <label className="subscriptionForm__field">
                 <Input
                   name="firstname"
@@ -215,7 +221,9 @@ class RegisterPage extends Component {
                 />
               </label>
             </div>
-            <div className={`${this.errorClass(this.state.formErrors.lastname)}`}>
+            <div
+              className={`${this.errorClass(this.state.formErrors.lastname)}`}
+            >
               <label className="subscriptionForm__field">
                 <Input
                   name="lastname"
@@ -250,9 +258,15 @@ class RegisterPage extends Component {
                   className="subscriptionForm__input"
                   onChange={e => this.onChange(e)}
                 >
-                  <option className="subscriptionForm__field">Select gender*</option>
-                  <option className="subscriptionForm__field" value="female">Female</option>
-                  <option className="subscriptionForm__field" value="male">Male</option>
+                  <option className="subscriptionForm__field">
+                    Select gender*
+                  </option>
+                  <option className="subscriptionForm__field" value="female">
+                    Female
+                  </option>
+                  <option className="subscriptionForm__field" value="male">
+                    Male
+                  </option>
                 </select>
               </label>
             </div>
@@ -265,15 +279,18 @@ class RegisterPage extends Component {
               type="submit"
               className="big-button"
               onClick={this.onSubmit}
-              rounded gradient="peach"
+              rounded
+              gradient="peach"
             >
               Register
-              </Button>
+            </Button>
             <p>
-              <b>You already have an account?</b> <Link className="linkTo" to={routes.SIGN_IN}>Sign In</Link>
+              <b>You already have an account?</b>{" "}
+              <Link className="linkTo" to={routes.SIGN_IN}>
+                Sign In
+              </Link>
             </p>
           </form>
-
         </div>
         <RegisterModal
           errorMessage={this.state.error}

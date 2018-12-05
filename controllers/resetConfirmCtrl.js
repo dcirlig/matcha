@@ -38,7 +38,9 @@ module.exports = {
                         success: "Your password is reset successfully"
                       });
                     } else {
-                      return res.json({ error: "Passwords are different! try again!" });
+                      return res.json({
+                        error: "Passwords are different! try again!"
+                      });
                     }
                   });
                 } else {

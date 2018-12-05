@@ -5,7 +5,7 @@ var models = require("../models/user");
 
 // Routes
 module.exports = {
-  login: function (req, res) {
+  login: function(req, res) {
     // Params
     var userData = {
       username: req.body.username,
@@ -18,16 +18,16 @@ module.exports = {
           error: "Please use your username!"
         });
       } else {
-        models.getUser("username", userData.username, function (result) {
+        models.getUser("username", userData.username, function(result) {
           if (result) {
-            result.forEach(function (element) {
+            result.forEach(function(element) {
               if (
                 element.emailVerified == false &&
                 element.secretTokenEmail != ""
               ) {
                 return res.json({ error: "Please verify your email" });
               } else {
-                bcrypt.compare(userData.passwd, element.passwd, function (
+                bcrypt.compare(userData.passwd, element.passwd, function(
                   errBycrypt,
                   resBycrypt
                 ) {
@@ -45,7 +45,9 @@ module.exports = {
               }
             });
           } else {
-            return res.json({ error: "User not found! Please create a account" });
+            return res.json({
+              error: "User not found! Please create a account"
+            });
           }
         });
       }

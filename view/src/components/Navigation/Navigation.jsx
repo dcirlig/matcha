@@ -1,8 +1,16 @@
 import React from "react";
 // import { Link } from "react-router-dom";
-import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink } from 'mdbreact';
-import matchaLogo from '../../images/matcha_logo.png';
-import matchaName from '../../images/matcha_logo_detoure.png';
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarNav,
+  NavbarToggler,
+  Collapse,
+  NavItem,
+  NavLink
+} from "mdbreact";
+import matchaLogo from "../../images/matcha_logo.png";
+import matchaName from "../../images/matcha_logo_detoure.png";
 import * as routes from "../../constants/routes";
 
 class LoginHeader extends React.Component {
@@ -29,23 +37,39 @@ class LoginHeader extends React.Component {
         <Navbar className="navbar-features" dark expand="md" scrolling>
           <NavbarBrand>
             <NavLink to="/explorer" activeClassName="is-active" exact={true}>
-              <img src={matchaLogo} id="logo-matcha-small" alt="logo-matcha-small" height="30" />
-              <img src={matchaName} id="logo-matcha-detoure" alt="name-matcha-small" height="30" />
+              <img
+                src={matchaLogo}
+                id="logo-matcha-small"
+                alt="logo-matcha-small"
+                height="30"
+              />
+              <img
+                src={matchaName}
+                id="logo-matcha-detoure"
+                alt="name-matcha-small"
+                height="30"
+              />
             </NavLink>
           </NavbarBrand>
           {!this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
           <Collapse isOpen={this.state.collapse} navbar>
             <NavbarNav left>
               <NavItem>
-                <NavLink to={`/users/${username}`} activeClassName="is-active">My Profile</NavLink>
+                <NavLink to={`/users/${username}`} activeClassName="is-active">
+                  My Profile
+                </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/explorer" activeClassName="is-active">Explorer</NavLink>
+                <NavLink to="/explorer" activeClassName="is-active">
+                  Explorer
+                </NavLink>
               </NavItem>
             </NavbarNav>
             <NavbarNav right>
               <NavItem>
-                <NavLink to={routes.LOG_OUT} activeClassName="is-active">Log out</NavLink>
+                <NavLink to={routes.LOG_OUT} activeClassName="is-active">
+                  Log out
+                </NavLink>
               </NavItem>
             </NavbarNav>
           </Collapse>
@@ -78,18 +102,32 @@ class LogoutHeader extends React.Component {
         <Navbar className="navbar-features" dark expand="md" scrolling>
           <NavbarBrand>
             <NavLink to="/" activeClassName="is-active" exact={true}>
-              <img src={matchaLogo} id="logo-matcha-small" alt="logo-matcha-small" height="30" />
-              <img src={matchaName} id="logo-matcha-detoure" alt="name-matcha-small" height="30" />
+              <img
+                src={matchaLogo}
+                id="logo-matcha-small"
+                alt="logo-matcha-small"
+                height="30"
+              />
+              <img
+                src={matchaName}
+                id="logo-matcha-detoure"
+                alt="name-matcha-small"
+                height="30"
+              />
             </NavLink>
           </NavbarBrand>
           {!this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
           <Collapse isOpen={this.state.collapse} navbar>
             <NavbarNav right>
               <NavItem>
-                <NavLink to={routes.SIGN_UP} activeClassName="is-active">Create Account</NavLink>
+                <NavLink to={routes.SIGN_UP} activeClassName="is-active">
+                  Create Account
+                </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to={routes.SIGN_IN} activeClassName="is-active">Sign In</NavLink>
+                <NavLink to={routes.SIGN_IN} activeClassName="is-active">
+                  Sign In
+                </NavLink>
               </NavItem>
             </NavbarNav>
           </Collapse>
