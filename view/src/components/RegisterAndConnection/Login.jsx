@@ -92,7 +92,6 @@ class LoginPage extends Component {
       .post(`/api/users/login`, this.state)
 
       .then(res => {
-        console.log(res.data);
         if (res.data.success) {
           this.setState({ success: res.data.success });
           this.setState({ redirect: true });
@@ -119,7 +118,6 @@ class LoginPage extends Component {
     const { username, passwd, redirect, error, succes } = this.state;
 
     if (redirect) {
-      console.log(username);
       return <Redirect to={`/users/${username}`} />;
     }
 

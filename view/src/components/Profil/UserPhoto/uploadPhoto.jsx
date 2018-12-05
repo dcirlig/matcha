@@ -22,20 +22,20 @@ class UploadPhoto extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  async componentWillMount() {
-    await this.setState({
-      userId: sessionStorage.getItem("userId")
-    });
-  }
+  // async componentWillMount() {
+  //   await this.setState({
+  //     userId: sessionStorage.getItem("userId")
+  //   });
+  // }
 
   componentDidMount() {
     var data = [];
-    var userData = {
-      userId: this.state.userId
-    };
+    this.setState({
+      userId: sessionStorage.getItem("userId")
+    });
     axios
-      .post("/api/displayPhoto", userData)
-      .then(async res => {
+      .post("/api/displayPhoto", sessionStorage)
+      .then(res => {
         var obj = res.data.fileList;
         obj.map(element => {
           var image = {
@@ -46,7 +46,7 @@ class UploadPhoto extends Component {
           data.push(image);
           return data;
         });
-        await this.setState({
+        this.setState({
           fileList: data
         });
       })
@@ -97,6 +97,9 @@ class UploadPhoto extends Component {
         uid: uid,
         url: file.url
       };
+      await this.setState({
+        fileList: fileList
+      });
       axios
         .post("/api/deletephoto", userData)
         .then(response => {

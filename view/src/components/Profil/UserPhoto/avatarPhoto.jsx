@@ -40,13 +40,9 @@ class Avatar extends Component {
   }
 
   componentDidMount() {
-    var userData = {
-      userId: this.state.userId
-    };
     axios
-      .post("/api/displayAvatarPhoto", userData)
+      .post("/api/displayAvatarPhoto", sessionStorage)
       .then(async res => {
-        // if (res.data) console.log("avat", res);
         var filePtah = res.data.file;
         if (filePtah) {
           await this.setState({
@@ -78,7 +74,6 @@ class Avatar extends Component {
       axios
         .post("/api/avatarPhoto", formData, config)
         .then(response => {
-          // console.log("res=", response);
           var imageUrl = `https://localhost:4000/${response.data.imageUrl}`;
           this.setState({ imageUrl: imageUrl });
         })
@@ -96,7 +91,6 @@ class Avatar extends Component {
       </div>
     );
     const imageUrl = this.state.imageUrl;
-    // console.log("imageUrl=", imageUrl);
     return (
       <div className="container">
         <Upload
