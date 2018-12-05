@@ -7,6 +7,8 @@ var resetPassword = require("./controllers/resetCtrl");
 var resetConfirmPassword = require("./controllers/resetConfirmCtrl");
 var profilCtrl = require("./controllers/profilCtrl");
 var tagCtrl = require("./controllers/tagCtrl");
+var photoCtrl = require("./controllers/photoCtrl");
+var avatarPhotoCtrl = require("./controllers/avatarPhotoCtrl");
 //Routes
 exports.router = (function() {
   var Router = express.Router();
@@ -24,5 +26,10 @@ exports.router = (function() {
   Router.post("/tags/display", tagCtrl.displayTags);
   Router.post("/tags/add", tagCtrl.addTag);
   Router.post("/tags/delete", tagCtrl.deleteTag);
+  Router.post("/uploadPhoto", photoCtrl.uploadPhoto);
+  Router.post("/deletePhoto", photoCtrl.deletePhoto);
+  Router.post("/displayPhoto", photoCtrl.displayPhoto);
+  Router.post("/avatarPhoto", avatarPhotoCtrl.avatarPhoto);
+  Router.post("/displayAvatarPhoto", avatarPhotoCtrl.displayAvatarPhoto);
   return Router;
 })();

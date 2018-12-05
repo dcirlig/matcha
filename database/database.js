@@ -67,6 +67,7 @@ con.connect(function(err) {
     (
     imageId            INTEGER AUTO_INCREMENT PRIMARY KEY,
     url                VARCHAR(45) NOT NULL,
+    uid                VARCHAR(255) NOT NULL,
     userId             INTEGER NOT NULL,
     FOREIGN KEY (userId) REFERENCES users(userId)
     )`;

@@ -25,7 +25,7 @@ function findOne(field, userData, callback) {
 }
 
 function getUser(field, userData, callback) {
-  sql = `SELECT  userId, username, passwd, emailVerified,  secretTokenEmail, gender FROM users WHERE ${field}=?`;
+  sql = `SELECT * FROM users WHERE ${field}=?`;
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
     if (result.length > 0) return callback(result);
