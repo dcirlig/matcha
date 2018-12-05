@@ -6,8 +6,9 @@ var verifyEmailCtrl = require("./controllers/verifyEmailCtrl");
 var resetPassword = require("./controllers/resetCtrl");
 var resetConfirmPassword = require("./controllers/resetConfirmCtrl");
 var profilCtrl = require("./controllers/profilCtrl");
+var tagCtrl = require("./controllers/tagCtrl");
 //Routes
-exports.router = (function () {
+exports.router = (function() {
   var Router = express.Router();
 
   // Users routes
@@ -20,5 +21,8 @@ exports.router = (function () {
     resetConfirmPassword.resetConfirm
   );
   Router.get("/users/:username", profilCtrl.userProfil);
+  Router.post("/tags/display", tagCtrl.displayTags);
+  Router.post("/tags/add", tagCtrl.addTag);
+  Router.post("/tags/delete", tagCtrl.deleteTag);
   return Router;
 })();

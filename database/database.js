@@ -52,6 +52,7 @@ con.connect(function(err) {
     gender              VARCHAR(45) DEFAULT 'female',
     resetPasswordToken  VARCHAR(255) DEFAULT NULL,
     bio                 VARCHAR(255) DEFAULT '',
+    tags                TEXT,
     localisation        VARCHAR(255) DEFAULT '',
     sexual_orientation  VARCHAR(255) DEFAULT 'bisexual',
     profil_image        VARCHAR(255) DEFAULT NULL
@@ -78,14 +79,20 @@ con.connect(function(err) {
       var sql = `CREATE TABLE if NOT EXISTS interests
       (
       interestId         INTEGER AUTO_INCREMENT PRIMARY KEY,
-      content            VARCHAR(45) NOT NULL,
-      userId             INTEGER NOT NULL,
-      FOREIGN KEY (userId) REFERENCES users(userId)
+      content            VARCHAR(45) NOT NULL
       )`;
 
       con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Create table interests");
+      });
+
+      const tags = [["organic"], ["geek"], ["piercing"], ["vegan"], ["PHP"]];
+      var sql = "INSERT INTO interests (content) VALUES ?";
+
+      con.query(sql, [tags], function(err, result) {
+        if (err) console.log(err);
+        console.log("Create suggested interests");
       });
     });
   });
