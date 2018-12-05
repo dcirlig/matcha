@@ -21,7 +21,6 @@ var upload = multer({
 module.exports = {
   avatarPhoto: function(req, res) {
     upload(req, res, err => {
-      console.log(req.body);
       if (req.file) {
         if (!req.file.originalname.match(/\.(jpg|jpeg)$/)) {
           res.json({ error: "Only format jpeg are allowed!" });
@@ -38,7 +37,6 @@ module.exports = {
             );
             fs.unlink(oldImageUrl, function(err) {});
           }
-
           res.json({ imageUrl: userData.url });
           users.updateUser(`profil_image='${userData.url}' `, userData.userId);
         }

@@ -3,6 +3,12 @@ import "antd/dist/antd.css";
 import axios from "axios";
 import { Upload, Icon, message } from "antd";
 
+const dummyRequest = ({ file, onSuccess }) => {
+  setTimeout(() => {
+    onSuccess("ok");
+  }, 0);
+};
+
 function beforeUpload(file) {
   const isJPG = file.type === "image/jpeg";
   if (!isJPG) {
@@ -40,7 +46,7 @@ class Avatar extends Component {
     axios
       .post("/api/displayAvatarPhoto", userData)
       .then(async res => {
-        if (res.data) console.log("avat", res);
+        // if (res.data) console.log("avat", res);
         var filePtah = res.data.file;
         if (filePtah) {
           await this.setState({
@@ -72,6 +78,7 @@ class Avatar extends Component {
       axios
         .post("/api/avatarPhoto", formData, config)
         .then(response => {
+          // console.log("res=", response);
           var imageUrl = `https://localhost:4000/${response.data.imageUrl}`;
           this.setState({ imageUrl: imageUrl });
         })
@@ -89,15 +96,15 @@ class Avatar extends Component {
       </div>
     );
     const imageUrl = this.state.imageUrl;
-    console.log("imageUrl=", imageUrl);
+    // console.log("imageUrl=", imageUrl);
     return (
       <div className="container">
         <Upload
+          customRequest={dummyRequest}
           name="avatar"
           listType="picture-card"
           className="avatar-uploader"
           showUploadList={false}
-          action="//jsonplaceholder.typicode.com/posts/"
           beforeUpload={beforeUpload}
           onChange={this.handleChange}
         >

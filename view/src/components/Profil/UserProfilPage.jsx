@@ -5,7 +5,9 @@ import { Redirect } from "react-router-dom";
 import Header from "../Navigation/Navigation";
 import * as routes from "../../constants/routes";
 import Tags from "./Tags/tagsManagement";
-import Geolocation from "./Geolocation/Geolocation";
+import Avatar from "./UserPhoto/avatarPhoto";
+import Gallery from "./UserPhoto/uploadPhoto";
+// import Geolocation from "./Geolocation/Geolocation";
 
 class UserProfilPage extends Component {
   _isMounted = false;
@@ -24,11 +26,14 @@ class UserProfilPage extends Component {
       .get(`/api/users/${this.props.match.params.username}`)
 
       .then(res => {
+        console.log(res);
         if (this._isMounted) {
           this.setState({ userData: this.props.match.params.username });
         }
       })
-      .catch(err => {});
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   componentWillUnmount() {
@@ -52,11 +57,11 @@ class UserProfilPage extends Component {
           <MDBRow>
             <MDBCol size="4">
               <div className="lateral">
-                <p>profile picture</p>
+                <Avatar />
                 <p>{sessionStorage.getItem("userData")}</p>
               </div>
+              <Gallery />
               {this.state.isLoggedIn && <Tags />}
-              {this.state.isLoggedIn && <Geolocation />}
             </MDBCol>
             <MDBCol size="8">Overview profile</MDBCol>
           </MDBRow>

@@ -18,11 +18,14 @@ function findOne(field, userData, callback) {
 }
 
 function getImage(field, userData, callback) {
+  console.log(userData);
   sql = `SELECT * FROM images WHERE ${field}=?`;
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (result.length > 0) return callback(result);
-    else callback(0);
+    // console.log(result);
+    if (result) {
+      if (result.length > 0) return callback(result);
+    } else callback(0);
   });
 }
 

@@ -97,6 +97,7 @@ class LoginPage extends Component {
           this.setState({ success: res.data.success });
           this.setState({ redirect: true });
           sessionStorage.setItem("userData", res.data.username);
+          sessionStorage.setItem("userId", res.data.userId);
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
