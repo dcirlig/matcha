@@ -40,7 +40,7 @@ class tagsManager extends React.Component {
             text: "#" + tag
           };
         });
-        await this.setState({ tagsDB: newTags });
+        this.setState({ tagsDB: newTags });
         var tab = [];
         res.data.globalTags.forEach(function(element) {
           tab = tab.concat([{ id: element.content, text: element.content }]);
@@ -105,7 +105,7 @@ class tagsManager extends React.Component {
       .catch(err => {});
   }
 
-  handleAddition(tag) {
+  async handleAddition(tag) {
     let tagValid = this.state.tagValid;
     tagValid = tag.text.match(/^[a-zA-Z0-9_]+$/);
     sessionStorage.setItem("tag", tag.text);
@@ -120,8 +120,9 @@ class tagsManager extends React.Component {
           }
         })
         .catch(err => {});
-      this.setState(state => ({
+      await this.setState(state => ({
         tagsDB: [...state.tagsDB, { id: tag.text, text: "#" + tag.text }],
+        suggestions: [...state.suggestions, { id: tag.text, text: tag.text }],
         formError: ""
       }));
     } else {
