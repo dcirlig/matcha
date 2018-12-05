@@ -84,18 +84,23 @@ class tagsManager extends React.Component {
   }
 
   handleDelete(i) {
-    sessionStorage.setItem("tagToDelete", this.state.tagsDB[i].text);
+    const tagToDelete = this.state.tagsDB[i].text.split("#");
+    sessionStorage.setItem("tagToDelete", tagToDelete[1]);
     axios
       .post(`/api/tags/delete`, sessionStorage)
       .then(res => {
-        const tagTab = res.data.tags.split(",");
-        const newTags = tagTab.map(tag => {
-          return {
-            id: tag,
-            text: tag
-          };
-        });
-        this.setState({ tagsDB: newTags });
+        if (res.data.tags) {
+          const tagTab = res.data.tags.split(", ");
+          const newTags = tagTab.map(tag => {
+            return {
+              id: tag,
+              text: "#" + tag
+            };
+          });
+          this.setState({ tagsDB: newTags });
+        } else if (res.data.empty) {
+          this.setState({ tagsDB: [] });
+        }
       })
       .catch(err => {});
   }

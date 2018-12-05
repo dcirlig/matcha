@@ -36,7 +36,9 @@ function findTags(userData, callback) {
   sql = "SELECT tags FROM users WHERE username = ?";
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    return callback(result[0].tags);
+    if (result) {
+      return callback(result[0].tags);
+    }
   });
 }
 
@@ -44,11 +46,13 @@ function deleteTagUser(userData, tagToDelete, callback) {
   sql = "SELECT tags FROM users WHERE username = ?";
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    var newTagsList = result[0].tags.replace("," + tagToDelete, "");
-    if (newTagsList === result[0].tags)
+    var newTagsList = result[0].tags.replace(", " + tagToDelete, "");
+    if (newTagsList === result[0].tags) {
       newTagsList = result[0].tags.replace(tagToDelete + ", ", "");
-    if (newTagsList === result[0].tags)
+    }
+    if (newTagsList === result[0].tags) {
       newTagsList = result[0].tags.replace(tagToDelete, "");
+    }
     addTagsUser(newTagsList, userData);
     return callback(newTagsList);
   });

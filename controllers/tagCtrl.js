@@ -61,6 +61,7 @@ module.exports = {
       tags
     ) {
       if (tags) return res.json({ tags });
+      else return res.json({ empty: "Empty tags list" });
     });
   }
 };
