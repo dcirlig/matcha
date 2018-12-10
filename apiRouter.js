@@ -9,6 +9,7 @@ var profilCtrl = require("./controllers/profilCtrl");
 var tagCtrl = require("./controllers/tagCtrl");
 var photoCtrl = require("./controllers/photoCtrl");
 var avatarPhotoCtrl = require("./controllers/avatarPhotoCtrl");
+var settingsCtrl = require("./controllers/settingsCtrl");
 //Routes
 exports.router = (function() {
   var Router = express.Router();
@@ -31,5 +32,6 @@ exports.router = (function() {
   Router.post("/displayPhoto", photoCtrl.displayPhoto);
   Router.post("/avatarPhoto", avatarPhotoCtrl.avatarPhoto);
   Router.post("/displayAvatarPhoto", avatarPhotoCtrl.displayAvatarPhoto);
+  Router.post("/settings", settingsCtrl.settings);
   return Router;
 })();
