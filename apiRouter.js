@@ -9,9 +9,13 @@ var profilCtrl = require("./controllers/profilCtrl");
 var tagCtrl = require("./controllers/tagCtrl");
 var photoCtrl = require("./controllers/photoCtrl");
 var avatarPhotoCtrl = require("./controllers/avatarPhotoCtrl");
+<<<<<<< HEAD
 var geolocationCtrl = require("./controllers/geolocationCtrl");
 var settingsCtrl = require("./controllers/settingsCtrl");
 var preferencesCtrl = require("./controllers/preferencesCtrl");
+=======
+var settingsCtrl = require("./controllers/settingsCtrl");
+>>>>>>> cdacdc5b13841a2855196802b9af410ca1d73d92
 //Routes
 exports.router = (function() {
   var Router = express.Router();
@@ -34,10 +38,14 @@ exports.router = (function() {
   Router.post("/displayPhoto", photoCtrl.displayPhoto);
   Router.post("/avatarPhoto", avatarPhotoCtrl.avatarPhoto);
   Router.post("/displayAvatarPhoto", avatarPhotoCtrl.displayAvatarPhoto);
+<<<<<<< HEAD
   Router.post("/fillAddress", geolocationCtrl.fillAddress);
   Router.post("/displayAddress", geolocationCtrl.displayAddress);
   Router.post("/settings", settingsCtrl.settings);
   Router.post("/preferences/display", preferencesCtrl.displayPreferences);
   Router.post("/preferences/update", preferencesCtrl.updatePreferences);
+=======
+  Router.post("/settings", settingsCtrl.settings);
+>>>>>>> cdacdc5b13841a2855196802b9af410ca1d73d92
   return Router;
 })();
