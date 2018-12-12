@@ -53,7 +53,7 @@ class LoginHeader extends React.Component {
           </NavbarBrand>
           {!this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
           <Collapse isOpen={this.state.collapse} navbar>
-            <NavbarNav left>
+            <NavbarNav right>
               <NavItem>
                 <NavLink to={`/users/${username}`} activeClassName="is-active">
                   My Profile
@@ -64,8 +64,6 @@ class LoginHeader extends React.Component {
                   Explorer
                 </NavLink>
               </NavItem>
-            </NavbarNav>
-            <NavbarNav right>
               <NavItem>
                 <NavLink to={routes.LOG_OUT} activeClassName="is-active">
                   Log out

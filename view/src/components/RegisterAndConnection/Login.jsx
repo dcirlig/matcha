@@ -9,6 +9,8 @@ import Header from "../Navigation/Navigation";
 import matchaLogo from "../../images/matcha_logo_full.png";
 import { Input, Button } from "mdbreact";
 import LoginModal from "./RegisterModal";
+import iplocation from "iplocation";
+const publicIp = require("public-ip");
 
 const INITIAL_STATE = {
   username: "",
@@ -22,7 +24,14 @@ const INITIAL_STATE = {
   passwdValid: false,
   error: null,
   succes: null,
-  isLoggedIn: false
+  isLoggedIn: false,
+  coords: {
+    latitude: "",
+    longitude: ""
+  },
+  geoloc: 0,
+  ip: "",
+  checkbox: false
 };
 
 class LoginPage extends Component {
@@ -34,12 +43,54 @@ class LoginPage extends Component {
     this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
-  onChange = e => {
+  async getGeolocation() {
+    navigator.geolocation.getCurrentPosition(
+      async location => {
+        await sessionStorage.setItem("latitude", location.coords.latitude);
+        await sessionStorage.setItem("longitude", location.coords.longitude);
+      },
+      async error => {
+        await this.setState({ geoloc: false });
+        await iplocation(this.state.ip)
+          .then(async res => {
+            await sessionStorage.setItem("latitude", res.latitude);
+            await sessionStorage.setItem("longitude", res.longitude);
+          })
+          .catch(err => {});
+      }
+    );
+  }
+
+  async getIpLocation() {
+    await publicIp.v4().then(async ip => {
+      await this.setState({ ip: ip });
+    });
+    await iplocation(this.state.ip)
+      .then(async res => {
+        await sessionStorage.setItem("latitude", res.latitude);
+        await sessionStorage.setItem("longitude", res.longitude);
+      })
+      .catch(err => {});
+  }
+
+  onChange = async e => {
     const name = e.target.name;
-    const value = e.target.value;
-    this.setState({ [name]: value }, () => {
+    var value = e.target.value;
+
+    if (name === "checkbox") {
+      value = !this.state.checkbox;
+    }
+    await this.setState({ [name]: value }, () => {
       this.validateField(name, value);
     });
+    if (this.state.geoloc === 0 || name === "checkbox") {
+      this.setState({ geoloc: 1 });
+      if (this.state.checkbox === true) {
+        await this.getGeolocation();
+      } else {
+        await this.getIpLocation();
+      }
+    }
   };
 
   validateField(fieldName, value) {
@@ -87,7 +138,7 @@ class LoginPage extends Component {
     });
   }
 
-  onSubmit = event => {
+  onSubmit = async event => {
     axios
       .post(`/api/users/login`, this.state)
 
@@ -101,6 +152,7 @@ class LoginPage extends Component {
           this.setState({ error: res.data.error });
         }
       })
+
       .catch(err => {});
     // this.setState({ ...INITIAL_STATE });
     event.preventDefault();
@@ -161,6 +213,14 @@ class LoginPage extends Component {
                 />
               </label>
             </div>
+            <Input
+              label="Authorize geolocation"
+              type="checkbox"
+              id="checkbox2"
+              onChange={e => this.onChange(e)}
+              checked={this.state.checkbox}
+              name="checkbox"
+            />
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
               <p>{this.response(error, succes)}</p>
@@ -175,7 +235,6 @@ class LoginPage extends Component {
             >
               Login
             </Button>
-
             <p>
               <Link className="linkTo" to={routes.RESET_PASSWORD}>
                 Forgot your password ?

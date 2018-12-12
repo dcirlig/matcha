@@ -50,6 +50,8 @@ con.connect(function(err) {
     emailVerified       VARCHAR(45) DEFAULT false,
     secretTokenEmail    VARCHAR(255) NOT NULL,
     gender              VARCHAR(45) DEFAULT 'female',
+    age                 INT(2) DEFAULT 18,
+    birthdate           VARCHAR(255) DEFAULT NULL,
     resetPasswordToken  VARCHAR(255) DEFAULT NULL,
     bio                 VARCHAR(255) DEFAULT '',
     tags                TEXT,
@@ -94,6 +96,20 @@ con.connect(function(err) {
       con.query(sql, [tags], function(err, result) {
         if (err) console.log(err);
         console.log("Create suggested interests");
+
+        var sql = `CREATE TABLE if NOT EXISTS geolocation
+        (
+        geolocId             INTEGER AUTO_INCREMENT PRIMARY KEY,
+        latitude             VARCHAR(45) NOT NULL,
+        longitude            VARCHAR(45) NOT NULL,
+        userId               INTEGER NOT NULL,
+        FOREIGN KEY (userId) REFERENCES users(userId)
+        )`;
+
+        con.query(sql, function(err, result) {
+          if (err) console.log(err);
+          console.log("Create table geolocation");
+        });
       });
     });
   });

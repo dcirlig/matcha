@@ -7,9 +7,9 @@ function createTag(tagText) {
   });
 }
 
-function addTagsUser(newTagsList, username) {
-  sql = `UPDATE users SET tags=? WHERE username=?`;
-  connection.query(sql, [newTagsList, username], function(err, result) {
+function addTagsUser(newTagsList, userId) {
+  sql = `UPDATE users SET tags=? WHERE userId=?`;
+  connection.query(sql, [newTagsList, userId], function(err, result) {
     if (err) console.log(err);
   });
 }
@@ -32,19 +32,21 @@ function allTags(callback) {
   });
 }
 
-function findTags(userData, callback) {
-  sql = "SELECT tags FROM users WHERE username = ?";
-  connection.query(sql, userData, function(err, result) {
+function findTags(userId, callback) {
+  sql = "SELECT tags FROM users WHERE userId = ?";
+  connection.query(sql, userId, function(err, result) {
     if (err) console.log(err);
     if (result) {
       return callback(result[0].tags);
+    } else {
+      return callback("");
     }
   });
 }
 
-function deleteTagUser(userData, tagToDelete, callback) {
-  sql = "SELECT tags FROM users WHERE username = ?";
-  connection.query(sql, userData, function(err, result) {
+function deleteTagUser(userId, tagToDelete, callback) {
+  sql = "SELECT tags FROM users WHERE userId = ?";
+  connection.query(sql, userId, function(err, result) {
     if (err) console.log(err);
     var newTagsList = result[0].tags.replace(", " + tagToDelete, "");
     if (newTagsList === result[0].tags) {
@@ -53,7 +55,7 @@ function deleteTagUser(userData, tagToDelete, callback) {
     if (newTagsList === result[0].tags) {
       newTagsList = result[0].tags.replace(tagToDelete, "");
     }
-    addTagsUser(newTagsList, userData);
+    addTagsUser(newTagsList, userId);
     return callback(newTagsList);
   });
 }

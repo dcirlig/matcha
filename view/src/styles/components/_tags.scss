@@ -1,16 +1,18 @@
 /* Example Styles for React Tags*/
-
+.interests {
+  margin-top: $l-size;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 80%;
+}
 /* Styles for the input */
 div.ReactTags__tagInput {
-  width: 200px;
   border-radius: 2px;
   display: inline-block;
   margin-top: $s-size;
   width: 100%;
 }
-input.ReactTags__tagInputField .placeholder {
-  color: red;
-}
+
 div.ReactTags__tagInput input.ReactTags__tagInputField,
 div.ReactTags__tagInput input.ReactTags__tagInputField:focus {
   height: 31px;

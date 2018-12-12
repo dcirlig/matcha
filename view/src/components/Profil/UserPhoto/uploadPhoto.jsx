@@ -22,12 +22,6 @@ class UploadPhoto extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  // async componentWillMount() {
-  //   await this.setState({
-  //     userId: sessionStorage.getItem("userId")
-  //   });
-  // }
-
   componentDidMount() {
     var data = [];
     this.setState({
@@ -36,19 +30,21 @@ class UploadPhoto extends Component {
     axios
       .post("/api/displayPhoto", sessionStorage)
       .then(res => {
-        var obj = res.data.fileList;
-        obj.map(element => {
-          var image = {
-            uid: element.uid,
-            url: `https://localhost:4000/${element.url}`,
-            status: "done"
-          };
-          data.push(image);
-          return data;
-        });
-        this.setState({
-          fileList: data
-        });
+        if (res.data) {
+          var obj = res.data.fileList;
+          obj.map(element => {
+            var image = {
+              uid: element.uid,
+              url: `https://localhost:4000/${element.url}`,
+              status: "done"
+            };
+            data.push(image);
+            return data;
+          });
+          this.setState({
+            fileList: data
+          });
+        }
       })
       .catch(err => {});
   }
