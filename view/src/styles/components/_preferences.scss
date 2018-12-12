@@ -1,0 +1,176 @@
+.gender {
+  display: flex;
+  justify-content: center;
+  margin-bottom: $m-size;
+  margin-top: $m-size;
+}
+
+.genderIcon {
+  color: dimgray;
+  margin: $l-size;
+  cursor: pointer;
+}
+
+.birthDate {
+  margin-top: $l-size;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: $l-size;
+  position: relative;
+  z-index: 0;
+}
+
+.sexualOrientation {
+  position: relative !important;
+  z-index: 289 !important;
+  // margin-top: $m-size;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: $l-size;
+  max-width: 80%;
+}
+
+.sexual-orientation-select__control {
+  //   background-color: red;
+
+  border: 1px solid $light-pink !important;
+  box-shadow: none !important;
+}
+
+// .sexual-orientation-select__value-container {
+
+// }
+
+.sexual-orientation-select__indicator-separator {
+  background-color: $light-pink !important;
+}
+
+.sexual-orientation-select__indicator {
+  color: $light-pink !important;
+  cursor: pointer;
+}
+
+.sexual-orientation-select__placeholder {
+  color: darken($light-pink, 10%) !important;
+  font-size: $s-size !important;
+  font-weight: 400 !important;
+}
+
+.sexual-orientation-select__menu-list {
+  position: relative !important;
+  z-index: 300 !important;
+  font-size: $s-size !important;
+  font-weight: 400 !important;
+  color: $coral !important;
+}
+
+.sexual-orientation-select__option {
+  background-color: white !important;
+  color: $coral !important;
+}
+
+.sexual-orientation-select__option:hover {
+  background-color: lighten($coral, 20%) !important;
+}
+
+.ant-select {
+  color: $coral;
+  color: $coral;
+}
+
+.ant-select:hover {
+  color: $coral;
+}
+
+.ant-select-selection {
+  border: 1px solid $light-pink;
+}
+
+.ant-select-selection--single {
+  border: 1px solid $light-pink;
+}
+
+.ant-select-arrow {
+  color: $light-pink;
+}
+
+.ant-select-selection:hover {
+  border: 1px solid $coral;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.ant-select-focused {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.ant-select-enabled {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.ant-select-open {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.ant-radio-button-wrapper {
+  border: 1px solid $light-pink !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: $coral !important;
+}
+
+.ant-radio-button-wrapper-checked {
+  border: 1px solid $coral !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: $red !important;
+}
+
+.ant-radio-button-wrapper :hover {
+  color: $coral;
+}
+
+.ant-radio-button-wrapper-checked:hover {
+  color: $coral;
+}
+
+// list[aria-expanded="true"] {
+//   background-color: #42dca3;
+// }
+
+.ant-fullcalendar-selected-day .ant-fullcalendar-value {
+  background-color: $coral !important;
+  transition: opacity 20ms ease-in-out;
+}
+
+.bio {
+  margin-top: $xl-size;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80%;
+}
+
+.bio-Field {
+  margin-top: $xl-size;
+}
+
+.fa-pencil.active {
+  color: $coral !important;
+}
+
+i.fa.fa-pencil.prefix {
+  color: $red !important;
+}
+
+label.active {
+  color: $coral !important;
+}
+
+textarea.md-textarea.form-control:focus {
+  border-bottom: 2px solid $coral !important;
+  outline: none !important;
+  box-shadow: none !important;
+}

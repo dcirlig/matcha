@@ -5,8 +5,15 @@ module.exports = {
     models.allTags(function(globalTags) {
       if (globalTags) {
         globalTags = JSON.parse(JSON.stringify(globalTags));
-        models.findTags(req.body.userData, function(tags) {
-          if (tags) return res.json({ globalTags, tags });
+        models.findTags(req.body.userId, function(tags) {
+          if (tags) {
+            return res.json({ globalTags: globalTags, tags: tags });
+          } else {
+            return res.json({
+              globalTags: globalTags,
+              empty: "No tags in the user's list"
+            });
+          }
         });
       }
     });
@@ -15,14 +22,14 @@ module.exports = {
     var tag = {
       text: req.body.tag
     };
-    var username = req.body.userData;
+    var userId = req.body.userId;
     if (tag.text != "") {
       if (!tag.text.match(/^[a-zA-Z0-9_]+$/))
         return res.json({
           error:
             "Invalid tag! Your tag must contain only letters, numbers or '_' !"
         });
-      models.findTags(username, function(tags) {
+      models.findTags(userId, function(tags) {
         if (!tags) {
           index = -1;
         } else {
@@ -39,7 +46,7 @@ module.exports = {
           } else if (tags) {
             newTagsList = tags.concat(", " + [tag.text]);
           }
-          models.addTagsUser(newTagsList, username);
+          models.addTagsUser(newTagsList, userId);
           models.findTag("content", tag.text, function(find) {
             if (!find) {
               models.createTag(tag.text);
@@ -57,9 +64,7 @@ module.exports = {
     }
   },
   deleteTag: function(req, res) {
-    models.deleteTagUser(req.body.userData, req.body.tagToDelete, function(
-      tags
-    ) {
+    models.deleteTagUser(req.body.userId, req.body.tagToDelete, function(tags) {
       if (tags) return res.json({ tags });
       else return res.json({ empty: "Empty tags list" });
     });

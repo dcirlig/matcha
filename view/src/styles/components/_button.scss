@@ -1,36 +1,51 @@
 .big-button {
-   // background: $coral !important;
-    border: none;
-   // border-bottom: .6rem solid darken($coral, 10%);
-    color: white;
-    font-weight: bold;
-    font-size: $l-size;
-    margin-bottom: $m-size;
-    padding: 2.4rem;
-    width: 100%;
-    text-transform: none !important;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: $l-size;
+  margin-bottom: $m-size;
+  padding: 2.4rem;
+  width: 100%;
+  text-transform: none !important;
 }
 
 .big-button:disabled {
-    opacity: .5;
+  opacity: 0.5;
 }
 
 @media (min-width: $desktop-breakpoint) {
-    .big-button {
-        margin-bottom: $xl-size;
-    }
+  .big-button {
+    margin-bottom: $xl-size;
+  }
 }
 
-.button {
-       background: lighten($coral, 5%);
-       border: none;
-       border-bottom: .6rem solid $coral;
-       color: white;
-       font-weight: bold;
-       font-size: $m-size;
-       margin-bottom: $m-size;
-       padding: 1.5rem;
-       width: 100%;
-       text-transform: none !important;
-       outline: none;
+.small-button {
+  border: none;
+  color: white;
+  font-weight: bold;
+  max-width: 40%;
+  text-transform: none !important;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: $l-size;
+  margin-top: $l-size;
+  display: block;
+}
+
+.btn.btn-lg {
+  font-size: $m-size;
+}
+
+.medium-button {
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: $l-size;
+  margin-bottom: $m-size;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 2.4rem;
+  width: 80%;
+  text-transform: none !important;
 }

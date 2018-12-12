@@ -28,19 +28,21 @@ class tagsManager extends React.Component {
     this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     axios
       .post(`/api/tags/display`, sessionStorage)
 
       .then(async res => {
-        const tagTab = res.data.tags.split(", ");
-        const newTags = tagTab.map(tag => {
-          return {
-            id: tag,
-            text: "#" + tag
-          };
-        });
-        this.setState({ tagsDB: newTags });
+        if (res.data.empty !== "No tags in the user's list") {
+          const tagTab = res.data.tags.split(", ");
+          const newTags = tagTab.map(tag => {
+            return {
+              id: tag,
+              text: "#" + tag
+            };
+          });
+          this.setState({ tagsDB: newTags });
+        }
         var tab = [];
         res.data.globalTags.forEach(function(element) {
           tab = tab.concat([{ id: element.content, text: element.content }]);
@@ -137,10 +139,7 @@ class tagsManager extends React.Component {
   render() {
     const { tagsDB, suggestions } = this.state;
     return (
-      <div>
-        <p className="tagIntro">
-          Express yourself by setting up your interests
-        </p>
+      <div className="interests">
         <ReactTags
           tags={tagsDB}
           suggestions={suggestions}

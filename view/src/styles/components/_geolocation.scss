@@ -1,0 +1,54 @@
+.geolocationBlock {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: $l-size;
+  max-width: 80%;
+}
+
+.mapboxgl-ctrl-geocoder {
+  border-radius: 2px;
+  display: inline-block;
+  // margin-top: $l-size;
+  width: 100%;
+  font-size: 12px;
+  border: 1px solid lighten($light-pink, 10%);
+  padding: 0 4px;
+  outline: none;
+  font-weight: 500;
+  height: 31px;
+}
+
+input.mapboxgl-ctrl-geocoder {
+  height: 31px;
+  // margin: 0;
+  margin-top: $l-size;
+  font-size: 12px;
+  color: $coral;
+  font-weight: 500;
+  width: 100%;
+  border: 1px solid lighten($light-pink, 10%);
+  padding: 0 4px;
+  outline: none;
+}
+
+.mapbox-ctrl-results {
+  list-style-type: none;
+  box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
+  background: lighten($light-pink, 10%);
+  border-bottom: 1px solid lighten($coral, 10%);
+}
+
+.mapbox-ctrl-results li {
+  border-bottom: 1px solid lighten($light-pink, 5%);
+  padding: 5px 10px;
+  margin: 0;
+}
+
+.mapbox-ctrl-results li:hover {
+  background-color: lighten($coral, 20%);
+  cursor: pointer;
+}
+
+.small-button .fa {
+  font-size: $l-size;
+}

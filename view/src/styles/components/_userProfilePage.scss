@@ -3,9 +3,34 @@
   background-color: #fff;
   color: #787878;
   text-align: center;
-  display: flex;
-  justify-content: space-around;
+  // display: flex;
+  // justify-content: space-evenly;
   margin-top: 10px;
+}
+
+.avatarBlock {
+  max-width: 25%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// .iconProfile {
+//   font-size: $l-size;
+// }
+
+.btn .fa {
+  font-size: $l-size;
+}
+
+.lateralIcons {
+  font-size: $l-size;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.iconsButton {
+  font-size: $l-size;
+  border-radius: 50%;
 }
 
 .col-4 {
@@ -15,6 +40,19 @@
 .tagIntro {
   font-weight: 400;
   text-align: center;
-  margin: 32px;
-  color: #787878;
+  margin-top: $m-size;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  border-radius: 10px;
+  font-weight: bold;
+  max-width: 60%;
+  padding: 15px;
+}
+
+.userProfileSettings {
+  max-width: 100%;
+  margin-top: 32px;
+  margin-right: auto;
+  margin-left: auto;
 }

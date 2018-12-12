@@ -43,11 +43,13 @@ class Avatar extends Component {
     axios
       .post("/api/displayAvatarPhoto", sessionStorage)
       .then(async res => {
-        var filePtah = res.data.file;
-        if (filePtah) {
-          await this.setState({
-            imageUrl: `https://localhost:4000/${filePtah}`
-          });
+        if (res.data) {
+          var filePtah = res.data.file;
+          if (filePtah) {
+            await this.setState({
+              imageUrl: `https://localhost:4000/${filePtah}`
+            });
+          }
         }
       })
       .catch(err => {});
@@ -74,8 +76,12 @@ class Avatar extends Component {
       axios
         .post("/api/avatarPhoto", formData, config)
         .then(response => {
-          var imageUrl = `https://localhost:4000/${response.data.imageUrl}`;
-          this.setState({ imageUrl: imageUrl });
+          if (response.data.imageUrl) {
+            var imageUrl = `${window.location.origin}/${
+              response.data.imageUrl
+            }`;
+            this.setState({ imageUrl: imageUrl });
+          }
         })
         .catch(error => {
           console.log("error=", error);
@@ -92,7 +98,7 @@ class Avatar extends Component {
     );
     const imageUrl = this.state.imageUrl;
     return (
-      <div className="container">
+      <div>
         <Upload
           customRequest={dummyRequest}
           name="avatar"
@@ -103,7 +109,7 @@ class Avatar extends Component {
           onChange={this.handleChange}
         >
           {imageUrl ? (
-            <img src={this.state.imageUrl} alt="avatar" />
+            <img className="avatarPic" src={this.state.imageUrl} alt="avatar" />
           ) : (
             uploadButton
           )}

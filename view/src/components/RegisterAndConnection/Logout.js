@@ -4,6 +4,8 @@ import * as routes from "../../constants/routes";
 
 export default function LogOut() {
   sessionStorage.setItem("userData", "");
+  sessionStorage.setItem("latitude", "");
+  sessionStorage.setItem("longitude", "");
   sessionStorage.clear();
   return <Redirect to={routes.SIGN_IN} />;
 }

@@ -8,8 +8,8 @@ function createUser(userData) {
 }
 
 function updateUser(objUpdate, userData) {
-  sql = `UPDATE users SET ${objUpdate} WHERE userId=?`;
-  connection.query(sql, userData, function(err, result) {
+  sql = `UPDATE users SET ? WHERE userId=?`;
+  connection.query(sql, [objUpdate, userData], function(err, result) {
     if (err) console.log(err);
   });
 }

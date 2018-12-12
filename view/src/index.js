@@ -6,7 +6,7 @@ import ResetPasswordPage from "./components/ResetPassword/ResetPassword";
 import ResetConfirmPasswordPage from "./components/ResetPassword/ResetConfirmPassword";
 import UserProfilPage from "./components/Profil/UserProfilPage";
 import HomePage from "./components/Navigation/HomePage";
-import Footer from "./components/Navigation/Footer";
+// import Footer from "./components/Navigation/Footer";
 import NotFoundPage from "./components/Navigation/NotFoundPage";
 import * as routes from "./constants/routes";
 import React from "react";
@@ -63,7 +63,6 @@ const App = () => (
         />
         <Route render={props => <NotFoundPage {...props} />} />
       </Switch>
-      <Footer />
     </div>
   </Router>
 );
