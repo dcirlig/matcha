@@ -16,10 +16,8 @@ module.exports = {
               element.secretTokenEmail != ""
             ) {
               if (element.emailVerified == false) {
-                models.updateUser(
-                  "emailVerified=true, secretTokenEmail=''",
-                  element.userId
-                );
+                objUpdate = { emailVerified: true, secretTokenEmail: "" };
+                models.updateUser(objUpdate, element.userId);
                 return res.status(200).json({
                   success:
                     "You have successfully confirmed your email!You can log in now!"

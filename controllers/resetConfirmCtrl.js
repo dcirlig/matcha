@@ -30,10 +30,8 @@ module.exports = {
                     resBycrypt
                   ) {
                     if (resBycrypt) {
-                      models.updateUser(
-                        `passwd='${password}', resetPasswordToken=''`,
-                        element.userId
-                      );
+                      objUpdate = { passwd: password, resetPasswordToken: "" };
+                      models.updateUser(objUpdate, element.userId);
                       return res.status(200).json({
                         success: "Your password is reset successfully"
                       });

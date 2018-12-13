@@ -36,10 +36,8 @@ module.exports = {
             if (result) {
               result.forEach(element => {
                 var secretToken = randomstring.generate();
-                models.updateUser(
-                  `resetPasswordToken='${secretToken}'`,
-                  element.userId
-                );
+                objUpdate = { resetPasswordToken: secretToken };
+                models.updateUser(objUpdate, element.userId);
                 var url = `https://localhost:4000/password/reset/confirm/${secretToken}`;
 
                 transporter.sendMail({

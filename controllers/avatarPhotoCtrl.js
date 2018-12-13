@@ -2,7 +2,7 @@
 var multer = require("multer");
 const path = require("path");
 var fs = require("fs");
-var images = require("../models/images");
+var connection = require("../database/dbConnection");
 var users = require("../models/user");
 // Routes
 
@@ -23,7 +23,7 @@ module.exports = {
     upload(req, res, err => {
       if (req.file) {
         if (!req.file.originalname.match(/\.(jpg|jpeg)$/)) {
-          res.json({ error: "Only format jpeg are allowed!" });
+          return res.json({ error: "Only format jpeg are allowed!" });
         } else {
           var filepath = req.file.path.replace("view/public/", "");
           var userData = {
@@ -37,11 +37,15 @@ module.exports = {
             );
             fs.unlink(oldImageUrl, function(err) {});
           }
-          res.json({ imageUrl: userData.url });
-          users.updateUser(`profil_image='${userData.url}' `, userData.userId);
+          objUpdate = { profil_image: userData.url };
+          users.updateUser(objUpdate, userData.userId);
+          return res.json({
+            succes: "You are successfuly uploaded your profi photo",
+            imageUrl: userData.url
+          });
         }
       } else {
-        res.json({ error: "Error upload photo" });
+        return res.json({ error: "Error upload photo" });
       }
     });
   },
@@ -52,13 +56,13 @@ module.exports = {
       if (result) {
         result.forEach(element => {
           if (element.profil_image !== null) {
-            res.json({ file: element.profil_image });
+            return res.json({ file: element.profil_image });
           } else {
-            res.json({ error: "Please chose a profil photo" });
+            return res.json({ error: "Please chose a profil photo" });
           }
         });
       } else {
-        res.json({ error: "user not found" });
+        return res.json({ error: "user not found" });
       }
     });
   }

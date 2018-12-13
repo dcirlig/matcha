@@ -10,7 +10,7 @@ module.exports = {
     // Params
     var username = [];
     var email = [];
-    var data = [];
+    var data = {};
 
     var userId = req.body.userId;
     users.findOne("userId", `${userId}`, function(find) {
@@ -122,13 +122,7 @@ module.exports = {
           }
 
           if (data !== []) {
-            var obj = [];
-            for (key in data) {
-              obj.push(key + "=" + connection.escape(data[key]));
-            }
-
-            users.updateUser(obj, userId);
-
+            users.updateUser(data, userId);
             res.json({ success: "The parameters has successfully changed" });
           }
         });
