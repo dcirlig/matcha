@@ -27,6 +27,7 @@
     "react-scripts": "^2.1.1",
     "react-select": "^2.1.2",
     "react-tag-input": "^6.1.0",
+    "react-window-size": "^1.2.2",
     "when": "^3.7.8"
   },
   "scripts": {

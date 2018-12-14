@@ -36,24 +36,22 @@ class profilePreview extends React.Component {
 
   render() {
     return (
-      <div>
-        <Card
-          hoverable
-          style={{ width: 600, height: 1000 }}
-          cover={
-            <img
-              alt="ProfilePic"
-              className="profilePic"
-              src={this.state.imageUrl}
-            />
-          }
-        >
-          <UploadPhotos />
-          <br />
-          <Meta title={this.state.username} description="www.instagram.com" />
-          opekfiqjir
-        </Card>
-      </div>
+      <Card
+        hoverable
+        style={{ width: 600, height: 1000 }}
+        cover={
+          <img
+            alt="ProfilePic"
+            className="profilePic"
+            src={this.state.imageUrl}
+          />
+        }
+      >
+        <UploadPhotos />
+        <br />
+        <Meta title={this.state.username} description="www.instagram.com" />
+        opekfiqjir
+      </Card>
     );
   }
 }

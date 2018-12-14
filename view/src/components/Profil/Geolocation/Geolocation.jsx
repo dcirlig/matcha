@@ -21,7 +21,8 @@ class geolocationComponent extends React.Component {
       },
       fullAddress: "",
       errors: "",
-      userId: sessionStorage.getItem("userId")
+      userId: sessionStorage.getItem("userId"),
+      manuallyAddAddress: "Enter your address"
     };
     this.reverseLocation = this.reverseLocation.bind(this);
     this.onSelect = this.onSelect.bind(this);
@@ -65,18 +66,21 @@ class geolocationComponent extends React.Component {
   }
 
   async onSelect(address) {
-    if (address.center[0] && address.center[1]) {
-      await this.setState({
-        coords: {
-          longitude: address.center[0],
-          latitude: address.center[1]
-        }
-      });
-      await this.reverseLocation(this.state);
-    } else {
-      await this.setState({
-        errors: "Invalid address! Please enter a valid one."
-      });
+    if (address.center) {
+      if (address.center[0] && address.center[1]) {
+        await this.setState({
+          coords: {
+            longitude: address.center[0],
+            latitude: address.center[1]
+          },
+          manuallyAddAddress: ""
+        });
+        await this.reverseLocation(this.state);
+      } else {
+        await this.setState({
+          errors: "Invalid address! Please enter a valid one."
+        });
+      }
     }
   }
 
@@ -127,8 +131,13 @@ class geolocationComponent extends React.Component {
   }
 
   render() {
-    const { fullAddress, accessToken, country, error } = this.state;
-    const manuallyAddAddress = "Enter your address";
+    const {
+      fullAddress,
+      accessToken,
+      country,
+      error,
+      manuallyAddAddress
+    } = this.state;
     const inputClass = "mapboxgl-ctrl-geocoder";
     const resultsClass = "mapbox-ctrl-results";
     const resultClass = "mapbox-ctrl-result";

@@ -8,6 +8,7 @@ import Avatar from "./UserPhoto/avatarPhoto";
 import UserProfileSettings from "./Settings/userProfileSettings";
 import UserAccountSettings from "./Settings/userAccountSettings";
 import ProfilePreview from "./Preview/profilePreview";
+import windowSize from "react-window-size";
 
 class UserProfilPage extends Component {
   _isMounted = false;
@@ -35,10 +36,10 @@ class UserProfilPage extends Component {
   }
 
   async componentDidMount() {
+    window.scrollTo(0, 0);
     this._isMounted = true;
     await sessionStorage.getItem("userData");
     const userData = sessionStorage.getItem("userData");
-    console.log(userData);
     if (this._isMounted) {
       if (userData !== this.props.match.params.username) {
         await this.setState({ redirect: true });
@@ -47,16 +48,6 @@ class UserProfilPage extends Component {
       }
     }
 
-    // await sessionStorage.getItem("userId");
-    // await sessionStorage.getItem("userData");
-    // await this.setState({ userId: sessionStorage.getItem("userId"), userData: sessionStorage.getItem("userData")  });
-    // await this.setState({ userData: sessionStorage.getItem("userData") });
-    // this._isMounted = true;
-    // if (this.props.match.params.username !== this.state.userData) {
-    //   await this.setState({ redirect: true });
-    // }
-    // console.log(this.props.match.params.username);
-    // console.log(sessionStorage.getItem("userData"));
     // axios
     //   .get(`/api/users/${this.props.match.params.username}`)
 
@@ -70,22 +61,19 @@ class UserProfilPage extends Component {
     //   });
   }
 
+  componentDidUpdate() {
+    window.scrollTo(0, 0);
+    var myDiv = document.getElementById("lateralScroll");
+    myDiv.scrollTop = 0;
+  }
+
   componentWillUnmount() {
     this._isMounted = false;
   }
 
   render() {
-    const {
-      userData,
-      userUrl,
-      profileSettings,
-      accountSettings,
-      redirect
-    } = this.state;
-    // if (r) {
-    //   return <Redirect to={routes.NOT_FOUND} />;
-    // }
-    console.log(redirect);
+    const { profileSettings, accountSettings, redirect } = this.state;
+    console.log(this.props.windowWidth);
     return (
       <div>
         {redirect === true && (
@@ -98,7 +86,11 @@ class UserProfilPage extends Component {
             <Header isLoggedIn={this.state.isLoggedIn} />
             <div className="container-fluid">
               <MDBRow>
-                <MDBCol size="4">
+                <MDBCol
+                  id="lateralScroll"
+                  size="4"
+                  style={{ height: this.props.windowHeight - 50 }}
+                >
                   <div className="lateral">
                     <div className="avatarBlock">
                       <Avatar />
@@ -135,8 +127,11 @@ class UserProfilPage extends Component {
                   <div>{profileSettings && <UserProfileSettings />}</div>
                   <div>{accountSettings && <UserAccountSettings />}</div>
                 </MDBCol>
-                <MDBCol size="8">
-                  PREVIEW
+                <MDBCol
+                  className="profilePreview"
+                  size="8"
+                  style={{ height: this.props.windowHeight - 50 }}
+                >
                   <ProfilePreview />
                 </MDBCol>
               </MDBRow>
@@ -149,4 +144,4 @@ class UserProfilPage extends Component {
   }
 }
 
-export default UserProfilPage;
+export default windowSize(UserProfilPage);

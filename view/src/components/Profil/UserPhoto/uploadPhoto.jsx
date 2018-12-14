@@ -117,7 +117,7 @@ class UploadPhoto extends Component {
       </div>
     );
     return (
-      <div className="container">
+      <div className="uploadPhoto">
         <div className="clearfix">
           <Upload
             customRequest={dummyRequest}
