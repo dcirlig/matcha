@@ -36,12 +36,12 @@ class UserProfilPage extends Component {
   }
 
   async componentDidMount() {
-    window.scrollTo(0, 0);
     this._isMounted = true;
     await sessionStorage.getItem("userData");
     const userData = sessionStorage.getItem("userData");
     if (this._isMounted) {
       if (userData !== this.props.match.params.username) {
+        this._isMounted = false;
         await this.setState({ redirect: true });
       } else {
         await this.setState({ redirect: false });
@@ -62,9 +62,12 @@ class UserProfilPage extends Component {
   }
 
   componentDidUpdate() {
-    window.scrollTo(0, 0);
-    var myDiv = document.getElementById("lateralScroll");
-    myDiv.scrollTop = 0;
+    console.log(this._isMounted);
+    if (this._isMounted) {
+      window.scrollTo(0, 0);
+      var myDiv = document.getElementById("lateralScroll");
+      myDiv.scrollTop = 0;
+    }
   }
 
   componentWillUnmount() {
@@ -73,7 +76,6 @@ class UserProfilPage extends Component {
 
   render() {
     const { profileSettings, accountSettings, redirect } = this.state;
-    console.log(this.props.windowWidth);
     return (
       <div>
         {redirect === true && (
@@ -132,7 +134,7 @@ class UserProfilPage extends Component {
                   size="8"
                   style={{ height: this.props.windowHeight - 50 }}
                 >
-                  <ProfilePreview />
+                  <ProfilePreview {...this.props} />
                 </MDBCol>
               </MDBRow>
             </div>

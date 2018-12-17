@@ -90,8 +90,14 @@ class geolocationComponent extends React.Component {
     await reverse
       .getReverse(coordinates.coords.latitude, coordinates.coords.longitude)
       .then(async location => {
+        console.log(location.address);
+        if (location.address.cityDistrict) {
+          var fullAddress = location.address.cityDistrict;
+        } else if (!location.address.cityDistrict && location.address.town) {
+          fullAddress = location.address.town;
+        }
         await this.setState({
-          fullAddress: location.displayName,
+          fullAddress: fullAddress,
           coords: {
             latitude: coordinates.coords.latitude,
             longitude: coordinates.coords.longitude

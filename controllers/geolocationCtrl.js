@@ -36,7 +36,6 @@ module.exports = {
         error: "Invalid latitude or/and longitude value(s)."
       });
     }
-
     modelsLoc.doesExist(userData, function(find) {
       if (find) {
         modelsLoc.updateLocation(locationData, userData.userId);
