@@ -10,15 +10,16 @@ import HomePage from "./components/Navigation/HomePage";
 import NotFoundPage from "./components/Navigation/NotFoundPage";
 import * as routes from "./constants/routes";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import LogOut from "./components/RegisterAndConnection/Logout";
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "./styles/styles.scss";
+import history from "./constants/history";
 
 const App = () => (
-  <Router>
+  <Router history={history}>
     <div>
       <Switch>
         <Route

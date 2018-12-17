@@ -50,7 +50,8 @@ class Preferences extends Component {
       selectedOption: null,
       open: false,
       formError: "",
-      error: ""
+      error: "",
+      success: ""
     };
     this.selectFemale = this.selectFemale.bind(this);
     this.selectMale = this.selectMale.bind(this);
@@ -102,40 +103,17 @@ class Preferences extends Component {
   async updateDatabase(data) {
     const userId = this.state.userId;
     const dataTab = { userId: userId, data };
-    axios.post(`/api/preferences/update`, dataTab);
+    axios
+      .post(`/api/preferences/update`, dataTab)
 
-    // .then(async res => {
-    //   if (res.data.success) {
-    //     console.log(res.data);
-    //     if (res.data.gender === "female") {
-    //       var colorWoman = "#eb5e49";
-    //     } else if (res.data.gender === "male") {
-    //       var colorMan = "#eb5e49";
-    //     }
-    //     await this.setState({
-    //       gender: res.data.gender,
-    //       sexualOrientation: res.data.sexualOrientation,
-    //       bio: res.data.bio,
-    //       birthDate: res.data.birthDate,
-    //       styleWoman: {
-    //         color: colorWoman
-    //       },
-    //       styleMan: {
-    //         color: colorMan
-    //       },
-    //       selectedOption: {
-    //         value: res.data.gender,
-    //         label:
-    //           res.data.sexualOrientation.charAt(0).toUpperCase() +
-    //           res.data.sexualOrientation.slice(1),
-    //         className: "custom-class",
-    //         name: "sexualOrientation"
-    //       }
-    //     });
-    //     // console.log(this.state);
-    //   }
-    // })
-    // .catch(err => {});
+      .then(async res => {
+        if (res.data.success) {
+          await this.setState({
+            success: res.data.success
+          });
+        }
+      })
+      .catch(err => {});
   }
 
   async selectFemale() {
@@ -263,7 +241,7 @@ class Preferences extends Component {
             classNamePrefix="sexual-orientation-select"
           />
         </div>
-        {age} y.o.
+        <p className="userAge">{age} y.o.</p>
         {age ? (
           <div>
             <MDBBtn
@@ -304,7 +282,7 @@ class Preferences extends Component {
                 moment().subtract(99, "years"),
                 moment().subtract(18, "years")
               ]}
-              onSelect={this.selectDate}
+              onChange={this.selectDate}
               defaultValue={
                 defaultDateValue
                   ? defaultDateValue

@@ -3,6 +3,7 @@ import axios from "axios";
 import { FormErrors } from "../../../constants/utils";
 import { Input, Button } from "mdbreact";
 import RegisterModal from "../../RegisterAndConnection/RegisterModal";
+import history from "../../../constants/history";
 
 const INITIAL_STATE = {
   userId: sessionStorage.getItem("userId"),
@@ -127,11 +128,16 @@ class SettingsPage extends Component {
   }
 
   onSubmit = event => {
+    var username = this.state.usernameValid[0];
     axios
       .post(`/api/settings`, this.state)
       .then(res => {
         if (res.data.success) {
           this.setState({ success: res.data.success });
+          if (username) {
+            sessionStorage.setItem("userData", username);
+            history.push(`/users/${username}`);
+          }
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }

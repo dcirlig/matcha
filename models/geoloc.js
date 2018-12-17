@@ -16,7 +16,7 @@ function updateLocation(locationData, userData) {
 
 function doesExist(userData, callback) {
   sql = `SELECT COUNT(*) FROM geolocation WHERE userId= ?`;
-  connection.query(sql, userData, function(err, result) {
+  connection.query(sql, userData.userId, function(err, result) {
     if (err) console.log(err);
     if (result[0]["COUNT(*)"] === 0) find = 0;
     else find = 1;
