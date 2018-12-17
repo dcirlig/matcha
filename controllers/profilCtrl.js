@@ -7,13 +7,11 @@ var escapeHtml = require("../utils/utils").escapeHtml;
 
 module.exports = {
   userProfil: function(req, res) {
-    // console.log(req.params);
     if (req.params.username) {
       var username = escapeHtml(req.params.username);
     }
     if (username) {
       models.findOne("username", username, function(find) {
-        // console.log("find", find);
         if (find) {
           models.getUser("username", username, function(result) {
             if (result) {
@@ -28,10 +26,15 @@ module.exports = {
               }
               imgModels.getImage("userId", result[0].userId, function(images) {
                 if (images) {
-                  var imagesUser = JSON.stringify(images);
+                  imagesUser = JSON.stringify(images);
                 } else {
                   imagesUser = "";
                 }
+                getImages(imagesUser);
+              });
+              let images = "";
+              function getImages(imagesUser) {
+                images = imagesUser;
                 res.status(200).json({
                   firstname: result[0].firstname,
                   lastname: result[0].lastname,
@@ -43,9 +46,9 @@ module.exports = {
                   location: result[0].localisation,
                   sexualOrientation: result[0].sexual_orientation,
                   profilImage: result[0].profil_image,
-                  images: imagesUser
+                  images: images
                 });
-              });
+              }
             }
           });
         } else {

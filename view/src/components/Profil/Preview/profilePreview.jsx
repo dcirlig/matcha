@@ -3,6 +3,8 @@ import axios from "axios";
 import "antd/dist/antd.css";
 import { Card } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
+import Slider from "react-animated-slider";
+import "react-animated-slider/build/horizontal.css";
 
 const { Meta } = Card;
 
@@ -21,17 +23,16 @@ class profilePreview extends React.Component {
       bio: "",
       tags: [],
       location: "",
-      sexualOrientation: ""
+      sexualOrientation: "",
+      content: []
     };
   }
 
   componentDidMount() {
-    // console.log(sessionStorage.getItem("userData"));
     axios
       .get(`/api/users/${this.props.match.params.username}`)
 
       .then(res => {
-        console.log(res.data);
         this.setState({
           username: res.data.username,
           profilImage: res.data.profilImage,
@@ -42,9 +43,10 @@ class profilePreview extends React.Component {
           bio: res.data.bio,
           tags: res.data.tags,
           location: res.data.location,
-          sexualOrientation: res.data.sexualOrientation
+          sexualOrientation: res.data.sexualOrientation,
+          content: JSON.parse(res.data.images)
         });
-        // console.log(this.state);
+        // console.log(JSON.parse(this.state.content));
       })
       .catch(err => {
         console.log(err);
@@ -68,7 +70,8 @@ class profilePreview extends React.Component {
       age,
       gender,
       sexualOrientation,
-      location
+      location,
+      content
     } = this.state;
     const title = "@" + username;
     if (gender === "male") {
@@ -98,6 +101,20 @@ class profilePreview extends React.Component {
         </p>
         <Meta title={title} description={bio} />
         <ReactTags tags={tags} readOnly={true} />
+
+        <Slider className="slider-wrapper" style={{ width: "50" }}>
+          {content.map((item, index) => (
+            <div
+              key={index}
+              className="slider-content"
+              style={{
+                background: `url('https://localhost:4000/${
+                  item.url
+                }') no-repeat center center`
+              }}
+            />
+          ))}
+        </Slider>
       </Card>
     );
   }
