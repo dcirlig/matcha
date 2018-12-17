@@ -120,10 +120,11 @@ module.exports = {
               data["passwd"] = userData.new_password;
             }
           }
-
-          if (data !== []) {
+          if (Object.keys(data).length > 0) {
             users.updateUser(data, userId);
             res.json({ success: "The parameters has successfully changed" });
+          } else {
+            res.json({ error: "Empty fields" });
           }
         });
       } else {
