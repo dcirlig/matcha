@@ -32,7 +32,7 @@ function deleteImage(field, userData, callback) {
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
     if (result.length > 0) return callback(result);
-    else callback(0);
+    else callback(result);
   });
 }
 
