@@ -28,12 +28,17 @@ class profilePreview extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     axios
       .get(`/api/users/${this.props.match.params.username}`)
 
-      .then(res => {
-        this.setState({
+      .then(async res => {
+        if (res.data.images) {
+          var images = res.data.images;
+        } else {
+          images = "";
+        }
+        await this.setState({
           username: res.data.username,
           profilImage: res.data.profilImage,
           firstname: res.data.firstname,
@@ -44,9 +49,8 @@ class profilePreview extends React.Component {
           tags: res.data.tags,
           location: res.data.location,
           sexualOrientation: res.data.sexualOrientation,
-          content: JSON.parse(res.data.images)
+          content: images
         });
-        // console.log(JSON.parse(this.state.content));
       })
       .catch(err => {
         console.log(err);
@@ -101,20 +105,23 @@ class profilePreview extends React.Component {
         </p>
         <Meta title={title} description={bio} />
         <ReactTags tags={tags} readOnly={true} />
-
-        <Slider className="slider-wrapper" style={{ width: "50" }}>
-          {content.map((item, index) => (
-            <div
-              key={index}
-              className="slider-content"
-              style={{
-                background: `url('https://localhost:4000/${
-                  item.url
-                }') no-repeat center center`
-              }}
-            />
-          ))}
-        </Slider>
+        {content ? (
+          <Slider className="slider-wrapper" style={{ width: "50" }}>
+            {content.map((item, index) => (
+              <div
+                key={index}
+                className="slider-content"
+                style={{
+                  background: `url('https://localhost:4000/${
+                    item.url
+                  }') no-repeat center center`
+                }}
+              />
+            ))}
+          </Slider>
+        ) : (
+          ""
+        )}
       </Card>
     );
   }
