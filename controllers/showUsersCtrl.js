@@ -23,9 +23,47 @@ function deg2rad(deg) {
 module.exports = {
   showUsers: function(req, res) {
     userId = req.body.userId;
+    if (req.body.ageMin) {
+      ageMin = req.body.ageMin;
+    } else {
+      ageMin = 18;
+    }
+    if (req.body.ageMax) {
+      ageMax = req.body.ageMax;
+    } else {
+      ageMax = 99;
+    }
+    if (req.body.distMax) {
+      distMax = req.body.distMax;
+    } else {
+      distMax = 100;
+    }
+    if (req.body.popularityScoreMin) {
+      popularityScoreMin = req.body.popularityScoreMin;
+    } else {
+      popularityScoreMin = 0;
+    }
+    if (req.body.popularityScoreMax) {
+      popularityScoreMax = req.body.popularityScoreMax;
+    } else {
+      popularityScoreMax = 1000;
+    }
+    if (req.body.listTags) {
+      listTags = req.body.listTags;
+      if (listTags.length > 0) {
+        listTags = listTags.split(", ");
+      } else listTags = [];
+    } else {
+      listTags = [];
+    }
+
+    var sql_start = `SELECT *
+    FROM users
+    INNER JOIN geolocation ON users.userId = geolocation.userId
+    WHERE`;
     users.findOne("userId", userId, function(find) {
       if (find) {
-        sql = `SELECT sexual_orientation, gender, latitude, longitude, popularity_score, tags, age 
+        sql = `SELECT *
             FROM users
             INNER JOIN geolocation ON users.userId = geolocation.userId
         WHERE users.userId=?`;
@@ -34,12 +72,10 @@ module.exports = {
           if (result) {
             result.forEach(element => {
               if (element.sexual_orientation === "bisexual") {
-                sql = `SELECT sexual_orientation, gender, latitude, longitude, popularity_score, tags, age
-                FROM users
-                INNER JOIN geolocation ON users.userId = geolocation.userId
-                WHERE users.userId!=? && ((users.gender=? && 
-                users.sexual_orientation=?) || (users.gender=? && users.sexual_orientation=?) 
-                || users.sexual_orientation=? )`;
+                var condition = ` users.userId!=? && ((users.gender=? &&
+                  users.sexual_orientation=?) || (users.gender=? && users.sexual_orientation=?)
+                  || users.sexual_orientation=? ) `;
+                sql = sql_start + condition;
                 if (element.gender === "female") {
                   objData = [
                     userId,
@@ -60,22 +96,16 @@ module.exports = {
                   ];
                 }
               } else if (element.sexual_orientation === "homosexual") {
-                sql = `SELECT sexual_orientation, gender, latitude, longitude, popularity_score, tags, age
-                FROM users
-                INNER JOIN geolocation ON users.userId = geolocation.userId
-                WHERE users.userId!=? && (users.gender=? && 
-                (users.sexual_orientation=? ||  users.sexual_orientation=?))`;
+                condition = ` users.userId!=? && (users.gender=? && (users.sexual_orientation=? ||  users.sexual_orientation=?))`;
+                sql = sql_start + condition;
                 if (element.gender === "female") {
                   objData = [userId, "female", "homosexual", "bisexual"];
                 } else if (element.gender === "male") {
                   objData = [userId, "male", "homosexual", "bisexual"];
                 }
               } else if (element.sexual_orientation === "heterosexual") {
-                sql = `SELECT sexual_orientation, gender, latitude, longitude, popularity_score, tags, age
-                FROM users
-                INNER JOIN geolocation ON users.userId = geolocation.userId
-                WHERE users.userId!=? && (users.gender=? && 
-                (users.sexual_orientation=? ||  users.sexual_orientation=?))`;
+                condition = ` users.userId!=? && (users.gender=? && (users.sexual_orientation=? ||  users.sexual_orientation=?))`;
+                sql = sql_start + condition;
                 if (element.gender === "female") {
                   objData = [userId, "male", "heterosexual", "bisexual"];
                 } else if (element.gender === "male") {
@@ -95,11 +125,44 @@ module.exports = {
                     var tags = element.tags.split(", ");
                     var count = 0;
                     tags.forEach(tag => {
-                      if (user.tags.indexOf(tag) != -1) count += 1;
+                      if (user.tags) {
+                        if (user.tags.indexOf(tag) != -1) {
+                          count += 1;
+                        }
+                      }
                     });
                     user.common_tags = count;
+
+                    // console.log(obj.length);
+                    // console.log(Object.keys(listTags).length);
+                    if (listTags.length > 0) {
+                      count = 0;
+                      listTags.forEach(tag => {
+                        if (user.tags !== null) {
+                          if (user.tags.indexOf(tag) != -1) {
+                            count += 1;
+                          }
+                        }
+                      });
+                      if (count == 0) {
+                        results = results.filter(
+                          el => el.userId !== user.userId
+                        );
+                      }
+                    }
+                    if (user.age < ageMin || user.age > ageMax) {
+                      results = results.filter(el => el.userId !== user.userId);
+                    }
                   });
-                  console.log("results=", results);
+                  // console.log(results);
+                  const list_sort_users = JSON.parse(JSON.stringify(results));
+                  list_sort_users.sort(
+                    (a, b) =>
+                      a.dist - b.dist ||
+                      b.common_tags - a.common_tags ||
+                      b.popularity_score - a.popularity_score
+                  );
+                  return res.json({ user_list: list_sort_users });
                 } else {
                   return res.json({ success: "0 resultat" });
                 }
