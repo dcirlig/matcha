@@ -22,32 +22,16 @@ function deg2rad(deg) {
 
 module.exports = {
   searchUsers: function(req, res) {
-    userId = req.body.userId;
-    if (req.body.ageMin) {
-      ageMin = req.body.ageMin;
-    } else {
-      ageMin = 18;
-    }
-    if (req.body.ageMax) {
-      ageMax = req.body.ageMax;
-    } else {
-      ageMax = 99;
-    }
-    if (req.body.distMax) {
-      distMax = req.body.distMax;
-    } else {
-      distMax = 100;
-    }
-    if (req.body.popularityScoreMin) {
-      popularityScoreMin = req.body.popularityScoreMin;
-    } else {
-      popularityScoreMin = 0;
-    }
-    if (req.body.popularityScoreMax) {
-      popularityScoreMax = req.body.popularityScoreMax;
-    } else {
-      popularityScoreMax = 1000;
-    }
+    console.log("body", req.body);
+    var userId = req.body.userId;
+    var ageInterval = req.body.ageInterval;
+    var ageMin = ageInterval[0];
+    var ageMax = ageInterval[1];
+    var distMax = req.body.distMax;
+    var popularityScoreInterval = req.body.popularityScoreInterval;
+    var popularityScoreMin = popularityScoreInterval[0];
+    var popularityScoreMax = popularityScoreInterval[1];
+
     if (req.body.listTags) {
       listTags = req.body.listTags;
       if (listTags.length > 0) {
