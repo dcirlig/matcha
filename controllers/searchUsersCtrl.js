@@ -21,7 +21,7 @@ function deg2rad(deg) {
 }
 
 module.exports = {
-  showUsers: function(req, res) {
+  searchUsers: function(req, res) {
     userId = req.body.userId;
     if (req.body.ageMin) {
       ageMin = req.body.ageMin;

@@ -13,7 +13,7 @@ var geolocationCtrl = require("./controllers/geolocationCtrl");
 var settingsCtrl = require("./controllers/settingsCtrl");
 var preferencesCtrl = require("./controllers/preferencesCtrl");
 var settingsCtrl = require("./controllers/settingsCtrl");
-var showUsersCtrl = require("./controllers/showUsersCtrl");
+var searchUsersCtrl = require("./controllers/searchUsersCtrl");
 //Routes
 exports.router = (function() {
   var Router = express.Router();
@@ -42,6 +42,6 @@ exports.router = (function() {
   Router.post("/preferences/display", preferencesCtrl.displayPreferences);
   Router.post("/preferences/update", preferencesCtrl.updatePreferences);
   Router.post("/settings", settingsCtrl.settings);
-  Router.post("/showUsers", showUsersCtrl.showUsers);
+  Router.post("/searchUsers", searchUsersCtrl.searchUsers);
   return Router;
 })();
