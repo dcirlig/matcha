@@ -8,6 +8,7 @@ import UserProfilPage from "./components/Profil/UserProfilPage";
 import HomePage from "./components/Navigation/HomePage";
 // import Footer from "./components/Navigation/Footer";
 import NotFoundPage from "./components/Navigation/NotFoundPage";
+import SearchUsersPage from "./components/Search/SearchUsers";
 import * as routes from "./constants/routes";
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
@@ -62,7 +63,16 @@ const App = () => (
           path={routes.LOG_OUT}
           render={props => <LogOut {...props} />}
         />
-        <Route render={props => <NotFoundPage {...props} />} />
+        <Route
+          exact
+          path={routes.NOT_FOUND}
+          render={props => <NotFoundPage {...props} />}
+        />
+        <Route
+          exact
+          path={routes.SEARCH_USERS_PAGE}
+          render={props => <SearchUsersPage {...props} />}
+        />
       </Switch>
     </div>
   </Router>

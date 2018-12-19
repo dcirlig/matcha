@@ -7,3 +7,4 @@ export const USER_PROFIL_PAGE = "/users/:username";
 export const LOG_OUT = "/logout";
 export const HOME_PAGE = "/";
 export const NOT_FOUND = "/notfound";
+export const SEARCH_USERS_PAGE = "/search";
