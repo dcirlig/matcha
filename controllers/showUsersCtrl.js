@@ -57,16 +57,14 @@ module.exports = {
       listTags = [];
     }
 
-    var sql_start = `SELECT *
+    var sql_start = `SELECT  firstname, lastname, username, gender, age, bio, tags, sexual_orientation, profil_image, popularity_score, latitude, longitude
     FROM users
     INNER JOIN geolocation ON users.userId = geolocation.userId
     WHERE`;
     users.findOne("userId", userId, function(find) {
       if (find) {
-        sql = `SELECT *
-            FROM users
-            INNER JOIN geolocation ON users.userId = geolocation.userId
-        WHERE users.userId=?`;
+        condition = ` users.userId=?`;
+        sql = sql_start + condition;
         connection.query(sql, userId, function(err, result) {
           if (err) console.log(err);
           if (result) {
@@ -132,9 +130,6 @@ module.exports = {
                       }
                     });
                     user.common_tags = count;
-
-                    // console.log(obj.length);
-                    // console.log(Object.keys(listTags).length);
                     if (listTags.length > 0) {
                       count = 0;
                       listTags.forEach(tag => {
@@ -153,15 +148,54 @@ module.exports = {
                     if (user.age < ageMin || user.age > ageMax) {
                       results = results.filter(el => el.userId !== user.userId);
                     }
+                    if (user.dist > distMax) {
+                      results = results.filter(el => el.userId !== user.userId);
+                    }
+                    if (
+                      user.popularity_score < popularityScoreMin ||
+                      user.popularity_score > popularityScoreMax
+                    ) {
+                      results = results.filter(el => el.userId !== user.userId);
+                    }
                   });
-                  // console.log(results);
                   const list_sort_users = JSON.parse(JSON.stringify(results));
-                  list_sort_users.sort(
-                    (a, b) =>
-                      a.dist - b.dist ||
-                      b.common_tags - a.common_tags ||
-                      b.popularity_score - a.popularity_score
-                  );
+                  if (req.body.age) {
+                    list_sort_users.sort(
+                      (a, b) =>
+                        a.age - b.age ||
+                        a.dist - b.dist ||
+                        b.common_tags - a.common_tags ||
+                        b.popularity_score - a.popularity_score
+                    );
+                  } else if (req.body.location) {
+                    list_sort_users.sort(
+                      (a, b) =>
+                        a.dist - b.dist ||
+                        b.common_tags - a.common_tags ||
+                        b.popularity_score - a.popularity_score
+                    );
+                  } else if (req.body.popularity) {
+                    list_sort_users.sort(
+                      (a, b) =>
+                        b.popularity_score - a.popularity_score ||
+                        a.dist - b.dist ||
+                        b.common_tags - a.common_tags
+                    );
+                  } else if (req.body.tags) {
+                    list_sort_users.sort(
+                      (a, b) =>
+                        b.common_tags - a.common_tags ||
+                        a.dist - b.dist ||
+                        b.popularity_score - a.popularity_score
+                    );
+                  } else {
+                    list_sort_users.sort(
+                      (a, b) =>
+                        a.dist - b.dist ||
+                        b.common_tags - a.common_tags ||
+                        b.popularity_score - a.popularity_score
+                    );
+                  }
                   return res.json({ user_list: list_sort_users });
                 } else {
                   return res.json({ success: "0 resultat" });
