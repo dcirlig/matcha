@@ -2,10 +2,13 @@ import React, { Component } from "react";
 import { Slider } from "antd";
 import "antd/dist/antd.css";
 import axios from "axios";
-import { Card } from "antd";
+import { Card, Select } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const { Meta } = Card;
+const Option = Select.Option;
+
 const INITIAL_STATE = {
   userId: {
     userId: sessionStorage.getItem("userId")
@@ -17,6 +20,10 @@ const INITIAL_STATE = {
     listTags: "",
     usersList: [],
     userId: sessionStorage.getItem("userId")
+  },
+  sortBy: {
+    sortBy: "",
+    usersList: []
   }
 };
 
@@ -36,7 +43,10 @@ class SearchUsersPage extends Component {
         const searchOptions = Object.assign({}, this.state.searchOptions, {
           usersList: res.data.user_list
         });
-        this.setState({ searchOptions });
+        const sortBy = Object.assign({}, this.state.sortBy, {
+          usersList: res.data.user_list
+        });
+        this.setState({ searchOptions: searchOptions, sortBy: sortBy });
       } else {
         console.log("error");
       }
@@ -70,14 +80,35 @@ class SearchUsersPage extends Component {
     });
     this.setState({ searchOptions });
   };
-  handleSubmit = e => {
-    e.preventDefault();
-    axios.post(`/api/searchUsers`, this.state).then(res => {
+
+  onChangeOption = async e => {
+    var sortBy = Object.assign({}, this.state.sortBy, {
+      sortBy: e
+    });
+    await this.setState({ sortBy });
+    axios.post(`/api/searchUsers`, this.state.sortBy).then(res => {
       if (res.data.user_list) {
         const searchOptions = Object.assign({}, this.state.searchOptions, {
           usersList: res.data.user_list
         });
         this.setState({ searchOptions });
+      } else {
+        console.log("error");
+      }
+    });
+  };
+
+  handleSubmit = async e => {
+    e.preventDefault();
+    axios.post(`/api/searchUsers`, this.state.searchOptions).then(res => {
+      if (res.data.user_list) {
+        const searchOptions = Object.assign({}, this.state.searchOptions, {
+          usersList: res.data.user_list
+        });
+        const sortBy = Object.assign({}, this.state.sortBy, {
+          usersList: res.data.user_list
+        });
+        this.setState({ searchOptions: searchOptions, sortBy: sortBy });
       } else {
         console.log("error");
       }
@@ -129,6 +160,26 @@ class SearchUsersPage extends Component {
               Search
             </button>
           </form>
+          <div className="col-md-4">
+            <Select
+              showSearch
+              style={{ width: 200 }}
+              placeholder="Sort by"
+              optionFilterProp="children"
+              onChange={this.onChangeOption}
+              filterOption={(input, option) =>
+                option.props.children
+                  .toLowerCase()
+                  .indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              <Option value="age">Age</Option>
+              <Option value="location">Location</Option>
+              <Option value="popularity">Popularity score</Option>
+              <Option value="tags">Common tags</Option>
+              <Option value="default">Default</Option>
+            </Select>
+          </div>
         </div>
 
         {usersList.length > 0 ? (
