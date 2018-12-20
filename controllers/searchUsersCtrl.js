@@ -22,26 +22,10 @@ function deg2rad(deg) {
 
 module.exports = {
   searchUsers: function(req, res) {
-    console.log("body", req.body);
-    var userId = req.body.userId;
-    var ageInterval = req.body.ageInterval;
-    var ageMin = ageInterval[0];
-    var ageMax = ageInterval[1];
-    var distMax = req.body.distMax;
-    var popularityScoreInterval = req.body.popularityScoreInterval;
-    var popularityScoreMin = popularityScoreInterval[0];
-    var popularityScoreMax = popularityScoreInterval[1];
+    if (req.body.searchOptions) userId = req.body.searchOptions.userId;
+    else userId = req.body.userId;
 
-    if (req.body.listTags) {
-      listTags = req.body.listTags;
-      if (listTags.length > 0) {
-        listTags = listTags.split(", ");
-      } else listTags = [];
-    } else {
-      listTags = [];
-    }
-
-    var sql_start = `SELECT  firstname, lastname, username, gender, age, bio, tags, sexual_orientation, profil_image, popularity_score, latitude, longitude
+    var sql_start = `SELECT  *
     FROM users
     INNER JOIN geolocation ON users.userId = geolocation.userId
     WHERE`;
@@ -114,33 +98,71 @@ module.exports = {
                       }
                     });
                     user.common_tags = count;
-                    if (listTags.length > 0) {
-                      count = 0;
-                      listTags.forEach(tag => {
-                        if (user.tags !== null) {
-                          if (user.tags.indexOf(tag) != -1) {
-                            count += 1;
+                    if (req.body.searchOptions) {
+                      var searchOptions = req.body.searchOptions;
+                      var ageInterval = searchOptions.ageInterval;
+                      var ageMin = ageInterval[0];
+                      var ageMax = ageInterval[1];
+                      var distMax = searchOptions.distMax;
+                      var popularityScoreInterval =
+                        searchOptions.popularityScoreInterval;
+                      var popularityScoreMin = popularityScoreInterval[0];
+                      var popularityScoreMax = popularityScoreInterval[1];
+
+                      if (searchOptions.listTags) {
+                        listTags = req.body.searchOptions.listTags;
+                        if (searchOptions.listTags.length > 0) {
+                          listTags = searchOptions.listTags.split(", ");
+                        } else listTags = [];
+                      } else {
+                        listTags = [];
+                      }
+                      if (listTags.length > 0) {
+                        count = 0;
+                        listTags.forEach(tag => {
+                          if (user.tags !== null) {
+                            if (user.tags.indexOf(tag) != -1) {
+                              count += 1;
+                            }
                           }
+                        });
+                        if (count == 0) {
+                          results = results.filter(
+                            el => el.userId !== user.userId
+                          );
                         }
-                      });
-                      if (count == 0) {
+                      }
+                      if (
+                        user.age < ageMin ||
+                        (user.age > ageMax && ageMax != 99)
+                      ) {
                         results = results.filter(
-                          el => el.userId !== user.userId
+                          el => el.userId === user.userId
+                        );
+                      }
+                      if (user.dist > distMax) {
+                        results = results.filter(
+                          el => el.userId === user.userId
+                        );
+                      }
+                      if (
+                        user.popularity_score < popularityScoreMin ||
+                        (user.popularity_score > popularityScoreMax &&
+                          popularityScoreMax != 1000)
+                      ) {
+                        results = results.filter(
+                          el => el.userId === user.userId
                         );
                       }
                     }
-                    if (user.age < ageMin || user.age > ageMax) {
-                      results = results.filter(el => el.userId !== user.userId);
-                    }
-                    if (user.dist > distMax) {
-                      results = results.filter(el => el.userId !== user.userId);
-                    }
-                    if (
-                      user.popularity_score < popularityScoreMin ||
-                      user.popularity_score > popularityScoreMax
-                    ) {
-                      results = results.filter(el => el.userId !== user.userId);
-                    }
+                    var usrTgas = user.tags.split(", ");
+                    var newTags = usrTgas.map(tag => {
+                      return {
+                        id: tag,
+                        text: "#" + tag
+                      };
+                    });
+                    user.tags = newTags;
                   });
                   const list_sort_users = JSON.parse(JSON.stringify(results));
                   if (req.body.age) {
