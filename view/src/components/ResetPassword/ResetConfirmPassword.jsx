@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { FormErrors } from "../../constants/utils";
 import "../../index.css";
+import ResetModal from "../RegisterAndConnection/RegisterModal";
 
 const INITIAL_STATE = {
   newpasswd: "",
@@ -22,6 +23,7 @@ class ResetConfirmPassword extends Component {
     this.state = { ...INITIAL_STATE };
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
   onChange = e => {
@@ -75,20 +77,19 @@ class ResetConfirmPassword extends Component {
 
   validateForm() {
     this.setState({
-      formValid:
-        this.state.newPasswdValid &&
-        this.state.confNewPasswdValid &&
-        this.state.newpasswd === this.state.confnewpasswd
+      formValid: this.state.newPasswdValid && this.state.confNewPasswdValid
     });
   }
 
   onSubmit = event => {
+    event.preventDefault();
     axios
       .post(
         `/api/users/password/reset/confirm/${this.props.match.params.token}`,
         this.state
       )
       .then(res => {
+        console.log("resData= ", res.data);
         if (res.data.success) {
           this.setState({ succes: res.data.succes });
         } else if (res.data.error) {
@@ -97,62 +98,75 @@ class ResetConfirmPassword extends Component {
       })
       .catch(err => {});
     this.setState({ ...INITIAL_STATE });
-    event.preventDefault();
   };
 
   errorClass(error) {
     return error.length === 0 ? "" : "has-error";
   }
 
+  handleClearErrorMessage() {
+    this.setState({ error: null });
+  }
+
   render() {
     const { newpasswd, confnewpasswd, error, succes } = this.state;
     return (
       <div className="container">
-        <form>
-          <div
-            className={`form-group row
+        <div>
+          <form>
+            <div
+              className={`form-group row
                ${this.errorClass(this.state.formErrors.newpasswd)}`}
-          >
-            <label htmlFor="newUserPassword">New Password *</label>
-            <input
-              name="newpasswd"
-              type="password"
-              className="form-control"
-              id="newUserPassword"
-              placeholder="Password"
-              onChange={e => this.onChange(e)}
-              value={newpasswd}
-            />
-          </div>
-          <div
-            className={`form-group row
+            >
+              <label htmlFor="newUserPassword">New Password *</label>
+              <input
+                name="newpasswd"
+                type="password"
+                className="form-control"
+                id="newUserPassword"
+                placeholder="Password"
+                onChange={e => this.onChange(e)}
+                value={newpasswd}
+              />
+            </div>
+            <div
+              className={`form-group row
                ${this.errorClass(this.state.formErrors.confnewpasswd)}`}
-          >
-            <label htmlFor="confNewUserPassword">Confirm New Password *</label>
-            <input
-              name="confnewpasswd"
-              type="password"
-              className="form-control"
-              id="confNewUserPassword"
-              placeholder="Password"
-              onChange={e => this.onChange(e)}
-              value={confnewpasswd}
-            />
-          </div>
+            >
+              <label htmlFor="confNewUserPassword">
+                Confirm New Password *
+              </label>
+              <input
+                name="confnewpasswd"
+                type="password"
+                className="form-control"
+                id="confNewUserPassword"
+                placeholder="Password"
+                onChange={e => this.onChange(e)}
+                value={confnewpasswd}
+              />
+            </div>
 
-          <div className="panel panel-default">
-            <FormErrors formErrors={this.state.formErrors} />
-            <p>{this.response(error, succes)}</p>
-          </div>
-          <button
-            disabled={!this.state.formValid}
-            type="submit"
-            className="btn btn-primary"
-            onClick={this.onSubmit}
-          >
-            Register
-          </button>
-        </form>
+            <div className="panel panel-default">
+              <FormErrors formErrors={this.state.formErrors} />
+              <p>{this.response(error, succes)}</p>
+            </div>
+            <button
+              disabled={!this.state.formValid}
+              type="submit"
+              className="btn btn-primary"
+              onClick={this.onSubmit}
+            >
+              Register
+            </button>
+          </form>
+        </div>
+
+        {console.log(error)}
+        <ResetModal
+          errorMessage={error}
+          handleClearErrorMessage={this.handleClearErrorMessage}
+        />
       </div>
     );
   }
