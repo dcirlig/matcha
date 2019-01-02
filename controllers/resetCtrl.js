@@ -36,7 +36,7 @@ module.exports = {
             if (result) {
               result.forEach(element => {
                 var secretToken = randomstring.generate();
-                objUpdate = { resetPasswordToken: secretToken };
+                objUpdate = { secretToken: secretToken };
                 models.updateUser(objUpdate, element.userId);
                 var url = `https://localhost:4000/password/reset/confirm/${secretToken}`;
 
@@ -45,7 +45,7 @@ module.exports = {
                   subject: "Resset password",
                   html: `	
                   Hi ${element.username},
-                  We got a request to reset your Instagram password. <a href="${url}">${url}</a>`
+                  We got a request to reset your Matcha password. <a href="${url}">${url}</a>`
                 });
               });
               return res.status(200).json({

@@ -87,11 +87,9 @@ module.exports = {
               userData.passwd = bcrypt.hashSync(userData.passwd);
 
               var secretToken = randomstring.generate();
-              userData.secretTokenEmail = secretToken;
+              userData.secretToken = secretToken;
               models.createUser(userData);
-              var url = `https://localhost:4000/verify/${
-                userData.secretTokenEmail
-              }`;
+              var url = `https://localhost:4000/verify/${userData.secretToken}`;
 
               transporter.sendMail({
                 to: userData.email,

@@ -21,10 +21,7 @@ module.exports = {
         models.getUser("username", userData.username, function(result) {
           if (result) {
             result.forEach(function(element) {
-              if (
-                element.emailVerified == false &&
-                element.secretTokenEmail != ""
-              ) {
+              if (element.emailVerified == false && element.secretToken != "") {
                 return res.json({ error: "Please verify your email" });
               } else {
                 bcrypt.compare(userData.passwd, element.passwd, function(

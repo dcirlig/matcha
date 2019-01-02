@@ -8,15 +8,12 @@ module.exports = {
   verify: function(req, res) {
     if (req.params.token) {
       var token = escapeHtml(req.params.token);
-      models.getUser("secretTokenEmail", token, function(result) {
+      models.getUser("secretToken", token, function(result) {
         if (result) {
           result.forEach(function(element) {
-            if (
-              element.secretTokenEmail == token &&
-              element.secretTokenEmail != ""
-            ) {
+            if (element.secretToken == token && element.secretToken != "") {
               if (element.emailVerified == false) {
-                objUpdate = { emailVerified: true, secretTokenEmail: "" };
+                objUpdate = { emailVerified: true, secretToken: "" };
                 models.updateUser(objUpdate, element.userId);
                 return res.status(200).json({
                   success:

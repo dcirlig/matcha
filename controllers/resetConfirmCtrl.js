@@ -9,9 +9,9 @@ module.exports = {
     // Params
     if (req.params.token) {
       var token = req.params.token;
-      models.findOne("resetPasswordToken", token, function(find) {
+      models.findOne("secretToken", token, function(find) {
         if (find) {
-          models.getUser("resetPasswordToken", token, function(result) {
+          models.getUser("secretToken", token, function(result) {
             if (result) {
               result.forEach(element => {
                 var password = req.body.newpasswd;
@@ -30,7 +30,7 @@ module.exports = {
                     resBycrypt
                   ) {
                     if (resBycrypt) {
-                      objUpdate = { passwd: password, resetPasswordToken: "" };
+                      objUpdate = { passwd: password, secretToken: "" };
                       models.updateUser(objUpdate, element.userId);
                       return res.status(200).json({
                         success: "Your password is reset successfully"
