@@ -9,46 +9,55 @@ module.exports = {
   userProfil: function(req, res) {
     if (req.params.username) {
       var username = escapeHtml(req.params.username);
-    }
-    if (username) {
       models.findOne("username", username, function(find) {
         if (find) {
           models.getUser("username", username, function(result) {
             if (result) {
-              if (result[0].tags) {
-                const tagTab = result[0].tags.split(", ");
-                var newTags = tagTab.map(tag => {
-                  return {
-                    id: tag,
-                    text: "#" + tag
-                  };
-                });
-              }
-
-              imgModels.getImage("userId", result[0].userId, function(images) {
-                if (images) {
-                  imagesUser = images;
+              result.forEach(element => {
+                if (element.tags) {
+                  const tagTab = element.tags.split(", ");
+                  var newTags = tagTab.map(tag => {
+                    return {
+                      id: tag,
+                      text: "#" + tag
+                    };
+                  });
+                  element.tags = newTags;
                 } else {
-                  imagesUser = "";
+                  element.tags = [];
                 }
-                res.status(200).json({
-                  firstname: result[0].firstname,
-                  lastname: result[0].lastname,
-                  username: result[0].username,
-                  gender: result[0].gender,
-                  age: result[0].age,
-                  bio: result[0].bio,
-                  tags: newTags,
-                  location: result[0].localisation,
-                  sexualOrientation: result[0].sexual_orientation,
-                  profilImage: result[0].profil_image,
-                  images: imagesUser
+                imgModels.getImage("userId", element.userId, function(images) {
+                  if (images) {
+                    imagesUser = images;
+                  } else {
+                    imagesUser = "";
+                  }
+                  element.images = imagesUser;
+                  var user = [
+                    {
+                      firstname: element.firstname,
+                      lastname: element.lastname,
+                      username: element.username,
+                      gender: element.gender,
+                      age: element.age,
+                      bio: element.bio,
+                      tags: element.tags,
+                      location: element.localisation,
+                      sexualOrientation: element.sexual_orientation,
+                      profilImage: element.profil_image,
+                      images: imagesUser
+                    }
+                  ];
+
+                  return res.json({ success: user });
                 });
               });
+            } else {
+              return res.json({ error: "This user does not exists" });
             }
           });
         } else {
-          res.json({
+          return res.json({
             error:
               "This member does not exist or did not complete his/her profile info."
           });
@@ -57,49 +66,3 @@ module.exports = {
     }
   }
 };
-// module.exports = {
-//   userProfil: function(req, res) {
-//     console.log(req.params);
-
-//   if (req.params.username) {
-//     console.log("coucou");
-//     var username = escapeHtml(req.params.username);
-//   }
-// }
-//   if (username) {
-//     models.findOne("username", username, function(find) {
-//       console.log("find", find);
-//     });
-//   }
-//   // }
-// }
-//           if (find) {
-//             models.getUser("username", username, function(result) {
-//               if (result) {
-//                 result.forEach(element => {
-//                   models.updateUser(
-//                     `localisation='${userData.localisation}', bio='${
-//                       userData.bio
-//                     }', gender = '${userData.gender}', sexual_orientation='${
-//                       userData.sexual_orientation
-//                     }', profil_image='${userData.profil_image}'`,
-//                     element.userId
-//                   );
-//                   return res.status(200).json({
-//                     success: "Successfully completed"
-//                   });
-//                 });
-//               } else {
-//                 res.json({ error: "user does not exists" });
-//               }
-//             });
-//           } else {
-//             return res.json({ error: "User does not exist" });
-//           }
-//         });
-//       } else {
-//         res.json({ error: "Please complete the required fields" });
-//       }
-//     }
-//   }
-// };

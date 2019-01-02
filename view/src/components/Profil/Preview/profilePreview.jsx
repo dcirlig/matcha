@@ -14,43 +14,19 @@ class profilePreview extends React.Component {
 
     this.state = {
       isLoggedIn: true,
-      username: "",
-      profilImage: "",
-      firstname: "",
-      lastname: "",
-      gender: "",
-      age: "",
-      bio: "",
-      tags: [],
-      location: "",
-      sexualOrientation: "",
-      content: []
+      redirect: false,
+      user: []
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     axios
       .get(`/api/users/${this.props.match.params.username}`)
-
       .then(async res => {
-        if (res.data.images) {
-          var images = res.data.images;
-        } else {
-          images = "";
+        if (res.data.success) {
+          var data = res.data.success;
+          this.setState({ user: data });
         }
-        await this.setState({
-          username: res.data.username,
-          profilImage: res.data.profilImage,
-          firstname: res.data.firstname,
-          lastname: res.data.lastname,
-          gender: res.data.gender,
-          age: res.data.age,
-          bio: res.data.bio,
-          tags: res.data.tags,
-          location: res.data.location,
-          sexualOrientation: res.data.sexualOrientation,
-          content: images
-        });
       })
       .catch(err => {
         console.log(err);
@@ -64,65 +40,59 @@ class profilePreview extends React.Component {
   }
 
   render() {
-    const {
-      profilImage,
-      username,
-      bio,
-      tags,
-      firstname,
-      lastname,
-      age,
-      gender,
-      sexualOrientation,
-      location,
-      content
-    } = this.state;
-    const title = "@" + username;
-    if (gender === "male") {
-      var genderDisplay = "Man";
-    } else if (gender === "female") {
-      genderDisplay = "Woman";
-    }
+    const { user } = this.state;
+
     return (
-      <Card
-        hoverable
-        style={{ width: 600, height: 1000 }}
-        cover={
-          <img
-            alt="ProfilePic"
-            className="profilePic"
-            src={`https://localhost:4000/${profilImage}`}
-          />
-        }
-      >
-        <br />
-        <p>
-          <b>
-            {firstname} {lastname} - {location} <br />
-            {genderDisplay}, {sexualOrientation} <br />
-            {age} y.o.
-          </b>
-        </p>
-        <Meta title={title} description={bio} />
-        <ReactTags tags={tags} readOnly={true} />
-        {content ? (
-          <Slider className="slider-wrapper" style={{ width: "50" }}>
-            {content.map((item, index) => (
-              <div
-                key={index}
-                className="slider-content"
-                style={{
-                  background: `url('https://localhost:4000/${
-                    item.url
-                  }') no-repeat center center`
-                }}
-              />
-            ))}
-          </Slider>
-        ) : (
-          ""
-        )}
-      </Card>
+      <div>
+        {user.map((item, index) => (
+          <div key={index}>
+            <Card
+              hoverable
+              style={{ width: 600, height: 1000 }}
+              cover={
+                <img
+                  alt="ProfilePic"
+                  className="profilePic"
+                  src={
+                    item.profilImage
+                      ? `https://localhost:4000/${item.profilImage}`
+                      : ""
+                  }
+                />
+              }
+            >
+              <br />
+              <p>
+                <b>
+                  {item.firstname} {item.lastname} - {item.location} <br />
+                  {item.gender === "male" ? "Man" : "Woman"},{" "}
+                  {item.sexualOrientation} <br />
+                  {item.age} y.o.
+                </b>
+              </p>
+              <Meta title={"@" + item.username} description={item.bio} />
+              <ReactTags tags={item.tags} readOnly={true} />
+              {item.images ? (
+                <Slider className="slider-wrapper" style={{ width: "50" }}>
+                  {item.images.map((item, index) => (
+                    <div
+                      key={index}
+                      className="slider-content"
+                      style={{
+                        background: `url('https://localhost:4000/${
+                          item.url
+                        }') no-repeat center center`
+                      }}
+                    />
+                  ))}
+                </Slider>
+              ) : (
+                ""
+              )}
+            </Card>
+          </div>
+        ))}
+      </div>
     );
   }
 }

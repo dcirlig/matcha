@@ -3,7 +3,7 @@ import { MDBRow, MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 // import axios from "axios";
 // import { Redirect } from "react-router-dom";
 import Header from "../Navigation/Navigation";
-import * as routes from "../../constants/routes";
+// import * as routes from "../../constants/routes";
 import Avatar from "./UserPhoto/avatarPhoto";
 import UserProfileSettings from "./Settings/userProfileSettings";
 import UserAccountSettings from "./Settings/userAccountSettings";
@@ -15,7 +15,6 @@ class UserProfilPage extends Component {
     super(props);
     this.state = {
       isLoggedIn: true,
-      userData: sessionStorage.getItem("userData"),
       userId: sessionStorage.getItem("userId"),
       userUrl: "",
       profileSettings: true,
@@ -35,11 +34,11 @@ class UserProfilPage extends Component {
   }
 
   componentDidMount() {
-    sessionStorage.getItem("userData");
-    const userData = sessionStorage.getItem("userData");
-    if (userData !== this.props.match.params.username) {
-      window.location = routes.NOT_FOUND;
-    }
+    // sessionStorage.getItem("userData");
+    // const userData = sessionStorage.getItem("userData");
+    // if (userData !== this.props.match.params.username) {
+    //   // window.location = routes.NOT_FOUND;
+    // }
   }
 
   componentDidUpdate() {
@@ -54,6 +53,7 @@ class UserProfilPage extends Component {
 
   render() {
     const { profileSettings, accountSettings } = this.state;
+
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
@@ -110,6 +110,8 @@ class UserProfilPage extends Component {
   }
 }
 
-// export default (this._isMounted ? windowSize(UserProfilPage) : UserProfilPage);
+export default (sessionStorage.getItem("userData")
+  ? windowSize(UserProfilPage)
+  : UserProfilPage);
 
-export default windowSize(UserProfilPage);
+// export default windowSize(UserProfilPage);
