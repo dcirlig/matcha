@@ -69,9 +69,21 @@ con.connect(function (err) {
       con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table users");
-        fakeUsers.fakeUsers();
-        console.log("Insert random users");
-        fakeUsers.fakeUsers();
+        var sql = `CREATE TABLE if NOT EXISTS geolocation
+      (
+      geolocId             INTEGER AUTO_INCREMENT PRIMARY KEY,
+      latitude             VARCHAR(45) NOT NULL,
+      longitude            VARCHAR(45) NOT NULL,
+      userId               INTEGER NOT NULL,
+      FOREIGN KEY (userId) REFERENCES users(userId)
+      )`;
+
+        con.query(sql, function (err, result) {
+          if (err) console.log(err);
+          console.log("Create table geolocation");
+          fakeUsers.fakeUsers();
+          console.log("Insert random users");
+        });
       });
 
       var sql = `CREATE TABLE if NOT EXISTS images
@@ -105,20 +117,6 @@ con.connect(function (err) {
       con.query(sql, [tags], function (err, result) {
         if (err) console.log(err);
         console.log("Create suggested interests");
-      });
-
-      var sql = `CREATE TABLE if NOT EXISTS geolocation
-        (
-        geolocId             INTEGER AUTO_INCREMENT PRIMARY KEY,
-        latitude             VARCHAR(45) NOT NULL,
-        longitude            VARCHAR(45) NOT NULL,
-        userId               INTEGER NOT NULL,
-        FOREIGN KEY (userId) REFERENCES users(userId)
-        )`;
-
-      con.query(sql, function (err, result) {
-        if (err) console.log(err);
-        console.log("Create table geolocation");
       });
     });
   });
