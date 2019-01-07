@@ -5,7 +5,7 @@ import axios from "axios";
 import { Card, Select } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import Header from "../Navigation/Navigation";
 const { Meta } = Card;
 const Option = Select.Option;
 
@@ -24,7 +24,8 @@ const INITIAL_STATE = {
   sortBy: {
     sortBy: "",
     usersList: []
-  }
+  },
+  isLoggedIn: true
 };
 
 class SearchUsersPage extends Component {
@@ -38,7 +39,7 @@ class SearchUsersPage extends Component {
   }
 
   componentWillMount() {
-    axios.post(`/api/searchUsers`, this.state.userId).then(res => {
+    axios.post(`/api/explorer`, this.state.userId).then(res => {
       if (res.data.user_list) {
         const searchOptions = Object.assign({}, this.state.searchOptions, {
           usersList: res.data.user_list
@@ -86,7 +87,7 @@ class SearchUsersPage extends Component {
       sortBy: e
     });
     await this.setState({ sortBy });
-    axios.post(`/api/searchUsers`, this.state.sortBy).then(res => {
+    axios.post(`/api/explorer`, this.state.sortBy).then(res => {
       if (res.data.user_list) {
         const searchOptions = Object.assign({}, this.state.searchOptions, {
           usersList: res.data.user_list
@@ -100,7 +101,7 @@ class SearchUsersPage extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
-    axios.post(`/api/searchUsers`, this.state.searchOptions).then(res => {
+    axios.post(`/api/explorer`, this.state.searchOptions).then(res => {
       if (res.data.user_list) {
         const searchOptions = Object.assign({}, this.state.searchOptions, {
           usersList: res.data.user_list
@@ -119,104 +120,107 @@ class SearchUsersPage extends Component {
     const { searchOptions } = this.state;
     var usersList = searchOptions.usersList;
     return (
-      <div className="container">
-        <div className="col-md-4">
-          <form>
-            <Slider
-              range
-              min={18}
-              max={99}
-              value={searchOptions.ageInterval}
-              name="ageInterval"
-              onChange={this.onChangeAge}
-            />
-
-            <Slider
-              max={100}
-              value={searchOptions.distMax}
-              onChange={this.onChangeDistance}
-              name="distMax"
-            />
-            <Slider
-              range
-              min={0}
-              max={1000}
-              value={searchOptions.popularityScoreInterval}
-              name="popularityScoreInterval"
-              onChange={this.onChangePopularity}
-            />
-            <label htmlFor="searchTagsInput">
-              Search by tags:
-              <input
-                name="listTags"
-                type="text"
-                id="searchTagsInput"
-                placeholder="green, geek"
-                onChange={e => this.onChangeTagsList(e)}
-                value={searchOptions.listTags}
+      <div>
+        <Header isLoggedIn={this.state.isLoggedIn} />
+        <div className="container">
+          <div className="col-md-4">
+            <form>
+              <Slider
+                range
+                min={18}
+                max={99}
+                value={searchOptions.ageInterval}
+                name="ageInterval"
+                onChange={this.onChangeAge}
               />
-            </label>
-            <button type="submit" onClick={e => this.handleSubmit(e)}>
-              Search
-            </button>
-          </form>
-          <div className="col-md-4">
-            <Select
-              showSearch
-              style={{ width: 200 }}
-              placeholder="Sort by"
-              optionFilterProp="children"
-              onChange={this.onChangeOption}
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              <Option value="age">Age</Option>
-              <Option value="location">Location</Option>
-              <Option value="popularity">Popularity score</Option>
-              <Option value="tags">Common tags</Option>
-              <Option value="default">Default</Option>
-            </Select>
-          </div>
-        </div>
 
-        {usersList.length > 0 ? (
-          <div className="col-md-4">
-            {usersList.map((item, index) => (
-              <div key={index}>
-                <Card
-                  hoverable
-                  style={{ width: 240 }}
-                  cover={
-                    <img
-                      alt="example"
-                      src={`https://localhost:4000/${item.profil_image}`}
+              <Slider
+                max={100}
+                value={searchOptions.distMax}
+                onChange={this.onChangeDistance}
+                name="distMax"
+              />
+              <Slider
+                range
+                min={0}
+                max={1000}
+                value={searchOptions.popularityScoreInterval}
+                name="popularityScoreInterval"
+                onChange={this.onChangePopularity}
+              />
+              <label htmlFor="searchTagsInput">
+                Search by tags:
+                <input
+                  name="listTags"
+                  type="text"
+                  id="searchTagsInput"
+                  placeholder="green, geek"
+                  onChange={e => this.onChangeTagsList(e)}
+                  value={searchOptions.listTags}
+                />
+              </label>
+              <button type="submit" onClick={e => this.handleSubmit(e)}>
+                Search
+              </button>
+            </form>
+            <div className="col-md-4">
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                placeholder="Sort by"
+                optionFilterProp="children"
+                onChange={this.onChangeOption}
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                <Option value="age">Age</Option>
+                <Option value="location">Location</Option>
+                <Option value="popularity">Popularity score</Option>
+                <Option value="tags">Common tags</Option>
+                <Option value="default">Default</Option>
+              </Select>
+            </div>
+          </div>
+
+          {usersList.length > 0 ? (
+            <div className="col-md-4">
+              {usersList.map((item, index) => (
+                <div key={index}>
+                  <Card
+                    hoverable
+                    style={{ width: 240 }}
+                    cover={
+                      <img
+                        alt="example"
+                        src={`https://localhost:4000/${item.profil_image}`}
+                      />
+                    }
+                  >
+                    <Meta
+                      title={`${item.firstname} ${item.lastname}, ${
+                        item.age
+                      } years old`}
+                      description={item.bio}
                     />
-                  }
-                >
-                  <Meta
-                    title={`${item.firstname} ${item.lastname}, ${
-                      item.age
-                    } years old`}
-                    description={item.bio}
-                  />
-                  <ReactTags tags={item.tags} readOnly={true} />
-                  <p>{item.dist} km</p>
-                  <p>
-                    {item.gender === "male" ? "Man" : "Woman"},{" "}
-                    {item.sexual_orientation}
-                  </p>
-                </Card>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="col-md-4">
-            <p>No user finds</p>
-          </div>
-        )}
+                    <ReactTags tags={item.tags} readOnly={true} />
+                    <p>{item.dist} km</p>
+                    <p>
+                      {item.gender === "male" ? "Man" : "Woman"},{" "}
+                      {item.sexual_orientation}
+                    </p>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="col-md-4">
+              <p>No user finds</p>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
