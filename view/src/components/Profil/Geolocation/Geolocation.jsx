@@ -61,7 +61,7 @@ class geolocationComponent extends React.Component {
             await this.setState({ error: res.data.error });
           }
         })
-        .catch(err => {});
+        .catch(err => { });
     }
   }
 
@@ -90,11 +90,14 @@ class geolocationComponent extends React.Component {
     await reverse
       .getReverse(coordinates.coords.latitude, coordinates.coords.longitude)
       .then(async location => {
-        console.log(location.address);
         if (location.address.cityDistrict) {
           var fullAddress = location.address.cityDistrict;
         } else if (!location.address.cityDistrict && location.address.town) {
           fullAddress = location.address.town;
+        } else if (location.address.city) {
+          fullAddress = location.address.city;
+        } else if (location.address.village) {
+          fullAddress = location.address.village;
         }
         await this.setState({
           fullAddress: fullAddress,
@@ -120,7 +123,7 @@ class geolocationComponent extends React.Component {
           await this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   async handleErrors(error) {
@@ -170,23 +173,23 @@ class geolocationComponent extends React.Component {
             error,
             getCurrentPosition
           }) => (
-            <div>
-              <br />
-              <p className="tagIntro warm-flame-gradient">
-                or get geolocated with your browser
+              <div>
+                <br />
+                <p className="tagIntro warm-flame-gradient">
+                  or get geolocated with your browser
               </p>
-              <MDBBtn
-                onClick={getCurrentPosition}
-                className="small-button"
-                rounded
-                size="lg"
-                gradient="peach"
-              >
-                Refresh Position
+                <MDBBtn
+                  onClick={getCurrentPosition}
+                  className="small-button"
+                  rounded
+                  size="lg"
+                  gradient="peach"
+                >
+                  Refresh Position
                 <MDBIcon icon="map-pin" className="ml-2" size="lg" />
-              </MDBBtn>
-            </div>
-          )}
+                </MDBBtn>
+              </div>
+            )}
         />
         <RegisterModal
           errorMessage={error}
