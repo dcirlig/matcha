@@ -44,14 +44,14 @@ class tagsManager extends React.Component {
           this.setState({ tagsDB: newTags });
         }
         var tab = [];
-        res.data.globalTags.forEach(function(element) {
+        res.data.globalTags.forEach(function (element) {
           tab = tab.concat([{ id: element.content, text: element.content }]);
         });
         await this.setState({
           suggestions: [...this.state.suggestions, ...tab]
         });
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   onChange = e => {
@@ -104,7 +104,7 @@ class tagsManager extends React.Component {
           this.setState({ tagsDB: [] });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   async handleAddition(tag) {
@@ -121,7 +121,7 @@ class tagsManager extends React.Component {
             this.setState({ error: res.data.error });
           }
         })
-        .catch(err => {});
+        .catch(err => { });
       await this.setState(state => ({
         tagsDB: [...state.tagsDB, { id: tag.text, text: "#" + tag.text }],
         suggestions: [...state.suggestions, { id: tag.text, text: tag.text }],

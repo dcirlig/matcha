@@ -1,4 +1,5 @@
 var mysql = require("mysql");
+var fakeUsers = require("./fakeUsers");
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -6,10 +7,10 @@ var con = mysql.createConnection({
   password: "rootnode"
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
   if (err) console.log(err);
   var sql = `CREATE DATABASE IF NOT EXISTS db_matcha`;
-  con.query(sql, function(err, result) {
+  con.query(sql, function (err, result) {
     if (err) console.log(err);
     console.log("Database created!");
 
@@ -20,26 +21,26 @@ con.connect(function(err) {
       database: "db_matcha"
     });
 
-    con.connect(function(err) {
+    con.connect(function (err) {
       if (err) console.log(err);
       console.log("Connected to database!");
       sql = "DROP TABLE IF EXISTS `images`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete images table");
       });
       sql = "DROP TABLE IF EXISTS `interests`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete interests table");
       });
       sql = "DROP TABLE IF EXISTS `geolocation`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete geolocation table");
       });
       sql = "DROP TABLE IF EXISTS `users`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete users table");
       });
@@ -65,9 +66,12 @@ con.connect(function(err) {
     popularity_score    INT DEFAULT 0
     )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table users");
+        fakeUsers.fakeUsers();
+        console.log("Insert random users");
+        fakeUsers.fakeUsers();
       });
 
       var sql = `CREATE TABLE if NOT EXISTS images
@@ -79,9 +83,9 @@ con.connect(function(err) {
     FOREIGN KEY (userId) REFERENCES users(userId)
     )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
-        console.log("Create table interests");
+        console.log("Create table images");
       });
 
       var sql = `CREATE TABLE if NOT EXISTS interests
@@ -90,7 +94,7 @@ con.connect(function(err) {
       content            VARCHAR(45) NOT NULL
       )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table interests");
       });
@@ -98,11 +102,12 @@ con.connect(function(err) {
       const tags = [["organic"], ["geek"], ["piercing"], ["vegan"], ["PHP"]];
       var sql = "INSERT INTO interests (content) VALUES ?";
 
-      con.query(sql, [tags], function(err, result) {
+      con.query(sql, [tags], function (err, result) {
         if (err) console.log(err);
         console.log("Create suggested interests");
+      });
 
-        var sql = `CREATE TABLE if NOT EXISTS geolocation
+      var sql = `CREATE TABLE if NOT EXISTS geolocation
         (
         geolocId             INTEGER AUTO_INCREMENT PRIMARY KEY,
         latitude             VARCHAR(45) NOT NULL,
@@ -111,11 +116,12 @@ con.connect(function(err) {
         FOREIGN KEY (userId) REFERENCES users(userId)
         )`;
 
-        con.query(sql, function(err, result) {
-          if (err) console.log(err);
-          console.log("Create table geolocation");
-        });
+      con.query(sql, function (err, result) {
+        if (err) console.log(err);
+        console.log("Create table geolocation");
       });
     });
   });
 });
+
+// fakeUsers.fakeUsers();

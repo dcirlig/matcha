@@ -1,4 +1,7 @@
 .navbar-features {
+    position: fixed;
+    top: 0;
+    width: 100%;
     background-color: lighten($coral, 5%);
     font-weight: 500;
 }
