@@ -1,4 +1,5 @@
 var connection = require("../database/dbConnection");
+var modelsLoc = require("./geoloc");
 
 function createUser(userData) {
   sql = `INSERT INTO users SET ?`;
@@ -35,7 +36,19 @@ function getUser(field, userData, callback) {
   });
 }
 
+function createUserAndLocation(userData, userCoords) {
+  sql = `INSERT INTO users SET ?`;
+  connection.query(sql, userData, function (err, result) {
+    if (err) console.log(err);
+    else {
+      userCoords.userId = result.insertId
+      modelsLoc.createLocation(userCoords)
+    }
+  });
+}
+
 exports.createUser = createUser;
 exports.getUser = getUser;
 exports.findOne = findOne;
 exports.updateUser = updateUser;
+exports.createUserAndLocation = createUserAndLocation;
