@@ -21,7 +21,7 @@ function deg2rad(deg) {
 }
 
 module.exports = {
-  searchUsers: function(req, res) {
+  explorer: function(req, res) {
     if (req.body.sortBy) {
       var sortBy = req.body.sortBy;
       const list_sort_users = JSON.parse(JSON.stringify(req.body.usersList));

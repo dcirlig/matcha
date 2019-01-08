@@ -70,7 +70,7 @@ const App = () => (
         />
         <Route
           exact
-          path={routes.SEARCH_USERS_PAGE}
+          path={routes.EXPLORER_PAGE}
           render={props => <SearchUsersPage {...props} />}
         />
       </Switch>
