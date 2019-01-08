@@ -22,6 +22,7 @@ function deg2rad(deg) {
 
 module.exports = {
   explorer: function(req, res) {
+    console.log(req.body);
     if (req.body.sortBy) {
       var sortBy = req.body.sortBy;
       const list_sort_users = JSON.parse(JSON.stringify(req.body.usersList));
@@ -64,6 +65,7 @@ module.exports = {
       }
       return res.json({ user_list: list_sort_users });
     } else {
+      console.log(req.body);
       if (req.body.searchOptions) userId = req.body.searchOptions.userId;
       else userId = req.body.userId;
       var sql_start = `SELECT  *
@@ -150,7 +152,8 @@ module.exports = {
                         var popularityScoreMin = popularityScoreInterval[0];
                         var popularityScoreMax = popularityScoreInterval[1];
                         if (searchOptions.listTags) {
-                          listTags = req.body.searchOptions.listTags;
+                          listTags = searchOptions.listTags;
+                          console.log(listTags);
                           if (searchOptions.listTags.length > 0) {
                             listTags = searchOptions.listTags.split(", ");
                           } else listTags = [];
@@ -176,13 +179,15 @@ module.exports = {
                           user.age < ageMin ||
                           (user.age > ageMax && ageMax != 99)
                         ) {
+                          console.log("userIddddd", user.userId);
+
                           results = results.filter(
-                            el => el.userId === user.userId
+                            el => el.userId !== user.userId
                           );
                         }
                         if (user.dist > distMax) {
                           results = results.filter(
-                            el => el.userId === user.userId
+                            el => el.userId !== user.userId
                           );
                         }
                         if (
@@ -191,19 +196,24 @@ module.exports = {
                             popularityScoreMax != 1000)
                         ) {
                           results = results.filter(
-                            el => el.userId === user.userId
+                            el => el.userId !== user.userId
                           );
                         }
                       }
-                      var usrTgas = user.tags.split(", ");
-                      var newTags = usrTgas.map(tag => {
-                        return {
-                          id: tag,
-                          text: "#" + tag
-                        };
-                      });
-                      user.tags = newTags;
+
+                      if (user.tags) {
+                        console.log(user.tags);
+                        var usrTgas = user.tags.split(", ");
+                        var newTags = usrTgas.map(tag => {
+                          return {
+                            id: tag,
+                            text: "#" + tag
+                          };
+                        });
+                        user.tags = newTags;
+                      } else user.tags = [];
                     });
+
                     const list_sort_users = JSON.parse(JSON.stringify(results));
 
                     list_sort_users.sort(

@@ -30,20 +30,20 @@ class geolocationComponent extends React.Component {
     this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
-  async componentDidMount() {
-    await sessionStorage.getItem("userId");
+  componentDidMount() {
+    // sessionStorage.getItem("userId");
     if (
       sessionStorage.getItem("latitude") !== "" &&
       sessionStorage.getItem("longitude") !== ""
     ) {
-      await this.setState({
+      this.setState({
         userId: sessionStorage.getItem("userId"),
         coords: {
           latitude: sessionStorage.getItem("latitude"),
           longitude: sessionStorage.getItem("longitude")
         }
       });
-      await this.reverseLocation(this.state);
+      this.reverseLocation(this.state);
       sessionStorage.setItem("latitude", "");
       sessionStorage.setItem("longitude", "");
       return;
@@ -51,17 +51,17 @@ class geolocationComponent extends React.Component {
       axios
         .post(`/api/displayAddress`, sessionStorage)
 
-        .then(async res => {
+        .then(res => {
           if (res.data.success) {
-            await this.setState({
+            this.setState({
               success: res.data.success,
               fullAddress: res.data.fullAddress
             });
           } else if (res.data.error) {
-            await this.setState({ error: res.data.error });
+            this.setState({ error: res.data.error });
           }
         })
-        .catch(err => { });
+        .catch(err => {});
     }
   }
 
@@ -75,21 +75,21 @@ class geolocationComponent extends React.Component {
           },
           manuallyAddAddress: ""
         });
-        await this.reverseLocation(this.state);
+        this.reverseLocation(this.state);
       } else {
-        await this.setState({
+        this.setState({
           errors: "Invalid address! Please enter a valid one."
         });
       }
     }
   }
 
-  async reverseLocation(coordinates) {
+  reverseLocation(coordinates) {
     const reverse = new Geo.ReverseGeocoder();
 
-    await reverse
+    reverse
       .getReverse(coordinates.coords.latitude, coordinates.coords.longitude)
-      .then(async location => {
+      .then(location => {
         if (location.address.cityDistrict) {
           var fullAddress = location.address.cityDistrict;
         } else if (!location.address.cityDistrict && location.address.town) {
@@ -99,7 +99,7 @@ class geolocationComponent extends React.Component {
         } else if (location.address.village) {
           fullAddress = location.address.village;
         }
-        await this.setState({
+        this.setState({
           fullAddress: fullAddress,
           coords: {
             latitude: coordinates.coords.latitude,
@@ -113,22 +113,22 @@ class geolocationComponent extends React.Component {
     axios
       .post(`/api/fillAddress`, this.state)
 
-      .then(async res => {
+      .then(res => {
         if (res.data.success) {
-          await this.setState({
+          this.setState({
             success: res.data.success,
             fullAddress: res.data.fullAddress
           });
         } else if (res.data.error) {
-          await this.setState({ error: res.data.error });
+          this.setState({ error: res.data.error });
         }
       })
-      .catch(err => { });
+      .catch(err => {});
   }
 
-  async handleErrors(error) {
+  handleErrors(error) {
     if (error.message === "User denied Geolocation") {
-      await this.setState({
+      this.setState({
         error:
           "Geolocation is inactive! Please, activate it from your browser if you want to refresh your position."
       });
@@ -173,23 +173,23 @@ class geolocationComponent extends React.Component {
             error,
             getCurrentPosition
           }) => (
-              <div>
-                <br />
-                <p className="tagIntro warm-flame-gradient">
-                  or get geolocated with your browser
+            <div>
+              <br />
+              <p className="tagIntro warm-flame-gradient">
+                or get geolocated with your browser
               </p>
-                <MDBBtn
-                  onClick={getCurrentPosition}
-                  className="small-button"
-                  rounded
-                  size="lg"
-                  gradient="peach"
-                >
-                  Refresh Position
+              <MDBBtn
+                onClick={getCurrentPosition}
+                className="small-button"
+                rounded
+                size="lg"
+                gradient="peach"
+              >
+                Refresh Position
                 <MDBIcon icon="map-pin" className="ml-2" size="lg" />
-                </MDBBtn>
-              </div>
-            )}
+              </MDBBtn>
+            </div>
+          )}
         />
         <RegisterModal
           errorMessage={error}
