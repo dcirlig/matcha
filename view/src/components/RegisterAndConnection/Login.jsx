@@ -43,53 +43,64 @@ class LoginPage extends Component {
     this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
-  async getGeolocation() {
+  getGeolocation() {
     navigator.geolocation.getCurrentPosition(
-      async location => {
-        await sessionStorage.setItem("latitude", location.coords.latitude);
-        await sessionStorage.setItem("longitude", location.coords.longitude);
+      location => {
+        const coords = Object.assign({}, this.state.coords, {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude
+        });
+        this.setState({ coords });
       },
-      async error => {
-        await this.setState({ geoloc: false });
-        await iplocation(this.state.ip)
-          .then(async res => {
-            await sessionStorage.setItem("latitude", res.latitude);
-            await sessionStorage.setItem("longitude", res.longitude);
+      error => {
+        iplocation(this.state.ip)
+          .then(res => {
+            const coords = Object.assign({}, this.state.coords, {
+              latitude: res.latitude,
+              longitude: res.longitude
+            });
+            this.setState({ coords });
           })
           .catch(err => {});
       }
     );
   }
 
-  async getIpLocation() {
-    await publicIp.v4().then(async ip => {
-      await this.setState({ ip: ip });
+  getIpLocation() {
+    publicIp.v4().then(ip => {
+      this.setState({ ip: ip });
     });
-    await iplocation(this.state.ip)
-      .then(async res => {
-        await sessionStorage.setItem("latitude", res.latitude);
-        await sessionStorage.setItem("longitude", res.longitude);
+    iplocation(this.state.ip)
+      .then(res => {
+        const coords = Object.assign({}, this.state.coords, {
+          latitude: res.latitude,
+          longitude: res.longitude
+        });
+        this.setState({ coords });
       })
       .catch(err => {});
   }
 
-  onChange = async e => {
+  onChange = e => {
     const name = e.target.name;
     var value = e.target.value;
 
     if (name === "checkbox") {
-      value = !this.state.checkbox;
+      value = e.target.checked;
+      if (value) {
+        this.setState({ geoloc: 1 });
+      } else {
+        this.setState({ geoloc: 0 });
+      }
     }
-    await this.setState({ [name]: value }, () => {
+
+    this.setState({ [name]: value }, () => {
       this.validateField(name, value);
     });
-    if (this.state.geoloc === 0 || name === "checkbox") {
-      this.setState({ geoloc: 1 });
-      if (this.state.checkbox === true) {
-        await this.getGeolocation();
-      } else {
-        await this.getIpLocation();
-      }
+    if (this.state.geoloc === 0) {
+      this.getIpLocation();
+    } else {
+      this.getGeolocation();
     }
   };
 
@@ -138,16 +149,18 @@ class LoginPage extends Component {
     });
   }
 
-  onSubmit = async event => {
+  onSubmit = event => {
     axios
       .post(`/api/users/login`, this.state)
 
       .then(res => {
         if (res.data.success) {
-          this.setState({ success: res.data.success });
-          this.setState({ redirect: true });
           sessionStorage.setItem("userData", res.data.username);
           sessionStorage.setItem("userId", res.data.userId);
+          sessionStorage.setItem("latitude", res.data.coords.latitude);
+          sessionStorage.setItem("longitude", res.data.coords.longitude);
+          this.setState({ success: res.data.success });
+          this.setState({ redirect: true });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }

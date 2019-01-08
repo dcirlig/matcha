@@ -9,8 +9,8 @@ import UserProfileSettings from "./Settings/userProfileSettings";
 import UserAccountSettings from "./Settings/userAccountSettings";
 import ProfilePreview from "./Preview/profilePreview";
 import windowSize from "react-window-size";
-
 class UserProfilPage extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -34,6 +34,7 @@ class UserProfilPage extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     // sessionStorage.getItem("userData");
     // const userData = sessionStorage.getItem("userData");
     // if (userData !== this.props.match.params.username) {
@@ -42,16 +43,18 @@ class UserProfilPage extends Component {
   }
 
   componentDidUpdate() {
+    this._isMounted = true;
     window.scrollTo(0, 0);
     var myDiv = document.getElementById("lateralScroll");
     myDiv.scrollTop = 0;
   }
 
-  // componentWillUnmount() {
-  //   this._isMounted = false;
-  // }
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   render() {
+    console.log("isMounted", this._isMounted);
     const { profileSettings, accountSettings } = this.state;
 
     return (
@@ -110,8 +113,8 @@ class UserProfilPage extends Component {
   }
 }
 
-export default (sessionStorage.getItem("userData")
-  ? windowSize(UserProfilPage)
-  : UserProfilPage);
+// export default (sessionStorage.getItem("userData")
+//   ? windowSize(UserProfilPage)
+//   : UserProfilPage);
 
-// export default windowSize(UserProfilPage);
+export default windowSize(UserProfilPage);

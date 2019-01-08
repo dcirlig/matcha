@@ -9,9 +9,10 @@ module.exports = {
     // Params
     var userData = {
       username: req.body.username,
-      passwd: req.body.passwd
+      passwd: req.body.passwd,
+      latitude: req.body.coords.latitude,
+      longitude: req.body.coords.longitude
     };
-
     if (userData.username != null && userData.passwd != null) {
       if (!userData.username.match(/^[a-zA-Z0-9_]+$/)) {
         return res.json({
@@ -33,7 +34,11 @@ module.exports = {
                       success: "you are login",
                       userId: element.userId,
                       token: jwtUtils.generateTokenForUser(userData),
-                      username: element.username
+                      username: element.username,
+                      coords: {
+                        latitude: userData.latitude,
+                        longitude: userData.longitude
+                      }
                     });
                   } else {
                     return res.json({ error: "Wrong username or password" });

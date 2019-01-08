@@ -38,7 +38,7 @@ class SearchUsersPage extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     axios.post(`/api/explorer`, this.state.userId).then(res => {
       if (res.data.user_list) {
         const searchOptions = Object.assign({}, this.state.searchOptions, {
