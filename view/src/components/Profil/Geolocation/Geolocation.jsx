@@ -30,12 +30,12 @@ class geolocationComponent extends React.Component {
     this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
-  componentDidMount() {
-    // sessionStorage.getItem("userId");
+  async componentDidMount() {
     if (
       sessionStorage.getItem("latitude") !== "" &&
       sessionStorage.getItem("longitude") !== ""
     ) {
+      // console.log('hey')
       this.setState({
         userId: sessionStorage.getItem("userId"),
         coords: {
@@ -43,11 +43,12 @@ class geolocationComponent extends React.Component {
           longitude: sessionStorage.getItem("longitude")
         }
       });
-      this.reverseLocation(this.state);
+      await this.reverseLocation(this.state);
       sessionStorage.setItem("latitude", "");
       sessionStorage.setItem("longitude", "");
       return;
     } else {
+      // console.log('et non')
       axios
         .post(`/api/displayAddress`, sessionStorage)
 
@@ -61,11 +62,12 @@ class geolocationComponent extends React.Component {
             this.setState({ error: res.data.error });
           }
         })
-        .catch(err => {});
+        .catch(err => { });
     }
   }
 
   async onSelect(address) {
+    // console.log("coucou")
     if (address.center) {
       if (address.center[0] && address.center[1]) {
         await this.setState({
@@ -84,12 +86,15 @@ class geolocationComponent extends React.Component {
     }
   }
 
-  reverseLocation(coordinates) {
+  async reverseLocation(coordinates) {
+    console.log('coordinates', coordinates.coords)
     const reverse = new Geo.ReverseGeocoder();
 
-    reverse
+    await reverse
       .getReverse(coordinates.coords.latitude, coordinates.coords.longitude)
-      .then(location => {
+      .then(async location => {
+        console.log('hihihi')
+        console.log('location', location)
         if (location.address.cityDistrict) {
           var fullAddress = location.address.cityDistrict;
         } else if (!location.address.cityDistrict && location.address.town) {
@@ -99,7 +104,7 @@ class geolocationComponent extends React.Component {
         } else if (location.address.village) {
           fullAddress = location.address.village;
         }
-        this.setState({
+        await this.setState({
           fullAddress: fullAddress,
           coords: {
             latitude: coordinates.coords.latitude,
@@ -110,6 +115,8 @@ class geolocationComponent extends React.Component {
       .catch(err => {
         console.error(err);
       });
+    // console.log("MAJ")
+    // console.log('getGeoloc', this.state)
     axios
       .post(`/api/fillAddress`, this.state)
 
@@ -123,7 +130,7 @@ class geolocationComponent extends React.Component {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   handleErrors(error) {
@@ -173,23 +180,23 @@ class geolocationComponent extends React.Component {
             error,
             getCurrentPosition
           }) => (
-            <div>
-              <br />
-              <p className="tagIntro warm-flame-gradient">
-                or get geolocated with your browser
+              <div>
+                <br />
+                <p className="tagIntro warm-flame-gradient">
+                  or get geolocated with your browser
               </p>
-              <MDBBtn
-                onClick={getCurrentPosition}
-                className="small-button"
-                rounded
-                size="lg"
-                gradient="peach"
-              >
-                Refresh Position
+                <MDBBtn
+                  onClick={getCurrentPosition}
+                  className="small-button"
+                  rounded
+                  size="lg"
+                  gradient="peach"
+                >
+                  Refresh Position
                 <MDBIcon icon="map-pin" className="ml-2" size="lg" />
-              </MDBBtn>
-            </div>
-          )}
+                </MDBBtn>
+              </div>
+            )}
         />
         <RegisterModal
           errorMessage={error}

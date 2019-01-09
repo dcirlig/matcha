@@ -216,7 +216,7 @@ class SearchUsersPage extends Component {
                     <Meta
                       title={`${item.firstname} ${item.lastname}, ${
                         item.age
-                      } years old`}
+                        } years old`}
                       description={item.bio}
                     />
                     <ReactTags tags={item.tags} readOnly={true} />
@@ -230,10 +230,10 @@ class SearchUsersPage extends Component {
               ))}
             </div>
           ) : (
-            <div className="col-md-4">
-              <p>No user finds</p>
-            </div>
-          )}
+              <div className="col-md-4">
+                <p>No user finds</p>
+              </div>
+            )}
         </div>
       </div>
     );

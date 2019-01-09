@@ -2,7 +2,8 @@ var modelsLoc = require("../models/geoloc");
 var modelsUser = require("../models/user");
 
 module.exports = {
-  fillAddress: function(req, res) {
+  fillAddress: function (req, res) {
+    console.log(req.body)
     var locationData = {
       latitude: req.body.coords.latitude,
       longitude: req.body.coords.longitude,
@@ -36,7 +37,7 @@ module.exports = {
         error: "Invalid latitude or/and longitude value(s)."
       });
     }
-    modelsLoc.doesExist(userData, function(find) {
+    modelsLoc.doesExist(userData, function (find) {
       if (find) {
         modelsLoc.updateLocation(locationData, userData.userId);
       } else {
@@ -49,9 +50,9 @@ module.exports = {
       });
     });
   },
-  displayAddress: function(req, res) {
+  displayAddress: function (req, res) {
     const userId = req.body.userId;
-    modelsUser.getUser("userId", userId, function(result) {
+    modelsUser.getUser("userId", userId, function (result) {
       if (result) {
         return res.status(200).json({
           fullAddress: result[0].localisation,

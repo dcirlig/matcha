@@ -8,9 +8,9 @@ function distance(lat1, lon1, lat2, lon2) {
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c; // Distance in km
   return d;
@@ -69,11 +69,11 @@ module.exports = {
       FROM users
       INNER JOIN geolocation ON users.userId = geolocation.userId
       WHERE`;
-      users.findOne("userId", userId, function(find) {
+      users.findOne("userId", userId, function (find) {
         if (find) {
           condition = ` users.userId=?`;
           sql = sql_start + condition;
-          connection.query(sql, userId, function(err, result) {
+          connection.query(sql, userId, function (err, result) {
             if (err) console.log(err);
             if (JSON.parse(JSON.stringify(result)).length > 0) {
               result.forEach(element => {
@@ -118,7 +118,7 @@ module.exports = {
                     objData = [userId, "female", "heterosexual", "bisexual"];
                   }
                 }
-                connection.query(sql, objData, function(error, results) {
+                connection.query(sql, objData, function (error, results) {
                   if (error) console.log(error);
                   if (JSON.parse(JSON.stringify(results)).length > 0) {
                     results.forEach(user => {
