@@ -48,9 +48,9 @@ class LoginPage extends Component {
   }
 
   componentWillUnmount() {
-    console.log("coucou")
+    // console.log("coucou")
     this._isMounted = false;
-    console.log(this._isMounted)
+    // console.log(this._isMounted)
   }
 
   getGeolocation() {
@@ -109,7 +109,7 @@ class LoginPage extends Component {
     const { geoloc } = this.state
 
     if (name === "checkbox") {
-      console.log('coucou')
+      // console.log('coucou')
       if (this._isMounted === true) {
         this.setState({ geoloc: 1 })
       }
@@ -125,7 +125,7 @@ class LoginPage extends Component {
         this.validateField(name, value);
       });
     }
-    console.log(sessionStorage)
+    // console.log(sessionStorage)
   }
 
 
@@ -170,7 +170,7 @@ class LoginPage extends Component {
   };
 
   validateForm() {
-    console.log('isMounted', this._isMounted)
+    // console.log('isMounted', this._isMounted)
     if (this._isMounted) {
       this.setState({
         formValid: this.state.usernameValid && this.state.passwdValid
@@ -179,22 +179,25 @@ class LoginPage extends Component {
   }
 
   onSubmit = event => {
-    console.log(this.state)
+    // console.log(this.state)
     axios
       .post(`/api/users/login`, this.state)
 
-      .then(res => {
+      .then(async res => {
+        console.log(res.data)
         if (res.data.success) {
+          // console.log(res.data)
           sessionStorage.setItem("userData", res.data.username);
           sessionStorage.setItem("userId", res.data.userId);
           // console.log(res.data.coords)
           // sessionStorage.setItem("latitude", res.data.coords.latitude);
           // sessionStorage.setItem("longitude", res.data.coords.longitude);
-          if (this._isMounted) {
-            this._isMounted = false
-            // await this.setState({ success: res.data.success });
-            this.setState({ redirect: true });
-          }
+          // if (this._isMounted) {
+          // this._isMounted = false
+          // await this.setState({ success: res.data.success });
+          // console.log("etetet")
+          await this.setState({ redirect: true });
+          // }
           // window.location = 'https://localhost:4000/users/' + res.data.username
         } else if (res.data.error) {
           // this.setState({ error: res.data.error });
