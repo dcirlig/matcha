@@ -6,7 +6,7 @@ var models = require("../models/user");
 // Routes
 module.exports = {
   login: function (req, res) {
-    // console.log(req.body)
+    console.log(req.body)
     // Params
     var userData = {
       username: req.body.username,
