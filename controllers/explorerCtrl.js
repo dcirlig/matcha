@@ -21,11 +21,10 @@ function deg2rad(deg) {
 }
 
 module.exports = {
-  explorer: function (req, res) {
-    // console.log(req.body);
+  explorer: function(req, res) {
     if (req.body.sortBy) {
-      var sortBy = req.body.sortBy;
-      const list_sort_users = JSON.parse(JSON.stringify(req.body.usersList));
+      var sortBy = req.body.sortBy.sortBy;
+      var list_sort_users = req.body.usersList.usersList;
       if (sortBy === "age") {
         list_sort_users.sort(
           (a, b) =>
@@ -65,9 +64,7 @@ module.exports = {
       }
       return res.json({ user_list: list_sort_users });
     } else {
-      // console.log(req.body);
-      if (req.body.searchOptions) userId = req.body.searchOptions.userId;
-      else userId = req.body.userId;
+      userId = req.body.userId.userId;
       var sql_start = `SELECT  *
       FROM users
       INNER JOIN geolocation ON users.userId = geolocation.userId
@@ -78,12 +75,12 @@ module.exports = {
           sql = sql_start + condition;
           connection.query(sql, userId, function (err, result) {
             if (err) console.log(err);
-            if (result) {
+            if (JSON.parse(JSON.stringify(result)).length > 0) {
               result.forEach(element => {
                 if (element.sexual_orientation === "bisexual") {
                   var condition = ` users.userId!=? && ((users.gender=? &&
-                    users.sexual_orientation=?) || (users.gender=? && users.sexual_orientation=?)
-                    || users.sexual_orientation=? ) `;
+                                users.sexual_orientation=?) || (users.gender=? && users.sexual_orientation=?)
+                                || users.sexual_orientation=? ) `;
                   sql = sql_start + condition;
                   if (element.gender === "female") {
                     objData = [
@@ -123,7 +120,7 @@ module.exports = {
                 }
                 connection.query(sql, objData, function (error, results) {
                   if (error) console.log(error);
-                  if (results.length > 0) {
+                  if (JSON.parse(JSON.stringify(results)).length > 0) {
                     results.forEach(user => {
                       user.dist = distance(
                         element.latitude,
@@ -141,8 +138,8 @@ module.exports = {
                         }
                       });
                       user.common_tags = count;
-                      if (req.body.ageInterval) {
-                        var searchOptions = req.body;
+                      if (req.body.searchOptions) {
+                        var searchOptions = req.body.searchOptions;
                         var ageInterval = searchOptions.ageInterval;
                         var ageMin = ageInterval[0];
                         var ageMax = ageInterval[1];
@@ -153,7 +150,6 @@ module.exports = {
                         var popularityScoreMax = popularityScoreInterval[1];
                         if (searchOptions.listTags) {
                           listTags = searchOptions.listTags;
-                          // console.log(listTags);
                           if (searchOptions.listTags.length > 0) {
                             listTags = searchOptions.listTags.split(", ");
                           } else listTags = [];
@@ -164,7 +160,10 @@ module.exports = {
                           count = 0;
                           listTags.forEach(tag => {
                             if (user.tags !== null) {
-                              if (user.tags.indexOf(tag) != -1) {
+                              var regex = new RegExp(
+                                "(^" + tag + ", | " + tag + ",|, " + tag + "$)"
+                              );
+                              if (user.tags.search(regex) !== -1) {
                                 count += 1;
                               }
                             }
@@ -175,12 +174,11 @@ module.exports = {
                             );
                           }
                         }
+
                         if (
                           user.age < ageMin ||
                           (user.age > ageMax && ageMax != 99)
                         ) {
-                          // console.log("userIddddd", user.userId);
-
                           results = results.filter(
                             el => el.userId !== user.userId
                           );
@@ -190,6 +188,7 @@ module.exports = {
                             el => el.userId !== user.userId
                           );
                         }
+
                         if (
                           user.popularity_score < popularityScoreMin ||
                           (user.popularity_score > popularityScoreMax &&
@@ -200,9 +199,7 @@ module.exports = {
                           );
                         }
                       }
-
                       if (user.tags) {
-                        // console.log(user.tags);
                         var usrTgas = user.tags.split(", ");
                         var newTags = usrTgas.map(tag => {
                           return {
@@ -213,19 +210,19 @@ module.exports = {
                         user.tags = newTags;
                       } else user.tags = [];
                     });
-
-                    const list_sort_users = JSON.parse(JSON.stringify(results));
-
-                    list_sort_users.sort(
-                      (a, b) =>
-                        a.dist - b.dist ||
-                        b.common_tags - a.common_tags ||
-                        b.popularity_score - a.popularity_score
-                    );
-                    return res.json({ user_list: list_sort_users });
                   } else {
                     return res.json({ success: "0 resultat" });
                   }
+                  var list_sort_users = JSON.parse(JSON.stringify(results));
+
+                  list_sort_users.sort(
+                    (a, b) =>
+                      a.dist - b.dist ||
+                      b.common_tags - a.common_tags ||
+                      b.popularity_score - a.popularity_score
+                  );
+
+                  return res.json({ user_list: list_sort_users });
                 });
               });
             } else {

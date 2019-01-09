@@ -28,7 +28,7 @@ function getLocation(userData, callback) {
   sql = `SELECT * FROM geolocation WHERE userId=?`;
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (result.length > 0) return callback(result);
+    if (JSON.parse(JSON.stringify(result)) > 0) return callback(result);
     else callback(0);
   });
 }
