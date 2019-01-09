@@ -25,84 +25,109 @@ const INITIAL_STATE = {
   error: null,
   succes: null,
   isLoggedIn: false,
+  geoloc: 0,
+  checkbox: false,
   coords: {
     latitude: "",
     longitude: ""
-  },
-  geoloc: 0,
-  ip: "",
-  checkbox: false
+  }
 };
 
 class LoginPage extends Component {
   constructor(props) {
     super(props);
+    this._isMounted = false;
     this.state = { ...INITIAL_STATE };
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    console.log("coucou")
+    this._isMounted = false;
+    console.log(this._isMounted)
+  }
+
   getGeolocation() {
     navigator.geolocation.getCurrentPosition(
-      location => {
+      async location => {
         const coords = Object.assign({}, this.state.coords, {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude
         });
-        this.setState({ coords });
+        if (this._isMounted === true) {
+          this.setState({ coords });
+        }
+        await sessionStorage.setItem('latitude', location.coords.latitude)
+        await sessionStorage.setItem('longitude', location.coords.longitude)
       },
       error => {
         iplocation(this.state.ip)
-          .then(res => {
+          .then(async res => {
             const coords = Object.assign({}, this.state.coords, {
               latitude: res.latitude,
               longitude: res.longitude
             });
-            this.setState({ coords });
+            if (this._isMounted === true) {
+              this.setState({ coords });
+            }
+            await sessionStorage.setItem('latitude', res.latitude)
+            await sessionStorage.setItem('longitude', res.longitude)
           })
-          .catch(err => {});
+          .catch(err => { });
       }
     );
+
   }
 
   getIpLocation() {
     publicIp.v4().then(ip => {
-      this.setState({ ip: ip });
+      iplocation(ip)
+        .then(async res => {
+          await sessionStorage.setItem('latitude', res.latitude)
+          await sessionStorage.setItem('longitude', res.longitude)
+          const coords = Object.assign({}, this.state.coords, {
+            latitude: res.latitude,
+            longitude: res.longitude
+          });
+          if (this._isMounted === true) {
+            this.setState({ coords });
+          }
+        })
+        .catch(err => { });
     });
-    iplocation(this.state.ip)
-      .then(res => {
-        const coords = Object.assign({}, this.state.coords, {
-          latitude: res.latitude,
-          longitude: res.longitude
-        });
-        this.setState({ coords });
-      })
-      .catch(err => {});
   }
 
   onChange = e => {
-    const name = e.target.name;
-    var value = e.target.value;
+    const name = e.target.name
+    var value = e.target.value
+    const { geoloc } = this.state
 
     if (name === "checkbox") {
-      value = e.target.checked;
-      if (value) {
-        this.setState({ geoloc: 1 });
-      } else {
-        this.setState({ geoloc: 0 });
+      console.log('coucou')
+      if (this._isMounted === true) {
+        this.setState({ geoloc: 1 })
       }
-    }
 
-    this.setState({ [name]: value }, () => {
-      this.validateField(name, value);
-    });
-    if (this.state.geoloc === 0) {
-      this.getIpLocation();
-    } else {
+      value = e.target.checked
       this.getGeolocation();
     }
-  };
+    if (geoloc === 0) {
+      this.getIpLocation()
+    }
+    if (this._isMounted === true) {
+      this.setState({ [name]: value }, () => {
+        this.validateField(name, value);
+      });
+    }
+    console.log(sessionStorage)
+  }
+
 
   validateField(fieldName, value) {
     let fieldValidationErrors = this.state.formErrors;
@@ -125,15 +150,16 @@ class LoginPage extends Component {
       default:
         break;
     }
-
-    this.setState(
-      {
-        formErrors: fieldValidationErrors,
-        usernameValid: usernameValid,
-        passwdValid: passwdValid
-      },
-      this.validateForm
-    );
+    if (this._isMounted) {
+      this.setState(
+        {
+          formErrors: fieldValidationErrors,
+          usernameValid: usernameValid,
+          passwdValid: passwdValid
+        },
+        this.validateForm
+      );
+    }
   }
 
   response = (err, succes) => {
@@ -144,12 +170,16 @@ class LoginPage extends Component {
   };
 
   validateForm() {
-    this.setState({
-      formValid: this.state.usernameValid && this.state.passwdValid
-    });
+    console.log('isMounted', this._isMounted)
+    if (this._isMounted) {
+      this.setState({
+        formValid: this.state.usernameValid && this.state.passwdValid
+      });
+    }
   }
 
   onSubmit = event => {
+    console.log(this.state)
     axios
       .post(`/api/users/login`, this.state)
 
@@ -157,16 +187,21 @@ class LoginPage extends Component {
         if (res.data.success) {
           sessionStorage.setItem("userData", res.data.username);
           sessionStorage.setItem("userId", res.data.userId);
-          sessionStorage.setItem("latitude", res.data.coords.latitude);
-          sessionStorage.setItem("longitude", res.data.coords.longitude);
-          this.setState({ success: res.data.success });
-          this.setState({ redirect: true });
+          // console.log(res.data.coords)
+          // sessionStorage.setItem("latitude", res.data.coords.latitude);
+          // sessionStorage.setItem("longitude", res.data.coords.longitude);
+          if (this._isMounted) {
+            this._isMounted = false
+            // await this.setState({ success: res.data.success });
+            this.setState({ redirect: true });
+          }
+          // window.location = 'https://localhost:4000/users/' + res.data.username
         } else if (res.data.error) {
-          this.setState({ error: res.data.error });
+          // this.setState({ error: res.data.error });
         }
       })
 
-      .catch(err => {});
+      .catch(err => { });
     // this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
@@ -176,11 +211,13 @@ class LoginPage extends Component {
   }
 
   handleClearErrorMessage() {
-    this.setState({ error: undefined });
+    if (this._isMounted) {
+      this.setState({ error: undefined });
+    }
   }
 
   render() {
-    const { username, passwd, redirect, error, succes } = this.state;
+    const { username, passwd, error, succes, redirect } = this.state;
 
     if (redirect) {
       return <Redirect to={`/users/${username}`} />;

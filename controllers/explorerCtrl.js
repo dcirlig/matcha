@@ -8,9 +8,9 @@ function distance(lat1, lon1, lat2, lon2) {
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c; // Distance in km
   return d;
@@ -21,8 +21,8 @@ function deg2rad(deg) {
 }
 
 module.exports = {
-  explorer: function(req, res) {
-    console.log(req.body);
+  explorer: function (req, res) {
+    // console.log(req.body);
     if (req.body.sortBy) {
       var sortBy = req.body.sortBy;
       const list_sort_users = JSON.parse(JSON.stringify(req.body.usersList));
@@ -65,18 +65,18 @@ module.exports = {
       }
       return res.json({ user_list: list_sort_users });
     } else {
-      console.log(req.body);
+      // console.log(req.body);
       if (req.body.searchOptions) userId = req.body.searchOptions.userId;
       else userId = req.body.userId;
       var sql_start = `SELECT  *
       FROM users
       INNER JOIN geolocation ON users.userId = geolocation.userId
       WHERE`;
-      users.findOne("userId", userId, function(find) {
+      users.findOne("userId", userId, function (find) {
         if (find) {
           condition = ` users.userId=?`;
           sql = sql_start + condition;
-          connection.query(sql, userId, function(err, result) {
+          connection.query(sql, userId, function (err, result) {
             if (err) console.log(err);
             if (result) {
               result.forEach(element => {
@@ -121,7 +121,7 @@ module.exports = {
                     objData = [userId, "female", "heterosexual", "bisexual"];
                   }
                 }
-                connection.query(sql, objData, function(error, results) {
+                connection.query(sql, objData, function (error, results) {
                   if (error) console.log(error);
                   if (results.length > 0) {
                     results.forEach(user => {
@@ -153,7 +153,7 @@ module.exports = {
                         var popularityScoreMax = popularityScoreInterval[1];
                         if (searchOptions.listTags) {
                           listTags = searchOptions.listTags;
-                          console.log(listTags);
+                          // console.log(listTags);
                           if (searchOptions.listTags.length > 0) {
                             listTags = searchOptions.listTags.split(", ");
                           } else listTags = [];
@@ -179,7 +179,7 @@ module.exports = {
                           user.age < ageMin ||
                           (user.age > ageMax && ageMax != 99)
                         ) {
-                          console.log("userIddddd", user.userId);
+                          // console.log("userIddddd", user.userId);
 
                           results = results.filter(
                             el => el.userId !== user.userId
@@ -202,7 +202,7 @@ module.exports = {
                       }
 
                       if (user.tags) {
-                        console.log(user.tags);
+                        // console.log(user.tags);
                         var usrTgas = user.tags.split(", ");
                         var newTags = usrTgas.map(tag => {
                           return {

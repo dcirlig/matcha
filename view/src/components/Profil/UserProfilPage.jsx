@@ -3,12 +3,13 @@ import { MDBRow, MDBCol, MDBIcon, MDBBtn } from "mdbreact";
 // import axios from "axios";
 // import { Redirect } from "react-router-dom";
 import Header from "../Navigation/Navigation";
-// import * as routes from "../../constants/routes";
+import * as routes from "../../constants/routes";
 import Avatar from "./UserPhoto/avatarPhoto";
 import UserProfileSettings from "./Settings/userProfileSettings";
 import UserAccountSettings from "./Settings/userAccountSettings";
 import ProfilePreview from "./Preview/profilePreview";
 import windowSize from "react-window-size";
+
 class UserProfilPage extends Component {
   _isMounted = false;
   constructor(props) {
@@ -26,20 +27,24 @@ class UserProfilPage extends Component {
   }
 
   profileSettings() {
-    this.setState({ profileSettings: true, accountSettings: false });
+    if (this._isMounted === true) {
+      this.setState({ profileSettings: true, accountSettings: false });
+    }
   }
 
   accountSettings() {
-    this.setState({ profileSettings: false, accountSettings: true });
+    if (this._isMounted === true) {
+      this.setState({ profileSettings: false, accountSettings: true });
+    }
   }
 
   componentDidMount() {
     this._isMounted = true;
-    // sessionStorage.getItem("userData");
-    // const userData = sessionStorage.getItem("userData");
-    // if (userData !== this.props.match.params.username) {
-    //   // window.location = routes.NOT_FOUND;
-    // }
+    sessionStorage.getItem("userData");
+    const userData = sessionStorage.getItem("userData");
+    if (userData !== this.props.match.params.username) {
+      window.location = routes.NOT_FOUND;
+    }
   }
 
   componentDidUpdate() {
@@ -54,9 +59,8 @@ class UserProfilPage extends Component {
   }
 
   render() {
-    console.log("isMounted", this._isMounted);
+    // console.log("isMounted", this._isMounted);
     const { profileSettings, accountSettings } = this.state;
-
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />

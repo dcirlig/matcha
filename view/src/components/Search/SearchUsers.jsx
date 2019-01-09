@@ -195,14 +195,18 @@ class SearchUsersPage extends Component {
                     cover={
                       <img
                         alt="example"
-                        src={`https://localhost:4000/${item.profil_image}`}
+                        src={
+                          item.profil_image.includes("amazonaws")
+                            ? item.profil_image
+                            : `https://localhost:4000/${item.profil_image}`
+                        }
                       />
                     }
                   >
                     <Meta
                       title={`${item.firstname} ${item.lastname}, ${
                         item.age
-                      } years old`}
+                        } years old`}
                       description={item.bio}
                     />
                     <ReactTags tags={item.tags} readOnly={true} />
@@ -216,10 +220,10 @@ class SearchUsersPage extends Component {
               ))}
             </div>
           ) : (
-            <div className="col-md-4">
-              <p>No user finds</p>
-            </div>
-          )}
+              <div className="col-md-4">
+                <p>No user finds</p>
+              </div>
+            )}
         </div>
       </div>
     );
