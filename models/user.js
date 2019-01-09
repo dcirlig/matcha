@@ -19,10 +19,8 @@ function findOne(field, userData, callback) {
   sql = `SELECT ${field} FROM users WHERE ${field}= ?`;
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (result) {
-      if (result.length > 0) find = 1;
-      else find = 0;
-    }
+    if (JSON.parse(JSON.stringify(result)) > 0) find = 1;
+    else find = 0;
     return callback(find);
   });
 }
@@ -31,18 +29,18 @@ function getUser(field, userData, callback) {
   sql = `SELECT * FROM users WHERE ${field}=?`;
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (result.length > 0) return callback(result);
+    if (JSON.parse(JSON.stringify(result)) > 0) return callback(result);
     else callback(0);
   });
 }
 
 function createUserAndLocation(userData, userCoords) {
   sql = `INSERT INTO users SET ?`;
-  connection.query(sql, userData, function (err, result) {
+  connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
     else {
-      userCoords.userId = result.insertId
-      modelsLoc.createLocation(userCoords)
+      userCoords.userId = result.insertId;
+      modelsLoc.createLocation(userCoords);
     }
   });
 }

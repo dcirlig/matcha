@@ -17,12 +17,12 @@ const INITIAL_STATE = {
     ageInterval: [18, 99],
     distMax: 100,
     popularityScoreInterval: [0, 1000],
-    listTags: "",
-    usersList: [],
-    userId: sessionStorage.getItem("userId")
+    listTags: ""
   },
   sortBy: {
-    sortBy: "",
+    sortBy: "Default"
+  },
+  usersList: {
     usersList: []
   },
   isLoggedIn: true
@@ -39,19 +39,18 @@ class SearchUsersPage extends Component {
   }
 
   componentDidMount() {
-    axios.post(`/api/explorer`, this.state.userId).then(res => {
-      if (res.data.user_list) {
-        const searchOptions = Object.assign({}, this.state.searchOptions, {
-          usersList: res.data.user_list
-        });
-        const sortBy = Object.assign({}, this.state.sortBy, {
-          usersList: res.data.user_list
-        });
-        this.setState({ searchOptions: searchOptions, sortBy: sortBy });
-      } else {
-        console.log("error");
-      }
-    });
+    axios
+      .post(`/api/explorer`, { userId: this.state.userId })
+      .then(async res => {
+        if (res.data.user_list) {
+          const usersList = Object.assign({}, this.state.usersList, {
+            usersList: res.data.user_list
+          });
+          await this.setState({ usersList });
+        } else {
+          console.log("error");
+        }
+      });
   }
 
   onChangeAge = e => {
@@ -82,43 +81,53 @@ class SearchUsersPage extends Component {
     this.setState({ searchOptions });
   };
 
-  onChangeOption = async e => {
+  onSelelctOption = async e => {
     var sortBy = Object.assign({}, this.state.sortBy, {
       sortBy: e
     });
     await this.setState({ sortBy });
-    axios.post(`/api/explorer`, this.state.sortBy).then(res => {
-      if (res.data.user_list) {
-        const searchOptions = Object.assign({}, this.state.searchOptions, {
-          usersList: res.data.user_list
-        });
-        this.setState({ searchOptions });
-      } else {
-        console.log("error");
-      }
-    });
+    axios
+      .post(`/api/explorer`, {
+        sortBy: this.state.sortBy,
+        usersList: this.state.usersList
+      })
+      .then(res => {
+        if (res.data.user_list) {
+          const usersList = Object.assign({}, this.state.usersList, {
+            usersList: res.data.user_list
+          });
+          this.setState({ usersList });
+        } else {
+          console.log("error");
+        }
+      });
   };
 
   handleSubmit = async e => {
     e.preventDefault();
-    axios.post(`/api/explorer`, this.state.searchOptions).then(res => {
-      if (res.data.user_list) {
-        const searchOptions = Object.assign({}, this.state.searchOptions, {
-          usersList: res.data.user_list
-        });
-        const sortBy = Object.assign({}, this.state.sortBy, {
-          usersList: res.data.user_list
-        });
-        this.setState({ searchOptions: searchOptions, sortBy: sortBy });
-      } else {
-        console.log("error");
-      }
-    });
+    axios
+      .post(`/api/explorer`, {
+        searchOptions: this.state.searchOptions,
+        userId: this.state.userId
+      })
+      .then(res => {
+        if (res.data.user_list) {
+          const usersList = Object.assign({}, this.state.usersList, {
+            usersList: res.data.user_list
+          });
+          const sortBy = Object.assign({}, this.state.sortBy, {
+            sortBy: "Default"
+          });
+          this.setState({ usersList, sortBy });
+        } else {
+          console.log("error");
+        }
+      });
   };
 
   render() {
-    const { searchOptions } = this.state;
-    var usersList = searchOptions.usersList;
+    const { searchOptions, usersList, sortBy } = this.state;
+    var list = usersList.usersList;
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
@@ -169,7 +178,8 @@ class SearchUsersPage extends Component {
                 style={{ width: 200 }}
                 placeholder="Sort by"
                 optionFilterProp="children"
-                onChange={this.onChangeOption}
+                value={sortBy.sortBy}
+                onSelect={this.onSelelctOption}
                 filterOption={(input, option) =>
                   option.props.children
                     .toLowerCase()
@@ -185,9 +195,9 @@ class SearchUsersPage extends Component {
             </div>
           </div>
 
-          {usersList.length > 0 ? (
+          {list.length > 0 ? (
             <div className="col-md-4">
-              {usersList.map((item, index) => (
+              {list.map((item, index) => (
                 <div key={index}>
                   <Card
                     hoverable
@@ -195,7 +205,11 @@ class SearchUsersPage extends Component {
                     cover={
                       <img
                         alt="example"
-                        src={`https://localhost:4000/${item.profil_image}`}
+                        src={
+                          item.profil_image.includes("amazonaws")
+                            ? item.profil_image
+                            : `https://localhost:4000/${item.profil_image}`
+                        }
                       />
                     }
                   >
