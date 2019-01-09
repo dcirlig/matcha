@@ -44,10 +44,16 @@ class Avatar extends Component {
       .post("/api/displayAvatarPhoto", sessionStorage)
       .then(async res => {
         if (res.data) {
-          var filePtah = res.data.file;
-          if (filePtah) {
+          var filePath = res.data.file;
+          var imageUrl = "";
+          if (filePath.includes("amazonaws")) {
+            imageUrl = filePath;
+          } else {
+            imageUrl = `https://localhost:4000/${filePath}`;
+          }
+          if (filePath) {
             await this.setState({
-              imageUrl: `https://localhost:4000/${filePtah}`
+              imageUrl: imageUrl
             });
           }
         }
@@ -109,7 +115,12 @@ class Avatar extends Component {
           onChange={this.handleChange}
         >
           {imageUrl ? (
-            <img className="avatarPic" src={this.state.imageUrl} alt="avatar" />
+            <img
+              className="avatarPic"
+              src={this.state.imageUrl}
+              // src={this.state.imageUrl}
+              alt="avatar"
+            />
           ) : (
             uploadButton
           )}

@@ -55,7 +55,9 @@ class profilePreview extends React.Component {
                   className="profilePic"
                   src={
                     item.profilImage
-                      ? `https://localhost:4000/${item.profilImage}`
+                      ? item.profilImage.includes("amazonaws")
+                        ? item.profilImage
+                        : `https://localhost:4000/${item.profilImage}`
                       : ""
                   }
                 />
