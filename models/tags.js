@@ -15,7 +15,6 @@ function addTagsUser(newTagsList, userId) {
 }
 
 function findTag(content, tagText, callback) {
-  console.log(tagText);
   sql = `SELECT ${content} FROM interests WHERE ${content}= ?`;
   connection.query(sql, tagText, function (err, result) {
     if (err) console.log(err);

@@ -89,14 +89,13 @@ class ResetConfirmPassword extends Component {
         this.state
       )
       .then(res => {
-        console.log("resData= ", res.data);
         if (res.data.success) {
           this.setState({ succes: res.data.succes });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
     this.setState({ ...INITIAL_STATE });
   };
 

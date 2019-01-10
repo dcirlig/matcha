@@ -5,6 +5,7 @@ import ConfirmEmailPage from "./components/RegisterAndConnection/Verify";
 import ResetPasswordPage from "./components/ResetPassword/ResetPassword";
 import ResetConfirmPasswordPage from "./components/ResetPassword/ResetConfirmPassword";
 import UserProfilPage from "./components/Profil/UserProfilPage";
+import ChatPage from "./components/Chat/ChatPage";
 import HomePage from "./components/Navigation/HomePage";
 // import Footer from "./components/Navigation/Footer";
 import NotFoundPage from "./components/Navigation/NotFoundPage";
@@ -72,6 +73,11 @@ const App = () => (
           exact
           path={routes.EXPLORER_PAGE}
           render={props => <SearchUsersPage {...props} />}
+        />
+        <Route
+          exact
+          path={routes.CHAT_PAGE}
+          render={props => <ChatPage {...props} />}
         />
       </Switch>
     </div>

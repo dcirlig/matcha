@@ -12,16 +12,33 @@ class UserProfileSettings extends Component {
       isLoggedIn: true,
       redirect: false,
       userData: "",
-      userId: ""
+      userId: "",
+      tagsDB: [],
+      suggestions: []
+
     };
+    this.update = this.update.bind(this)
   }
+
+  update() {
+    this.props.getInfos()
+  }
+
   render() {
     return (
       <div className="userProfileSettings">
-        <Gallery />
-        <Preferences />
-        <Tags />
-        <Geolocation />
+        <Gallery
+          getImages={this.update}
+        />
+        <Preferences
+          getNewPreferences={this.update}
+        />
+        <Tags
+          getNewTags={this.update}
+        />
+        <Geolocation
+          getNewLocation={this.update}
+        />
       </div>
     );
   }

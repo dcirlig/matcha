@@ -8,3 +8,4 @@ export const LOG_OUT = "/logout";
 export const HOME_PAGE = "/";
 export const NOT_FOUND = "/notfound";
 export const EXPLORER_PAGE = "/explorer";
+export const CHAT_PAGE = "/chat/chatpage";

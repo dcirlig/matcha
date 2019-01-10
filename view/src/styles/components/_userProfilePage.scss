@@ -36,7 +36,7 @@
 .col-4 {
   border-right: 2px solid $coral;
   overflow: auto;
-  position: fixed;
+  // position: fixed;
   top: 70px;
 }
 
@@ -53,6 +53,48 @@
   padding: 15px;
 }
 
+@media screen and (max-width: 1000px) {
+  #lateralScroll {
+    width: 100%;
+  }
+  .lateral {
+    width: 100%;
+  }
+  .col-4 {
+    min-width:100% !important;
+    overflow:visible;
+    position:relative;
+    display: block;
+    margin-left:auto;
+    margin-right:auto;
+    border: none;
+  }
+  .avatarBlock {
+    max-width: 50%;
+  }
+  .tagIntro {
+    font-weight: 400;
+    text-align: center;
+    margin-top: $m-size;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    max-width: 100%;
+    padding: 15px;
+  }
+  .iconsButtonPreview {
+    display:inline-block !important;
+    font-size: $l-size;
+    border-radius: 50%;
+  }
+}
+
+.iconsButtonPreview {
+  display:none;
+}
+
 .userProfileSettings {
   max-width: 100%;
   margin-top: 32px;
@@ -61,19 +103,55 @@
 }
 
 .profilePreview {
-  position: absolute;
-  right: 0;
-  margin-top: 150px;;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+// position: fixed;
+// margin-right:0;
 }
 
-// .cardElement {
-//   max-height:80%;
-// }
-
-.profilePage {
-  max-height: 50vh;
+.profile-preview-page {
+  margin-top: 100px;
+  max-width: 50%
 }
-
+@media screen and (max-width: 1000px) {
+  .profilePreview {
+    display:none;
+  }
+  .profile-preview-page {
+    max-width: 80%;
+    margin-top:0;
+  }
+}
 .cardElementProfile {
   z-index: -1000;
+}
+
+.profile-preview-container {
+  max-width:100%;
+}
+
+.ant-card.ant-card-bordered.ant-card-hoverable {
+  max-width:100%;
+  height: auto;
+}
+
+.slider-wrapper-profile {
+  top: $m-size;
+  margin-bottom: $m-size;
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+  height: 30vh;
+  max-width: 80%;
+  overflow: hidden;
+}
+
+.slider-content-profile {
+  max-height: 30vh;
+  max-width: 100%;
+}
+
+.profilePic {
+  max-height: 40vh;
 }
