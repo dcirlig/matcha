@@ -1,6 +1,7 @@
 var users = require("../models/user");
 var connection = require("../database/dbConnection");
 var likes = require("../models/like");
+var chat = require("../models/chat");
 
 module.exports = {
   displayLike: function(req, res) {
@@ -29,6 +30,11 @@ module.exports = {
                 likeTransmitterList.push(element.likedUser);
               });
               if (likeTransmitterList.includes(bodyLike.likeTransmitter)) {
+                var chatData = {
+                  userId1: bodyLike.likedUser,
+                  userId2: bodyLike.likeTransmitter
+                };
+                chat.createChat(chatData);
                 match = true;
               }
               console.log(likeTransmitterList);

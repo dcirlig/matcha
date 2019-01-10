@@ -29,6 +29,11 @@ con.connect(function(err) {
         if (err) console.log(err);
         console.log("Delete images table");
       });
+      sql = "DROP TABLE IF EXISTS `chats`";
+      con.query(sql, function(err, result) {
+        if (err) console.log(err);
+        console.log("Delete chats table");
+      });
       sql = "DROP TABLE IF EXISTS `likes`";
       con.query(sql, function(err, result) {
         if (err) console.log(err);
@@ -117,6 +122,19 @@ con.connect(function(err) {
       con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Create table likes");
+      });
+
+      var sql = `CREATE TABLE if NOT EXISTS chats
+      (
+      chatId            INTEGER AUTO_INCREMENT PRIMARY KEY,
+      userId1             INTEGER NOT NULL,
+      userId2                   INTEGER NOT NULL,
+      room                        VARCHAR(255) DEFAULT NULL
+      )`;
+
+      con.query(sql, function(err, result) {
+        if (err) console.log(err);
+        console.log("Create table chats");
       });
 
       var sql = `CREATE TABLE if NOT EXISTS interests
