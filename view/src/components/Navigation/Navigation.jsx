@@ -7,7 +7,8 @@ import {
   NavbarToggler,
   Collapse,
   NavItem,
-  NavLink
+  NavLink,
+  MDBIcon
 } from "mdbreact";
 import matchaLogo from "../../images/matcha_logo.png";
 import matchaName from "../../images/matcha_logo_detoure.png";
@@ -54,6 +55,12 @@ class LoginHeader extends React.Component {
           {!this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
           <Collapse isOpen={this.state.collapse} navbar>
             <NavbarNav right>
+              <NavItem>
+                <NavLink to={`/chat/chatpage`} activeClassName="is-active">
+                  <MDBIcon icon="hand-peace-o" size="lg" className="iconProfile" />
+                  <MDBIcon icon="envelope" size="lg" className="iconProfile" />
+                </NavLink>
+              </NavItem>
               <NavItem>
                 <NavLink to={`/users/${username}`} activeClassName="is-active">
                   My Profile

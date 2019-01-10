@@ -5,6 +5,7 @@ var bodyParser = require("body-parser");
 var Router = require("./apiRouter").router;
 const https = require("https");
 const fs = require("fs");
+const SocketManager = require("./SocketManager.jsx");
 
 var server = express();
 server.use(cors());
@@ -13,7 +14,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json({ limit: "1Mb" }));
 
 // Configure routes
-server.get("/", function(req, res) {
+server.get("/", function (req, res) {
   res.setHeader("Content-Type", "text/html");
   res.status(200).send("<h1>Bonjour sur mon serveur<h1/>");
 });
@@ -23,9 +24,18 @@ server.use("/api/", Router);
 
 const options = {
   key: fs.readFileSync("agent2-key.pem"),
-  cert: fs.readFileSync("agent2-cert.pem")
+  cert: fs.readFileSync("agent2-cert.pem"),
+  rejectUnauthorized: false
 };
 
-https.createServer(options, server).listen(8081, () => {
+// require('https').globalAgent.options.rejectUnauthorized = false;
+
+var app = https.createServer(options, server)
+var io = require('socket.io')(app);
+
+io.on('connection', SocketManager);
+
+app.listen(8081, () => {
   console.log("Server en ecoute");
 });
+

@@ -10,7 +10,8 @@
 }
 
 .ReactModalPortal .ReactModal__Overlay--after-open {
-    opacity: 1;
+    opacity: 100;
+    z-index:1000;
 }
 
 .ReactModalPortal .ReactModal__Overlay--before-close {
@@ -37,4 +38,85 @@
     font-size: $m-size;
     font-weight: 300;
     // word-break: word-wrap;
+}
+
+// .profilePreviewModal.ReactModalPortal > div {
+//     opacity: 100;
+//     z-index:1000 !important;
+// }
+
+.profilePreviewOverlay {
+    position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: rgb(255, 255, 255) !important; 
+        height: auto;
+        max-height:100%;
+        overflow:auto;
+        align-items: flex-start;
+        display: block !important;
+    
+}
+
+// .profilePreviewModal {
+//     background-color: rgb(0, 0, 0);
+// }
+
+.profilePreviewModal.ReactModalPortal .ReactModal__Overlay {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    transition: opacity 200ms ease-in-out;
+}
+
+.ReactModal__Content.ReactModal__Content--after-open.profilePreviewModal {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0;
+    max-height: 100%;
+}    
+
+.profilePreviewModal.ReactModalPortal .ReactModal__Overlay--after-open {
+    opacity: 1;
+    z-index: 290 !important;
+    display:flex;
+}
+
+.profilePreviewModal.ReactModalPortal .ReactModal__Overlay--before-close {
+    opacity: 0;
+}
+
+.profilePreviewModal.modalFeatures {
+    background: $light-pink;
+    color: white;
+    max-width: 30rem;
+    outline: none;
+    padding: $l-size;
+    text-align: center;
+}
+
+.profilePreviewModal.modal__title {
+    margin: 0 0 $l-size 0;
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+.profilePreviewModal.modal__body {
+    margin: 0 0 $l-size 0;
+    font-size: $m-size;
+    font-weight: 300;
+    // word-break: word-wrap;
+}
+
+.modalButton {
+    background: lighten($coral, 5%);
+    border: none;
+    border-bottom: .6rem solid $coral;
+    color: white;
+    font-weight: bold;
+    font-size: $m-size;
+    margin-top: $l-size;
+    margin-bottom: 0;
+    padding: 1.5rem;
+    width: 50%;
+    text-transform: none !important;
+    outline: none;
 }

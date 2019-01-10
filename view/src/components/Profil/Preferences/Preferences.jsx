@@ -97,12 +97,13 @@ class Preferences extends Component {
           });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   async updateDatabase(data) {
     const userId = this.state.userId;
     const dataTab = { userId: userId, data };
+    this.props.getNewPreferences()
     axios
       .post(`/api/preferences/update`, dataTab)
 
@@ -113,7 +114,7 @@ class Preferences extends Component {
           });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   async selectFemale() {
@@ -181,9 +182,9 @@ class Preferences extends Component {
     if (e.key === "Enter") {
       if (
         this.state.formError ===
-          "Too long! Your bio must contain 500 characters maximum." ||
+        "Too long! Your bio must contain 500 characters maximum." ||
         this.state.formError ===
-          "Your bio must contain only upper and lower case letters, numbers, punctuation and spaces."
+        "Your bio must contain only upper and lower case letters, numbers, punctuation and spaces."
       ) {
       } else {
         const biography = { bio: this.state.bio };
@@ -271,26 +272,26 @@ class Preferences extends Component {
                 />
               </div>
             ) : (
-              ""
-            )}
+                ""
+              )}
           </div>
         ) : (
-          <div style={divStyle} className="birthDate">
-            <Calendar
-              fullscreen={false}
-              validRange={[
-                moment().subtract(99, "years"),
-                moment().subtract(18, "years")
-              ]}
-              onChange={this.selectDate}
-              defaultValue={
-                defaultDateValue
-                  ? defaultDateValue
-                  : moment().subtract(25, "years")
-              }
-            />
-          </div>
-        )}
+            <div style={divStyle} className="birthDate">
+              <Calendar
+                fullscreen={false}
+                validRange={[
+                  moment().subtract(99, "years"),
+                  moment().subtract(18, "years")
+                ]}
+                onChange={this.selectDate}
+                defaultValue={
+                  defaultDateValue
+                    ? defaultDateValue
+                    : moment().subtract(25, "years")
+                }
+              />
+            </div>
+          )}
         <div className="bio">
           <p className="tagIntro warm-flame-gradient">
             Express yourself, set your interests!

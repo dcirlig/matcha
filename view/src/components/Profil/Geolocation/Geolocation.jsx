@@ -35,7 +35,6 @@ class geolocationComponent extends React.Component {
       sessionStorage.getItem("latitude") !== "" &&
       sessionStorage.getItem("longitude") !== ""
     ) {
-      // console.log('hey')
       this.setState({
         userId: sessionStorage.getItem("userId"),
         coords: {
@@ -48,7 +47,7 @@ class geolocationComponent extends React.Component {
       sessionStorage.setItem("longitude", "");
       return;
     } else {
-      // console.log('et non')
+
       axios
         .post(`/api/displayAddress`, sessionStorage)
 
@@ -67,7 +66,6 @@ class geolocationComponent extends React.Component {
   }
 
   async onSelect(address) {
-    // console.log("coucou")
     if (address.center) {
       if (address.center[0] && address.center[1]) {
         await this.setState({
@@ -87,14 +85,11 @@ class geolocationComponent extends React.Component {
   }
 
   async reverseLocation(coordinates) {
-    console.log('coordinates', coordinates.coords)
     const reverse = new Geo.ReverseGeocoder();
 
     await reverse
       .getReverse(coordinates.coords.latitude, coordinates.coords.longitude)
       .then(async location => {
-        console.log('hihihi')
-        console.log('location', location)
         if (location.address.cityDistrict) {
           var fullAddress = location.address.cityDistrict;
         } else if (!location.address.cityDistrict && location.address.town) {
@@ -115,12 +110,11 @@ class geolocationComponent extends React.Component {
       .catch(err => {
         console.error(err);
       });
-    // console.log("MAJ")
-    // console.log('getGeoloc', this.state)
     axios
       .post(`/api/fillAddress`, this.state)
 
       .then(res => {
+        this.props.getNewLocation()
         if (res.data.success) {
           this.setState({
             success: res.data.success,

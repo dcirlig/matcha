@@ -112,6 +112,7 @@ class tagsManager extends React.Component {
     tagValid = tag.text.match(/^[a-zA-Z0-9_]+$/);
     sessionStorage.setItem("tag", tag.text);
     if (tagValid) {
+      this.props.getNewTags()
       axios
         .post(`/api/tags/add`, sessionStorage)
         .then(res => {

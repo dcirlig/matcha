@@ -174,7 +174,7 @@ class RegisterPage extends Component {
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
         <Link to="/">
-          <img id="logo" src={matchaLogo} alt={"logo"} />
+          <img id="logoCreateAccount" src={matchaLogo} alt={"logo"} />
         </Link>
         <div className="subscriptionForm grey-text">
           <form>
