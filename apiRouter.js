@@ -14,6 +14,7 @@ var settingsCtrl = require("./controllers/settingsCtrl");
 var preferencesCtrl = require("./controllers/preferencesCtrl");
 var settingsCtrl = require("./controllers/settingsCtrl");
 var explorerCtrl = require("./controllers/explorerCtrl");
+var likeCtrl = require("./controllers/likeCtrl");
 //Routes
 exports.router = (function() {
   var Router = express.Router();
@@ -43,5 +44,7 @@ exports.router = (function() {
   Router.post("/preferences/update", preferencesCtrl.updatePreferences);
   Router.post("/settings", settingsCtrl.settings);
   Router.post("/explorer", explorerCtrl.explorer);
+  Router.post("/like", likeCtrl.like);
+  Router.post("/displayLike", likeCtrl.displayLike);
   return Router;
 })();

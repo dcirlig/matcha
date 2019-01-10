@@ -1,17 +1,18 @@
 import React, { Component } from "react";
-import { Slider } from "antd";
 import "antd/dist/antd.css";
 import axios from "axios";
-import { Card, Select } from "antd";
+import { Card, Select, Slider } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
+import Like from "./Like";
+
 const { Meta } = Card;
 const Option = Select.Option;
 
 const INITIAL_STATE = {
   userId: {
-    userId: sessionStorage.getItem("userId")
+    userId: ""
   },
   searchOptions: {
     ageInterval: [18, 99],
@@ -38,7 +39,10 @@ class SearchUsersPage extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.setState({
+      userId: { userId: sessionStorage.getItem("userId") }
+    });
     axios
       .post(`/api/explorer`, { userId: this.state.userId })
       .then(async res => {
@@ -213,27 +217,35 @@ class SearchUsersPage extends Component {
                       />
                     }
                   >
+                    <Like
+                      item={item}
+                      popularity_score={item.popularity_score}
+                      liked={item.liked}
+                    />
                     <Meta
                       title={`${item.firstname} ${item.lastname}, ${
                         item.age
-                        } years old`}
+                      } years old`}
                       description={item.bio}
                     />
                     <ReactTags tags={item.tags} readOnly={true} />
-                    <p>{item.dist} km</p>
+                    <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
                     <p>
                       {item.gender === "male" ? "Man" : "Woman"},{" "}
                       {item.sexual_orientation}
                     </p>
+                    <a href={`https://localhost:4000/users/${item.username}`}>
+                      Show more...
+                    </a>
                   </Card>
                 </div>
               ))}
             </div>
           ) : (
-              <div className="col-md-4">
-                <p>No user finds</p>
-              </div>
-            )}
+            <div className="col-md-4">
+              <p>No user finds</p>
+            </div>
+          )}
         </div>
       </div>
     );

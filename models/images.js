@@ -1,46 +1,46 @@
 var connection = require("../database/dbConnection");
 
 function insertImage(userData) {
-  sql = `INSERT INTO images SET ?`;
-  connection.query(sql, userData, function (err, result) {
+  sql = "INSERT INTO images SET ?";
+  connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
   });
 }
 
 function findOne(field, userData, callback) {
-  sql = `SELECT ${field} FROM images WHERE ${field}= ?`;
-  connection.query(sql, userData, function (err, result) {
+  sql = "SELECT " + field + " FROM images WHERE " + field + "= ?";
+  connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (JSON.parse(JSON.stringify(result)).length > 0) find = 1;
+    if (result.length > 0) find = 1;
     else find = 0;
     return callback(find);
   });
 }
 
 function getImage(field, userData, callback) {
-  sql = `SELECT * FROM images WHERE ${field}=?`;
-  connection.query(sql, userData, function (err, result) {
+  sql = "SELECT * FROM images WHERE " + field + "=?";
+  connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (JSON.parse(JSON.stringify(result)).length > 0) return callback(result);
+    if (result.length > 0) return callback(result);
     else callback(0);
   });
 }
 
 function deleteImage(field, userData, callback) {
-  sql = `DELETE FROM images WHERE ${field}=?`;
-  connection.query(sql, userData, function (err, result) {
+  sql = "DELETE FROM images WHERE " + field + "=?";
+  connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (JSON.parse(JSON.stringify(result)).length > 0) return callback(result);
-    else callback(result);
+    if (result.length > 0) return callback(result);
+    else callback(0);
   });
 }
 
 function deleteImage(field, userData, callback) {
-  sql = `DELETE FROM images WHERE ${field}=?`;
-  connection.query(sql, userData, function (err, result) {
+  sql = "DELETE FROM images WHERE " + field + "=?";
+  connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
     if (result)
-      if (JSON.parse(JSON.stringify(result)).length > 0) find = 1;
+      if (result.length > 0) find = 1;
       else find = 0;
     return callback(result);
   });

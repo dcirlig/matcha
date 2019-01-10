@@ -29,6 +29,11 @@ con.connect(function(err) {
         if (err) console.log(err);
         console.log("Delete images table");
       });
+      sql = "DROP TABLE IF EXISTS `likes`";
+      con.query(sql, function(err, result) {
+        if (err) console.log(err);
+        console.log("Delete likes table");
+      });
       sql = "DROP TABLE IF EXISTS `interests`";
       con.query(sql, function(err, result) {
         if (err) console.log(err);
@@ -78,7 +83,7 @@ con.connect(function(err) {
       FOREIGN KEY (userId) REFERENCES users(userId)
       )`;
 
-        con.query(sql, function (err, result) {
+        con.query(sql, function(err, result) {
           if (err) console.log(err);
           console.log("Create table geolocation");
           fakeUsers.fakeUsers();
@@ -98,6 +103,20 @@ con.connect(function(err) {
       con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Create table images");
+      });
+
+      var sql = `CREATE TABLE if NOT EXISTS likes
+      (
+      likeId            INTEGER AUTO_INCREMENT PRIMARY KEY,
+      likeTransmitter             INTEGER NOT NULL,
+      likedUser                   INTEGER NOT NULL,
+      liked                       INT DEFAULT 0,
+      FOREIGN KEY (likedUser) REFERENCES users(userId)
+      )`;
+
+      con.query(sql, function(err, result) {
+        if (err) console.log(err);
+        console.log("Create table likes");
       });
 
       var sql = `CREATE TABLE if NOT EXISTS interests
