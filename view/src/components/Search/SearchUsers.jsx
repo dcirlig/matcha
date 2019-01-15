@@ -6,6 +6,8 @@ import { WithContext as ReactTags } from "react-tag-input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
 import Like from "./Like";
+import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
+import { Helmet } from "react-helmet";
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -26,7 +28,8 @@ const INITIAL_STATE = {
   usersList: {
     usersList: []
   },
-  isLoggedIn: true
+  isLoggedIn: true,
+  open: false
 };
 
 class SearchUsersPage extends Component {
@@ -37,6 +40,7 @@ class SearchUsersPage extends Component {
     this.onChangeDistance = this.onChangeDistance.bind(this);
     this.onChangePopularity = this.onChangePopularity.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.openSearchFrame = this.openSearchFrame.bind(this);
   }
 
   async componentDidMount() {
@@ -107,6 +111,10 @@ class SearchUsersPage extends Component {
       });
   };
 
+  async openSearchFrame() {
+    await this.setState({ open: !this.state.open });
+  }
+
   handleSubmit = async e => {
     e.preventDefault();
     axios
@@ -130,122 +138,235 @@ class SearchUsersPage extends Component {
   };
 
   render() {
-    const { searchOptions, usersList, sortBy } = this.state;
+    const { searchOptions, usersList, sortBy, open } = this.state;
     var list = usersList.usersList;
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
-        <div className="container">
-          <div className="col-md-4">
-            <form>
-              <Slider
-                range
-                min={18}
-                max={99}
-                value={searchOptions.ageInterval}
-                name="ageInterval"
-                onChange={this.onChangeAge}
-              />
-
-              <Slider
-                max={100}
-                value={searchOptions.distMax}
-                onChange={this.onChangeDistance}
-                name="distMax"
-              />
-              <Slider
-                range
-                min={0}
-                max={1000}
-                value={searchOptions.popularityScoreInterval}
-                name="popularityScoreInterval"
-                onChange={this.onChangePopularity}
-              />
-              <label htmlFor="searchTagsInput">
-                Search by tags:
-                <input
-                  name="listTags"
-                  type="text"
-                  id="searchTagsInput"
-                  placeholder="green, geek"
-                  onChange={e => this.onChangeTagsList(e)}
-                  value={searchOptions.listTags}
-                />
-              </label>
-              <button type="submit" onClick={e => this.handleSubmit(e)}>
-                Search
-              </button>
-            </form>
-            <div className="col-md-4">
-              <Select
-                showSearch
-                style={{ width: 200 }}
-                placeholder="Sort by"
-                optionFilterProp="children"
-                value={sortBy.sortBy}
-                onSelect={this.onSelelctOption}
-                filterOption={(input, option) =>
-                  option.props.children
-                    .toLowerCase()
-                    .indexOf(input.toLowerCase()) >= 0
-                }
+        <Helmet>
+          <style>{"body { overflow: hidden }"}</style>
+        </Helmet>
+        <div className="container-fluid">
+          <MDBRow className="searchRows">
+            <MDBCol size='4' className="searchFrame">
+              <MDBBtn
+                onClick={this.openSearchFrame}
+                className="small-button explorer"
+                rounded
+                size="lg"
+                gradient="peach"
+                style={{ display: 'none' }}
               >
-                <Option value="age">Age</Option>
-                <Option value="location">Location</Option>
-                <Option value="popularity">Popularity score</Option>
-                <Option value="tags">Common tags</Option>
-                <Option value="default">Default</Option>
-              </Select>
-            </div>
-          </div>
-
-          {list.length > 0 ? (
-            <div className="col-md-4">
-              {list.map((item, index) => (
-                <div key={index}>
-                  <Card
-                    hoverable
-                    style={{ width: 240 }}
-                    cover={
-                      <img
-                        alt="example"
-                        src={
-                          item.profil_image.includes("amazonaws")
-                            ? item.profil_image
-                            : `https://localhost:4000/${item.profil_image}`
-                        }
-                      />
+                Preferences
+              </MDBBtn>
+              {open ? (<div className="searchOptionsMobile">
+                <form>
+                  <h4>Age</h4>
+                  <Slider
+                    range
+                    marks={{
+                      18: '18 ans',
+                      99: '99 ans'
+                    }}
+                    min={18}
+                    max={99}
+                    value={searchOptions.ageInterval}
+                    name="ageInterval"
+                    onChange={this.onChangeAge}
+                  />
+                  <h4>Distance</h4>
+                  <Slider
+                    marks={{
+                      0: '0',
+                      100: '100km'
+                    }}
+                    max={100}
+                    value={searchOptions.distMax}
+                    onChange={this.onChangeDistance}
+                    name="distMax"
+                  />
+                  <h4>Popularity</h4>
+                  <Slider
+                    range
+                    marks={{
+                      0: '0',
+                      1000: '1000'
+                    }}
+                    min={0}
+                    max={1000}
+                    value={searchOptions.popularityScoreInterval}
+                    name="popularityScoreInterval"
+                    onChange={this.onChangePopularity}
+                  />
+                  <label htmlFor="searchTagsInput">
+                    <h4>Search by tags:</h4>
+                    <input
+                      className="searchTagsInput"
+                      name="listTags"
+                      type="text"
+                      id="searchTagsInput"
+                      placeholder="green, geek"
+                      onChange={e => this.onChangeTagsList(e)}
+                      value={searchOptions.listTags}
+                    />
+                  </label>
+                  <MDBBtn gradient="peach" className="search-button" type="submit" onClick={e => this.handleSubmit(e)}>
+                    Search
+        </MDBBtn>
+                </form>
+                <div className="searchFilters">
+                  <Select
+                    showSearch
+                    style={{ width: 200 }}
+                    placeholder="Sort by"
+                    optionFilterProp="children"
+                    value={sortBy.sortBy ? sortBy.sortBy : undefined}
+                    onSelect={this.onSelelctOption}
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
                     }
                   >
-                    <Like
-                      item={item}
-                      popularity_score={item.popularity_score}
-                      liked={item.liked}
-                    />
-                    <Meta
-                      title={`${item.firstname} ${item.lastname}, ${
-                        item.age
-                      } years old`}
-                      description={item.bio}
-                    />
-                    <ReactTags tags={item.tags} readOnly={true} />
-                    <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
-                    <p>
-                      {item.gender === "male" ? "Man" : "Woman"},{" "}
-                      {item.sexual_orientation}
-                    </p>
-                    <a href={`https://localhost:4000/users/${item.username}`}>
-                      Show more...
-                    </a>
-                  </Card>
+                    <Option value="age">Age</Option>
+                    <Option value="location">Location</Option>
+                    <Option value="popularity">Popularity score</Option>
+                    <Option value="tags">Common tags</Option>
+                    <Option value="default">Default</Option>
+                  </Select>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="col-md-4">
-              <p>No user finds</p>
-            </div>
-          )}
+              </div>) : ""}
+              <div className="searchOptions">
+                <form>
+                  <h4>Age</h4>
+                  <Slider
+                    range
+                    marks={{
+                      18: '18 ans',
+                      99: '99 ans'
+                    }}
+                    min={18}
+                    max={99}
+                    value={searchOptions.ageInterval}
+                    name="ageInterval"
+                    onChange={this.onChangeAge}
+                  />
+                  <h4>Distance</h4>
+                  <Slider
+                    marks={{
+                      0: '0',
+                      100: '100km'
+                    }}
+                    max={100}
+                    value={searchOptions.distMax}
+                    onChange={this.onChangeDistance}
+                    name="distMax"
+                  />
+                  <h4>Popularity</h4>
+                  <Slider
+                    range
+                    marks={{
+                      0: '0',
+                      1000: '1000'
+                    }}
+                    min={0}
+                    max={1000}
+                    value={searchOptions.popularityScoreInterval}
+                    name="popularityScoreInterval"
+                    onChange={this.onChangePopularity}
+                  />
+                  <label htmlFor="searchTagsInput">
+                    <h4>Search by tags:</h4>
+                    <input
+                      className="searchTagsInput"
+                      name="listTags"
+                      type="text"
+                      id="searchTagsInput"
+                      placeholder="green, geek"
+                      onChange={e => this.onChangeTagsList(e)}
+                      value={searchOptions.listTags}
+                    />
+                  </label>
+                  <MDBBtn gradient="peach" className="search-button" type="submit" onClick={e => this.handleSubmit(e)}>
+                    Search
+              </MDBBtn>
+                </form>
+                <div className="searchFilters">
+                  <Select
+                    showSearch
+                    style={{ width: 200 }}
+                    placeholder="Sort by"
+                    optionFilterProp="children"
+                    value={sortBy.sortBy ? sortBy.sortBy : undefined}
+                    onSelect={this.onSelelctOption}
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    <Option value="age">Age</Option>
+                    <Option value="location">Location</Option>
+                    <Option value="popularity">Popularity score</Option>
+                    <Option value="tags">Common tags</Option>
+                    <Option value="default">Default</Option>
+                  </Select>
+                </div>
+              </div>
+            </MDBCol>
+            {list.length > 0 ? (
+              <MDBCol size='8' className="explorer-container">
+                {list.map((item, index) => (
+                  <div className="searchCardContainer" style={{ maxWidth: 240 }} key={index}>
+                    <Card
+                      hoverable
+                      style={{ height: 765, overflow: 'visible' }}
+                      cover={
+                        <img
+                          alt="example"
+                          src={
+                            item.profil_image.includes("amazonaws")
+                              ? item.profil_image
+                              : `https://localhost:4000/${item.profil_image}`
+                          }
+                        />
+                      }
+                    >
+                      <Like
+                        item={item}
+                        popularity_score={item.popularity_score}
+                        liked={item.liked}
+                        socket={this.props.socket}
+                      />
+                      <Meta
+                        title={`${item.firstname} ${item.lastname}, ${
+                          item.age
+                          } years old`}
+                        description={item.bio}
+                      />
+                      <ReactTags classNames={{
+                        tags: 'tagsContainer',
+                        selected: 'selectedSearchTags',
+                        tag: 'allSearchTags'
+                      }} tags={item.tags} readOnly={true} />
+                      <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
+                      <p>
+                        {item.gender === "male" ? "Man" : "Woman"},{" "}
+                        {item.sexual_orientation}
+                      </p>
+                      <a href={`https://localhost:4000/users/${item.username}`}>
+                        Show more...
+                    </a>
+                    </Card>
+                  </div>
+                ))}
+              </MDBCol>
+            ) : (
+                <div className="col-md-4">
+                  <p>No user finds</p>
+                </div>
+              )}
+          </MDBRow>
         </div>
       </div>
     );

@@ -131,18 +131,19 @@ class SettingsPage extends Component {
     var username = this.state.usernameValid[0];
     axios
       .post(`/api/settings`, this.state)
-      .then(res => {
+      .then(async res => {
         if (res.data.success) {
           this.setState({ success: res.data.success });
+          this.props.getInfos()
           if (username) {
-            sessionStorage.setItem("userData", username);
+            await sessionStorage.setItem("userData", username);
             history.push(`/users/${username}`);
           }
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
     this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };

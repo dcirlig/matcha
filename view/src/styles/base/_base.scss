@@ -34,3 +34,23 @@ button:disabled {
 .linkTo:hover{
   color: $light-pink; 
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 1px grey; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: lighten($light-pink, 10%); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: darken($light-pink, 10%); 
+}

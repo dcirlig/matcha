@@ -84,11 +84,11 @@ class UserProfilPage extends Component {
     }
 
     render() {
-        const { profileSettings, accountSettings, username, refresh } = this.state;
+        const { profileSettings, accountSettings, refresh } = this.state;
         return (
             <div>
                 <Header isLoggedIn={this.state.isLoggedIn} />
-                <div className="container-fluid">
+                <div className="container-fluid searchPage">
                     <MDBRow>
                         <MDBCol
                             id="lateralScroll"
@@ -97,7 +97,7 @@ class UserProfilPage extends Component {
                         >
                             <div className="lateral">
                                 <div className="avatarBlock">
-                                    <Avatar />
+                                    <Avatar getInfos={this.getInfos} />
                                 </div>
                                 <p className="tagIntro young-passion-gradient">
                                     Welcome to your dashboard {sessionStorage.getItem("userData")}
@@ -134,7 +134,7 @@ class UserProfilPage extends Component {
                                 </MDBBtn>
                             </div>
                             <div>{profileSettings && <UserProfileSettings getInfos={this.getInfos} />}</div>
-                            <div>{accountSettings && <UserAccountSettings />}</div>
+                            <div>{accountSettings && <UserAccountSettings getInfos={this.getInfos} />}</div>
                         </MDBCol>
                         <MDBCol
                             className="profilePreview"
@@ -148,7 +148,7 @@ class UserProfilPage extends Component {
                 <ProfilePreviewModal
                     profilePreview={this.state.profilePreview}
                     closeProfilePreview={this.closeProfilePreview}
-                    username={username}
+                    username={this.props.match.params.username}
                 />
             </div>
         );

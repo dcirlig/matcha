@@ -6,7 +6,6 @@ var Router = require("./apiRouter").router;
 const https = require("https");
 const fs = require("fs");
 
-
 var server = express();
 server.use(cors());
 // Body Parser configuration
@@ -28,33 +27,17 @@ const options = {
   rejectUnauthorized: false
 };
 
+// require('https').globalAgent.options.rejectUnauthorized = false;
+
 var app = https.createServer(options, server)
+var io = (module.exports.io = require("socket.io")(app));
+
+const SocketManager = require("./SocketManager.js");
+
+io.on('connection', SocketManager);
+
+// require('./SocketManager.js')(io);
 
 app.listen(8081, () => {
   console.log("Server en ecoute");
 });
-
-var io = require('socket.io').listen(app);
-
-io.on('connection', (socket) => {
-  var user1
-  var user1
-  var chatRoom
-  console.log("socketId", socket.id)
-  socket.on('newMatch', function (chatDetails) {
-    user1 = chatDetails.user1
-    user1.id = chatDetails.chatRoom + user1
-    user2 = chatDetails.user2
-    chatRoom = chatDetails.chatRoom
-    user2.id = chatDetails.chatRoom + user2
-  })
-  // socket.on('chatMessage', function (msg) {
-  //   // console.log('message: ' + msg)
-  //   io.emit('chat message', msg);
-  // })
-
-  socket.on('SEND_MESSAGE', (data) => {
-    console.log(data)
-    io.emit('RECEIVE_MESSAGE', data)
-  })
-})

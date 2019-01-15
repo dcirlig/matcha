@@ -19,6 +19,11 @@ import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "./styles/styles.scss";
 import history from "./constants/history";
+import Layout from "./components/Test/test";
+import io from "socket.io-client";
+
+const socketUrl = "localhost:8081";
+const socket = io(socketUrl);
 
 const App = () => (
   <Router history={history}>
@@ -72,12 +77,17 @@ const App = () => (
         <Route
           exact
           path={routes.EXPLORER_PAGE}
-          render={props => <SearchUsersPage {...props} />}
+          render={props => <SearchUsersPage {...props} socket={socket} />}
         />
         <Route
           exact
           path={routes.CHAT_PAGE}
           render={props => <ChatPage {...props} />}
+        />
+        <Route
+          exact
+          path={routes.TEST}
+          render={props => <Layout {...props} socket={socket} />}
         />
       </Switch>
     </div>
