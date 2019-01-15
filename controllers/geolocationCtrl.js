@@ -3,7 +3,6 @@ var modelsUser = require("../models/user");
 
 module.exports = {
   fillAddress: function (req, res) {
-    // console.log(req.body)
     var locationData = {
       latitude: req.body.coords.latitude,
       longitude: req.body.coords.longitude,

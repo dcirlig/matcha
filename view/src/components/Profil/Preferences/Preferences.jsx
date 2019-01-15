@@ -263,7 +263,7 @@ class Preferences extends Component {
                     moment().subtract(99, "years"),
                     moment().subtract(18, "years")
                   ]}
-                  onSelect={this.selectDate}
+                  onChange={this.selectDate}
                   defaultValue={
                     defaultDateValue
                       ? defaultDateValue
