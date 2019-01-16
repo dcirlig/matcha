@@ -336,7 +336,6 @@ class SearchUsersPage extends Component {
                         item={item}
                         popularity_score={item.popularity_score}
                         liked={item.liked}
-                        socket={this.props.socket}
                       />
                       <Meta
                         title={`${item.firstname} ${item.lastname}, ${

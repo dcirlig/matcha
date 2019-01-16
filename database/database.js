@@ -116,7 +116,6 @@ con.connect(function (err) {
       likeTransmitter             INTEGER NOT NULL,
       likedUser                   INTEGER NOT NULL,
       liked                       INT DEFAULT 0,
-      room                        VARCHAR(255) NOT NULL,
       FOREIGN KEY (likedUser) REFERENCES users(userId)
       )`;
 
@@ -128,20 +127,35 @@ con.connect(function (err) {
       var sql = `CREATE TABLE if NOT EXISTS chats
       (
       chatId            INTEGER AUTO_INCREMENT PRIMARY KEY,
-      userId1           INTEGER NOT NULL,
-      userId2           INTEGER NOT NULL,
-      content           VARCHAR(255) NOT NULL,
-      time              VARCHAR(255) NOT NULL,
-      chatRoom          VARCHAR(255) NOT NULL,
-      matchId           INTEGER NOT NULL,
+      userId1             INTEGER NOT NULL,
+      userId2                   INTEGER NOT NULL,
+      room                       VARCHAR(255) NOT NULL,
       FOREIGN KEY (userId1) REFERENCES users(userId),
-      FOREIGN KEY (userId2) REFERENCES users(userId),
-      FOREIGN KEY (matchId) REFERENCES likes(likeId)
+      FOREIGN KEY (userId2) REFERENCES users(userId)
       )`;
 
       con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table chats");
+      });
+
+      var sql = `CREATE TABLE if NOT EXISTS messages
+      (
+      messageId            INTEGER AUTO_INCREMENT PRIMARY KEY,
+      senderId             INTEGER NOT NULL,
+      receiverId           INTEGER NOT NULL,
+      content              VARCHAR(255) NOT NULL,
+      time                 VARCHAR(255) NOT NULL,
+      chatRoom             VARCHAR(255) NOT NULL,
+      matchId              INTEGER NOT NULL,
+      FOREIGN KEY (senderId) REFERENCES users(userId),
+      FOREIGN KEY (receiverId) REFERENCES users(userId),
+      FOREIGN KEY (matchId) REFERENCES likes(likeId)
+      )`;
+
+      con.query(sql, function (err, result) {
+        if (err) console.log(err);
+        console.log("Create table messages");
       });
 
       var sql = `CREATE TABLE if NOT EXISTS interests
