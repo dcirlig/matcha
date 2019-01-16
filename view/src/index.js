@@ -77,7 +77,7 @@ const App = () => (
         <Route
           exact
           path={routes.EXPLORER_PAGE}
-          render={props => <SearchUsersPage {...props} socket={socket} />}
+          render={props => <SearchUsersPage {...props} />}
         />
         <Route
           exact

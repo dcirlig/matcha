@@ -6,12 +6,12 @@ var escapeHtml = require("../utils/utils").escapeHtml;
 // Routes
 
 module.exports = {
-  userProfil: function(req, res) {
+  userProfil: function (req, res) {
     if (req.params.username) {
       var username = escapeHtml(req.params.username);
-      models.findOne("username", username, function(find) {
+      models.findOne("username", username, function (find) {
         if (find) {
-          models.getUser("username", username, function(result) {
+          models.getUser("username", username, function (result) {
             if (result) {
               result.forEach(element => {
                 if (element.tags) {
@@ -26,7 +26,7 @@ module.exports = {
                 } else {
                   element.tags = [];
                 }
-                imgModels.getImage("userId", element.userId, function(images) {
+                imgModels.getImage("userId", element.userId, function (images) {
                   if (images) {
                     imagesUser = images;
                   } else {
@@ -48,15 +48,14 @@ module.exports = {
                       images: imagesUser
                     }
                   ];
-
                   return res.json({ success: user });
                 });
               });
-            } else {
+            } else if (!result) {
               return res.json({ error: "This user does not exists" });
             }
           });
-        } else {
+        } else if (!req.params.username) {
           return res.json({
             error:
               "This member does not exist or did not complete his/her profile info."

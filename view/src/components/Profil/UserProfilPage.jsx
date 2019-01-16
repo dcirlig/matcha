@@ -21,7 +21,6 @@ class UserProfilPage extends Component {
             profileSettings: true,
             accountSettings: false,
             redirect: "not upgraded",
-            socket: null,
             profilePreview: false,
             refresh: false
         };

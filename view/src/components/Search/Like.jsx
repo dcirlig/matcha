@@ -7,8 +7,7 @@ const INITIAL_STATE = {
   likeTransmitter: sessionStorage.getItem("userId"),
   likedUser: "",
   popularity_score: "",
-  like: null,
-  socket: ""
+  like: null
 };
 
 class Like extends Component {
@@ -17,8 +16,6 @@ class Like extends Component {
     this.state = { ...INITIAL_STATE };
     this.handleLike = this.handleLike.bind(this);
   }
-
-  componentDidMount() { }
 
   handleLike = async e => {
     if (this.state.like != null) {
@@ -37,14 +34,8 @@ class Like extends Component {
     }
     axios.post(`/api/like`, this.state).then(async res => {
       console.log(res.data)
-      const socket = this.props.socket
-      socket.on("connect", () => {
-        console.log("Connected");
-      });
-      socket.emit('newMatch', { chatRoom: res.data.chatRoom, user1: this.state.likedUser, user2: this.state.likeTransmitter })
       await this.setState({
-        popularity_score: res.data.popularity_score,
-        socket: socket
+        popularity_score: res.data.popularity_score
       });
     });
   };

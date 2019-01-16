@@ -15,18 +15,18 @@ class profilePreview extends React.Component {
     this.state = {
       isLoggedIn: true,
       redirect: false,
-      user: []
+      user: [],
+      username: ""
     };
   }
 
   componentDidMount() {
-    console.log(this.props.match.params.username)
     axios
       .get(`/api/users/${this.props.match.params.username}`)
       .then(async res => {
         if (res.data.success) {
           var data = res.data.success;
-          this.setState({ user: data });
+          await this.setState({ user: data, username: data[0].username });
         }
       })
       .catch(err => {
@@ -34,10 +34,9 @@ class profilePreview extends React.Component {
       });
   }
 
-  componentDidUpdate(prevProps) {
-    console.log(this.props.match.params.username)
+  async componentDidUpdate(prevProps) {
     if (this.props.match.params.username !== prevProps.match.params.username) {
-      this.setState({ username: this.props.match.params.username });
+      await this.setState({ username: this.props.match.params.username });
     }
     if (this.props.refresh === true) {
       axios
@@ -47,7 +46,6 @@ class profilePreview extends React.Component {
             var data = res.data.success;
             await this.setState({ user: data });
             this.props.stopRefresh()
-            // console.log(data)
           }
         })
         .catch(err => {

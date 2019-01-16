@@ -14,7 +14,7 @@ module.exports = {
       likeTransmitter: parseInt(req.body.likeTransmitter),
       likedUser: parseInt(req.body.likedUser),
       liked: req.body.like,
-      room: "room" + randomstring.generate() + moment()
+      // room: "room" + randomstring.generate() + moment()
     };
     var popularity_score = parseInt(req.body.popularity_score);
     if (bodyLike.likeTransmitter) {
@@ -23,6 +23,7 @@ module.exports = {
           var sql = "SELECT  * FROM likes WHERE likeTransmitter=?";
           var likeTransmitterList = [];
           var match = false;
+          var room = "";
           connection.query(sql, bodyLike.likedUser, function (err, result) {
             if (err) console.log(err);
             if (result) {
@@ -32,10 +33,12 @@ module.exports = {
               if (likeTransmitterList.includes(bodyLike.likeTransmitter)) {
                 var chatData = {
                   userId1: bodyLike.likedUser,
-                  userId2: bodyLike.likeTransmitter
+                  userId2: bodyLike.likeTransmitter,
+                  room: "room" + randomstring.generate() + moment()
                 };
                 chat.createChat(chatData);
                 match = true;
+                room = chatData.room;
               }
 
               var objUpdate = { popularity_score: popularity_score + 1 };
@@ -46,7 +49,7 @@ module.exports = {
                 success: "You have liked this user!",
                 popularity_score: popularity_score + 1,
                 match: match,
-                chatRoom: bodyLike.room
+                chatRoom: room
               });
             }
           });
