@@ -57,7 +57,6 @@ class LoginHeader extends React.Component {
             <NavbarNav right>
               <NavItem>
                 <NavLink to={`/chat/chatpage`} activeClassName="is-active">
-                  <MDBIcon icon="hand-peace-o" size="lg" className="iconProfile" />
                   <MDBIcon icon="envelope" size="lg" className="iconProfile" />
                 </NavLink>
               </NavItem>

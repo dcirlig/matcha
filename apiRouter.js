@@ -48,5 +48,7 @@ exports.router = (function () {
   Router.post("/like", likeCtrl.like);
   Router.post("/displayLike", likeCtrl.displayLike);
   Router.post("/chat/getRooms", chatCtrl.getRooms);
+  Router.post("/chat/getConv", chatCtrl.getConv);
+  Router.post("/chat/getLastMessage", chatCtrl.getLastMessage);
   return Router;
 })();
