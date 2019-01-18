@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import axios from "axios";
-import { Card, Select, Slider } from "antd";
+import { Card, Select, Slider, notification } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
@@ -29,7 +29,8 @@ const INITIAL_STATE = {
     usersList: []
   },
   isLoggedIn: true,
-  open: false
+  open: false,
+  count: ""
 };
 
 class SearchUsersPage extends Component {
@@ -43,7 +44,37 @@ class SearchUsersPage extends Component {
     this.openSearchFrame = this.openSearchFrame.bind(this);
   }
 
+  componentWillMount() {
+    axios
+      .post(`/api/notifications`, { userId: sessionStorage.getItem("userId") })
+      .then(async res => {
+        if (res.data.success) {
+          await this.setState({ count: res.data.success });
+        } else {
+          console.log("error");
+        }
+      });
+  }
+
+  handleNotification = notification => {
+    console.log(notification);
+  };
+
   async componentDidMount() {
+    var socket = this.props.socket;
+    await socket.on("connect", () => {
+      console.log("connected");
+      socket.emit("notif", sessionStorage.getItem("userId"));
+      socket.on("NOTIF_RECEIVED", async data => {
+        const openNotificationWithIcon = type => {
+          notification[type]({
+            message: data.fromUser + " " + data.message
+          });
+        };
+        openNotificationWithIcon("info");
+        await this.setState({ count: data.count });
+      });
+    });
     await this.setState({
       userId: { userId: sessionStorage.getItem("userId") }
     });
@@ -137,113 +168,146 @@ class SearchUsersPage extends Component {
       });
   };
 
+  sendVisitNotification = e => {
+    // e.preventDefault();
+    var socket = this.props.socket;
+    const likeroom = e.userId;
+    const receiverId = e.userId;
+    const senderId = sessionStorage.getItem("userId");
+    const fromUser = sessionStorage.getItem("userData");
+    const sendAt = Date.now();
+    const message = "have visited your profile";
+    console.log(e);
+    socket.emit("NOTIF_SENT", {
+      likeroom,
+      message,
+      fromUser,
+      senderId,
+      receiverId,
+      sendAt
+    });
+  };
+
   render() {
-    const { searchOptions, usersList, sortBy, open } = this.state;
+    const { searchOptions, usersList, sortBy, open, count } = this.state;
     var list = usersList.usersList;
     return (
       <div>
-        <Header isLoggedIn={this.state.isLoggedIn} />
+        <Header
+          isLoggedIn={this.state.isLoggedIn}
+          notSeenNotifications={count}
+        />
+
         <Helmet>
           <style>{"body { overflow: hidden }"}</style>
         </Helmet>
         <div className="container-fluid">
           <MDBRow className="searchRows">
-            <MDBCol size='4' className="searchFrame">
+            <MDBCol size="4" className="searchFrame">
               <MDBBtn
                 onClick={this.openSearchFrame}
                 className="small-button explorer"
                 rounded
                 size="lg"
                 gradient="peach"
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
               >
                 Preferences
               </MDBBtn>
-              {open ? (<div className="searchOptionsMobile">
-                <form>
-                  <h4>Age</h4>
-                  <Slider
-                    range
-                    marks={{
-                      18: '18 ans',
-                      99: '99 ans'
-                    }}
-                    min={18}
-                    max={99}
-                    value={searchOptions.ageInterval}
-                    name="ageInterval"
-                    onChange={this.onChangeAge}
-                  />
-                  <h4>Distance</h4>
-                  <Slider
-                    marks={{
-                      0: '0',
-                      100: '100km'
-                    }}
-                    max={100}
-                    value={searchOptions.distMax}
-                    onChange={this.onChangeDistance}
-                    name="distMax"
-                  />
-                  <h4>Popularity</h4>
-                  <Slider
-                    range
-                    marks={{
-                      0: '0',
-                      1000: '1000'
-                    }}
-                    min={0}
-                    max={1000}
-                    value={searchOptions.popularityScoreInterval}
-                    name="popularityScoreInterval"
-                    onChange={this.onChangePopularity}
-                  />
-                  <label htmlFor="searchTagsInput">
-                    <h4>Search by tags:</h4>
-                    <input
-                      className="searchTagsInput"
-                      name="listTags"
-                      type="text"
-                      id="searchTagsInput"
-                      placeholder="green, geek"
-                      onChange={e => this.onChangeTagsList(e)}
-                      value={searchOptions.listTags}
+              {open ? (
+                <div className="searchOptionsMobile">
+                  <form>
+                    <h4>Age</h4>
+                    <Slider
+                      range
+                      marks={{
+                        18: "18 ans",
+                        99: "99 ans"
+                      }}
+                      min={18}
+                      max={99}
+                      value={searchOptions.ageInterval}
+                      name="ageInterval"
+                      onChange={this.onChangeAge}
                     />
-                  </label>
-                  <MDBBtn gradient="peach" className="search-button" type="submit" onClick={e => this.handleSubmit(e)}>
-                    Search
-        </MDBBtn>
-                </form>
-                <div className="searchFilters">
-                  <Select
-                    showSearch
-                    style={{ width: 200 }}
-                    placeholder="Sort by"
-                    optionFilterProp="children"
-                    value={sortBy.sortBy ? sortBy.sortBy : undefined}
-                    onSelect={this.onSelelctOption}
-                    filterOption={(input, option) =>
-                      option.props.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    <Option value="age">Age</Option>
-                    <Option value="location">Location</Option>
-                    <Option value="popularity">Popularity score</Option>
-                    <Option value="tags">Common tags</Option>
-                    <Option value="default">Default</Option>
-                  </Select>
+                    <h4>Distance</h4>
+                    <Slider
+                      marks={{
+                        0: "0",
+                        100: "100km"
+                      }}
+                      max={100}
+                      value={searchOptions.distMax}
+                      onChange={this.onChangeDistance}
+                      name="distMax"
+                    />
+                    <h4>Popularity</h4>
+                    <Slider
+                      range
+                      marks={{
+                        0: "0",
+                        1000: "1000"
+                      }}
+                      min={0}
+                      max={1000}
+                      value={searchOptions.popularityScoreInterval}
+                      name="popularityScoreInterval"
+                      onChange={this.onChangePopularity}
+                    />
+                    <label htmlFor="searchTagsInput">
+                      <h4>Search by tags:</h4>
+                      <input
+                        className="searchTagsInput"
+                        name="listTags"
+                        type="text"
+                        id="searchTagsInput"
+                        placeholder="green, geek"
+                        onChange={e => this.onChangeTagsList(e)}
+                        value={searchOptions.listTags}
+                      />
+                    </label>
+                    <MDBBtn
+                      gradient="peach"
+                      className="search-button"
+                      type="submit"
+                      onClick={e => this.handleSubmit(e)}
+                    >
+                      Search
+                    </MDBBtn>
+                  </form>
+                  <div className="searchFilters">
+                    <Select
+                      showSearch
+                      style={{ width: 200 }}
+                      placeholder="Sort by"
+                      optionFilterProp="children"
+                      value={sortBy.sortBy ? sortBy.sortBy : undefined}
+                      onSelect={this.onSelelctOption}
+                      filterOption={(input, option) =>
+                        option.props.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      <Option value="age">Age</Option>
+                      <Option value="location">Location</Option>
+                      <Option value="popularity">Popularity score</Option>
+                      <Option value="tags">Common tags</Option>
+                      <Option value="default">Default</Option>
+                    </Select>
+                  </div>
                 </div>
-              </div>) : ""}
+              ) : (
+                ""
+              )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
                   <Slider
                     range
                     marks={{
-                      18: '18 ans',
-                      99: '99 ans'
+                      18: "18 ans",
+                      99: "99 ans"
                     }}
                     min={18}
                     max={99}
@@ -254,8 +318,8 @@ class SearchUsersPage extends Component {
                   <h4>Distance</h4>
                   <Slider
                     marks={{
-                      0: '0',
-                      100: '100km'
+                      0: "0",
+                      100: "100km"
                     }}
                     max={100}
                     value={searchOptions.distMax}
@@ -266,8 +330,8 @@ class SearchUsersPage extends Component {
                   <Slider
                     range
                     marks={{
-                      0: '0',
-                      1000: '1000'
+                      0: "0",
+                      1000: "1000"
                     }}
                     min={0}
                     max={1000}
@@ -287,9 +351,14 @@ class SearchUsersPage extends Component {
                       value={searchOptions.listTags}
                     />
                   </label>
-                  <MDBBtn gradient="peach" className="search-button" type="submit" onClick={e => this.handleSubmit(e)}>
+                  <MDBBtn
+                    gradient="peach"
+                    className="search-button"
+                    type="submit"
+                    onClick={e => this.handleSubmit(e)}
+                  >
                     Search
-              </MDBBtn>
+                  </MDBBtn>
                 </form>
                 <div className="searchFilters">
                   <Select
@@ -315,12 +384,16 @@ class SearchUsersPage extends Component {
               </div>
             </MDBCol>
             {list.length > 0 ? (
-              <MDBCol size='8' className="explorer-container">
+              <MDBCol size="8" className="explorer-container">
                 {list.map((item, index) => (
-                  <div className="searchCardContainer" style={{ maxWidth: 240 }} key={index}>
+                  <div
+                    className="searchCardContainer"
+                    style={{ maxWidth: 240 }}
+                    key={index}
+                  >
                     <Card
                       hoverable
-                      style={{ height: 765, overflow: 'visible' }}
+                      style={{ height: 765, overflow: "visible" }}
                       cover={
                         <img
                           alt="example"
@@ -336,35 +409,44 @@ class SearchUsersPage extends Component {
                         item={item}
                         popularity_score={item.popularity_score}
                         liked={item.liked}
+                        socket={this.props.socket}
                       />
                       <Meta
                         title={`${item.firstname} ${item.lastname}, ${
                           item.age
-                          } years old`}
+                        } years old`}
                         description={item.bio}
                       />
-                      <ReactTags classNames={{
-                        tags: 'tagsContainer',
-                        selected: 'selectedSearchTags',
-                        tag: 'allSearchTags'
-                      }} tags={item.tags} readOnly={true} />
+                      <ReactTags
+                        classNames={{
+                          tags: "tagsContainer",
+                          selected: "selectedSearchTags",
+                          tag: "allSearchTags"
+                        }}
+                        tags={item.tags}
+                        readOnly={true}
+                      />
                       <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
                       <p>
                         {item.gender === "male" ? "Man" : "Woman"},{" "}
                         {item.sexual_orientation}
                       </p>
-                      <a href={`https://localhost:4000/users/${item.username}`}>
+
+                      <a
+                        href={`https://localhost:4000/users/${item.username}`}
+                        onClick={e => this.sendVisitNotification(item)}
+                      >
                         Show more...
-                    </a>
+                      </a>
                     </Card>
                   </div>
                 ))}
               </MDBCol>
             ) : (
-                <div className="col-md-4">
-                  <p>No user finds</p>
-                </div>
-              )}
+              <div className="col-md-4">
+                <p>No user finds</p>
+              </div>
+            )}
           </MDBRow>
         </div>
       </div>

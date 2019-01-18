@@ -10,6 +10,7 @@ import HomePage from "./components/Navigation/HomePage";
 // import Footer from "./components/Navigation/Footer";
 import NotFoundPage from "./components/Navigation/NotFoundPage";
 import SearchUsersPage from "./components/Search/SearchUsers";
+import NotificationsPage from "./components/Notifications/NotificationsPage";
 import * as routes from "./constants/routes";
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
@@ -62,7 +63,7 @@ const App = () => (
         <Route
           exact
           path={routes.USER_PROFIL_PAGE}
-          render={props => <UserProfilPage {...props} />}
+          render={props => <UserProfilPage {...props} socket={socket} />}
         />
         <Route
           exact
@@ -77,7 +78,7 @@ const App = () => (
         <Route
           exact
           path={routes.EXPLORER_PAGE}
-          render={props => <SearchUsersPage {...props} />}
+          render={props => <SearchUsersPage {...props} socket={socket} />}
         />
         <Route
           exact
@@ -88,6 +89,11 @@ const App = () => (
           exact
           path={routes.TEST}
           render={props => <Layout {...props} socket={socket} />}
+        />
+        <Route
+          exact
+          path={routes.NOTIFICATION}
+          render={props => <NotificationsPage {...props} socket={socket} />}
         />
       </Switch>
     </div>

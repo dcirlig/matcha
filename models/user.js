@@ -19,14 +19,14 @@ function findOne(field, userData, callback) {
   sql = "SELECT " + field + " FROM users WHERE " + field + "= ?";
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
-    if (result) find = 1;
+    if (result.length > 0) find = 1;
     else find = 0;
     return callback(find);
   });
 }
 
 function getUser(field, userData, callback) {
-  sql = "SELECT " + field + " FROM users WHERE " + field + "= ?";
+  // sql = "SELECT " + field + " FROM users WHERE " + field + "= ?";
   sql = "SELECT * FROM users WHERE " + field + "=?";
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);
