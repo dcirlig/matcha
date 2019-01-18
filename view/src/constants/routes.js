@@ -9,5 +9,4 @@ export const HOME_PAGE = "/";
 export const NOT_FOUND = "/notfound";
 export const EXPLORER_PAGE = "/explorer";
 export const CHAT_PAGE = "/chat/chatpage";
-export const TEST = "/test";
 export const NOTIFICATION = "/notifications";

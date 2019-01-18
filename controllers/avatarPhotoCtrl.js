@@ -8,7 +8,7 @@ var users = require("../models/user");
 
 var storage = multer.diskStorage({
   destination: "./view/public/profilPhoto",
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, "IMAGE-" + Date.now() + path.extname(file.originalname));
   }
 });
@@ -19,7 +19,7 @@ var upload = multer({
 }).single("myImage");
 
 module.exports = {
-  avatarPhoto: function(req, res) {
+  avatarPhoto: function (req, res) {
     upload(req, res, err => {
       if (req.file) {
         if (!req.file.originalname.match(/\.(jpg|jpeg)$/)) {
@@ -35,7 +35,7 @@ module.exports = {
               "https://localhost:4000/",
               "view/public/"
             );
-            fs.unlink(oldImageUrl, function(err) {});
+            fs.unlink(oldImageUrl, function (err) { });
           }
           objUpdate = { profil_image: userData.url };
           users.updateUser(objUpdate, userData.userId);
@@ -50,9 +50,9 @@ module.exports = {
     });
   },
 
-  displayAvatarPhoto: function(req, res) {
+  displayAvatarPhoto: function (req, res) {
     var userId = req.body.userId;
-    users.getUser("userId", `${userId}`, function(result) {
+    users.getUser("userId", `${userId}`, function (result) {
       if (result) {
         result.forEach(element => {
           if (element.profil_image !== null) {

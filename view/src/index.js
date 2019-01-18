@@ -20,7 +20,6 @@ import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "./styles/styles.scss";
 import history from "./constants/history";
-import Layout from "./components/Test/test";
 import io from "socket.io-client";
 
 const socketUrl = "localhost:8081";
@@ -83,12 +82,7 @@ const App = () => (
         <Route
           exact
           path={routes.CHAT_PAGE}
-          render={props => <ChatPage {...props} />}
-        />
-        <Route
-          exact
-          path={routes.TEST}
-          render={props => <Layout {...props} socket={socket} />}
+          render={props => <ChatPage {...props} socket={socket} />}
         />
         <Route
           exact
