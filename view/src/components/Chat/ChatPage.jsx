@@ -17,12 +17,14 @@ export default class ChatPage extends Component {
       activeConv: "",
       socket: this.props.socket,
       messages: [],
-      display: 'messages'
+      display: 'messages',
+      open: false
     }
     this.newChat = this.newChat.bind(this)
     this.openChat = this.openChat.bind(this)
     this.openMatches = this.openMatches.bind(this)
     this.openMessages = this.openMessages.bind(this)
+    this.openSelectChats = this.openSelectChats.bind(this)
   }
 
   componentDidMount() {
@@ -129,8 +131,12 @@ export default class ChatPage extends Component {
     this.setState({ display: 'messages' })
   }
 
+  openSelectChats() {
+    this.setState({ open: !this.state.open });
+  }
+
   render() {
-    const { usersMatched, existingConv, activeConv, messages, display } = this.state
+    const { usersMatched, existingConv, activeConv, messages, display, open } = this.state
     const { socket } = this.props
     return (
       <div>
@@ -141,8 +147,16 @@ export default class ChatPage extends Component {
         <div className="container-fluid">
           <MDBRow className="chatRows">
             <MDBCol size='4' className="sideBarChat">
-              <div className="sideBarContent">
-                <h3 className="welcomeChat">Welcome to your private chat!</h3>
+              <MDBBtn
+                onClick={this.openSelectChats}
+                className="small-button explorer"
+                rounded
+                size="lg"
+                gradient="peach"
+                style={{ display: 'none' }}
+              >Change chat
+              </MDBBtn>
+              {open ? <div className="sideBarContentMobile">
                 <MDBRow >
                   <MDBCol>
                     <MDBBtn gradient="peach" className="chatMenuButton" onClick={this.openMessages}>Your messages</MDBBtn>
@@ -151,14 +165,31 @@ export default class ChatPage extends Component {
                     <MDBBtn gradient="peach" className="chatMenuButton" onClick={this.openMatches}>Your matches</MDBBtn>
                   </MDBCol>
                 </MDBRow>
-                {display === 'messages' ? (<div className="messagesColMenu">{existingConv.length > 0 ?
+                {display === 'messages' && open ? (<div className="messagesColMenu">{existingConv.length > 0 ?
                   <ChatList className='chat-list' dataSource={existingConv} onClick={this.openChat} />
                   : "You have no chats yet."
                 }</div>) : (<div className="matchesColMenu">{usersMatched.length > 0 ?
                   <ChatList className='chat-list' dataSource={usersMatched} onClick={this.newChat} />
                   : <h4>You have no new matches.</h4>
-                }</div>)}
-              </div>
+                }</div>)}</div> :
+                <div className="sideBarContent">
+                  <h3 className="welcomeChat">Welcome to your private chat!</h3>
+                  <MDBRow >
+                    <MDBCol>
+                      <MDBBtn gradient="peach" className="chatMenuButton" onClick={this.openMessages}>Your messages</MDBBtn>
+                    </MDBCol>
+                    <MDBCol>
+                      <MDBBtn gradient="peach" className="chatMenuButton" onClick={this.openMatches}>Your matches</MDBBtn>
+                    </MDBCol>
+                  </MDBRow>
+                  {display === 'messages' ? (<div className="messagesColMenu">{existingConv.length > 0 ?
+                    <ChatList className='chat-list' dataSource={existingConv} onClick={this.openChat} />
+                    : "You have no chats yet."
+                  }</div>) : (<div className="matchesColMenu">{usersMatched.length > 0 ?
+                    <ChatList className='chat-list' dataSource={usersMatched} onClick={this.newChat} />
+                    : <h4>You have no new matches.</h4>
+                  }</div>)}
+                </div>}
             </MDBCol>
             <MDBCol size='8' className="chatContainer"><ChatContainer socket={socket} chatInfo={activeConv ? activeConv : "Select a conv"} chatMessages={messages ? messages : "Empty chat"} /></MDBCol>
           </MDBRow>

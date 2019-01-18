@@ -38,6 +38,47 @@ input[type=text]:focus:not([readonly]) {
   border-right: 1px solid $coral;
 }
 
+@media screen and (max-width: 1000px) {
+  .col-4.sideBarChat {
+    margin-left:2vh;
+    margin-bottom:2vh;
+  }
+  .chatContainer {
+    min-width:100% !important;
+    margin-top:0;
+  }
+  // .messagesColMenu {
+  //   display: none;
+  // }
+  // .matchesColMenu {
+  //   display: none;
+  // }
+  .sideBarContent {
+    display: none;
+  }
+  // .btn.peach-gradient.btn-lg.btn-rounded.Ripple-parent.small-button.explorer {
+  //   margin-top:10rem;
+  //   display: block !important;
+  //   margin-left: auto;
+  //   margin-right: auto;
+  // }
+  // .explorer-container {
+  //   margin-top:0;
+  // }
+  .sideBarContentMobile {
+    max-width: 90% !important;
+  }
+  // .searchCardContainer {
+  //   min-width: 100%;
+  // }
+}
+
+@media screen and (min-width: 1001px) {
+  .sideBarContentMobile {
+    display: none;
+  }
+}
+
 .sideBarContent {
   margin-top: 9.5rem;
   max-width: 90%;
