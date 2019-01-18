@@ -15,9 +15,10 @@ var preferencesCtrl = require("./controllers/preferencesCtrl");
 var settingsCtrl = require("./controllers/settingsCtrl");
 var explorerCtrl = require("./controllers/explorerCtrl");
 var likeCtrl = require("./controllers/likeCtrl");
-var chatCtrl = require("./controllers/chatCtrl")
+var chatCtrl = require("./controllers/chatCtrl");
+var notificationsCtrl = require("./controllers/notificationsCtrl");
 //Routes
-exports.router = (function () {
+exports.router = (function() {
   var Router = express.Router();
 
   // Users routes
@@ -50,5 +51,8 @@ exports.router = (function () {
   Router.post("/chat/getRooms", chatCtrl.getRooms);
   Router.post("/chat/getConv", chatCtrl.getConv);
   Router.post("/chat/getLastMessage", chatCtrl.getLastMessage);
+  Router.post("/notifications", notificationsCtrl.notifications);
+  Router.post("/getAllnotifications", notificationsCtrl.getAllnotifications);
+  
   return Router;
 })();

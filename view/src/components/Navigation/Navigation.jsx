@@ -33,6 +33,7 @@ class LoginHeader extends React.Component {
   }
   render() {
     const username = sessionStorage.getItem("userData");
+    const { notSeenNotifications } = this.props;
     return (
       <div>
         <Navbar className="navbar-features" dark expand="md" scrolling>
@@ -55,6 +56,14 @@ class LoginHeader extends React.Component {
           {!this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
           <Collapse isOpen={this.state.collapse} navbar>
             <NavbarNav right>
+              <NavItem>
+                <NavLink to={routes.NOTIFICATION} activeClassName="is-active">
+                  <div id="notifications">
+                    <div className="numberCircle">{notSeenNotifications}</div>
+                    <MDBIcon icon="bell" size="lg" className="iconProfile" />
+                  </div>
+                </NavLink>
+              </NavItem>
               <NavItem>
                 <NavLink to={`/chat/chatpage`} activeClassName="is-active">
                   <MDBIcon icon="envelope" size="lg" className="iconProfile" />
@@ -143,8 +152,9 @@ class LogoutHeader extends React.Component {
 
 export default function Header(props) {
   const isLoggedIn = props.isLoggedIn;
+  const notSeenNotifications = props.notSeenNotifications;
   if (isLoggedIn) {
-    return <LoginHeader />;
+    return <LoginHeader notSeenNotifications={notSeenNotifications} />;
   }
   return <LogoutHeader />;
 }

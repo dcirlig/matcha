@@ -18,6 +18,27 @@
 //   font-size: $l-size;
 // }
 
+.numberCircle {
+  width: 20px;
+  height: 20px;
+  box-sizing: initial;
+
+  background: #fff;
+  border: 0.1em solid #666;
+  color: #666;
+  text-align: center;
+  border-radius: 50%;
+
+  line-height: 1.5em;
+  box-sizing: content-box;
+  float: right;
+}
+
+#notifications {
+  width: 40px;
+  height: 40px;
+}
+
 .btn .fa {
   font-size: $l-size;
 }
@@ -61,12 +82,12 @@
     width: 100%;
   }
   .col-4 {
-    min-width:100% !important;
-    overflow:visible;
-    position:relative;
+    min-width: 100% !important;
+    overflow: visible;
+    position: relative;
     display: block;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
     border: none;
   }
   .avatarBlock {
@@ -85,14 +106,14 @@
     padding: 15px;
   }
   .iconsButtonPreview {
-    display:inline-block !important;
+    display: inline-block !important;
     font-size: $l-size;
     border-radius: 50%;
   }
 }
 
 .iconsButtonPreview {
-  display:none;
+  display: none;
 }
 
 .userProfileSettings {
@@ -106,21 +127,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-// position: fixed;
-// margin-right:0;
+  // position: fixed;
+  // margin-right:0;
 }
 
 .profile-preview-page {
   margin-top: 100px;
-  max-width: 50%
+  max-width: 50%;
 }
 @media screen and (max-width: 1000px) {
   .profilePreview {
-    display:none;
+    display: none;
   }
   .profile-preview-page {
     max-width: 80%;
-    margin-top:0;
+    margin-top: 0;
   }
 }
 .cardElementProfile {
@@ -128,11 +149,11 @@
 }
 
 .profile-preview-container {
-  max-width:100%;
+  max-width: 100%;
 }
 
 .ant-card.ant-card-bordered.ant-card-hoverable {
-  max-width:100%;
+  max-width: 100%;
   height: auto;
 }
 
