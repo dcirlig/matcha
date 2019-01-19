@@ -31,19 +31,50 @@ module.exports = function(socket) {
 
   socket.on(
     "MESSAGE_SENT",
-    ({ chatRoom, message, fromUser, senderId, receiverId, sendAt }) => {
+    ({
+      chatRoom,
+      message,
+      fromUser,
+      toUser,
+      senderId,
+      receiverId,
+      sendAt,
+      avatar,
+      myAvatar
+    }) => {
+      io.to(chatRoom).emit("MESSAGE_SENT", {
+        message,
+        fromUser,
+        toUser,
+        sendAt,
+        chatRoom,
+        senderId,
+        receiverId,
+        avatar,
+        myAvatar
+      });
       const chatData = {
         senderId: senderId,
         receiverId: receiverId,
+        content: message,
         time: sendAt,
-        chatRoom: chatRoom,
-        matchId: 0
+        chatRoom: chatRoom
       };
-      sql = "INSERT INTO chats SET ?";
+      sql = "INSERT INTO messages SET ?";
       connection.query(sql, chatData, function(err, result) {
         if (err) console.log(err);
       });
-      io.to(chatRoom).emit("MESSAGE_RECEIVED", { message, fromUser });
+      io.to(chatRoom).emit("MESSAGE_RECEIVED", {
+        message,
+        fromUser,
+        toUser,
+        sendAt,
+        chatRoom,
+        senderId,
+        receiverId,
+        avatar,
+        myAvatar
+      });
     }
   );
 };

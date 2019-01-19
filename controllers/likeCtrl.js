@@ -6,14 +6,12 @@ var randomstring = require("randomstring");
 var moment = require("moment");
 
 module.exports = {
-  displayLike: function(req, res) {},
-  like: function(req, res) {
-    // console.log(req.body)
+  displayLike: function (req, res) { },
+  like: function (req, res) {
     var bodyLike = {
       likeTransmitter: parseInt(req.body.likeTransmitter),
       likedUser: parseInt(req.body.likedUser),
       liked: req.body.like
-      // room: "room" + randomstring.generate() + moment()
     };
     var popularity_score = parseInt(req.body.popularity_score);
     if (bodyLike.likeTransmitter) {
@@ -23,7 +21,7 @@ module.exports = {
           var likeTransmitterList = [];
           var match = false;
           var room = "";
-          connection.query(sql, bodyLike.likedUser, function(err, result) {
+          connection.query(sql, bodyLike.likedUser, function (err, result) {
             if (err) console.log(err);
             if (result) {
               result.forEach(element => {
@@ -60,7 +58,7 @@ module.exports = {
           connection.query(
             sql,
             [bodyLike.likeTransmitter, bodyLike.likedUser],
-            function(err, result) {
+            function (err, result) {
               if (err) console.log(err);
             }
           );
