@@ -10,6 +10,10 @@
   overflow-x: hidden;
 }
 
+.notif-container {
+  margin-top: 10rem;
+}
+
 .col-4.searchFrame {
   overflow: visible;
   margin-left: 10rem;
@@ -23,23 +27,23 @@
 
 @media screen and (max-width: 1000px) {
   .col-4.searchFrame {
-    margin-left:2vh;
-    margin-bottom:2vh;
+    margin-left: 2vh;
+    margin-bottom: 2vh;
   }
   .explorer-container {
-    min-width:100% !important;
+    min-width: 100% !important;
   }
   .searchOptions {
     display: none;
   }
   .btn.peach-gradient.btn-lg.btn-rounded.Ripple-parent.small-button.explorer {
-    margin-top:10rem;
+    margin-top: 10rem;
     display: block !important;
     margin-left: auto;
     margin-right: auto;
   }
   .explorer-container {
-    margin-top:0;
+    margin-top: 0;
   }
   .searchOptionsMobile {
     max-width: 90% !important;
@@ -88,7 +92,7 @@ label#searchTagsInput.active {
   outline: none !important;
 }
 
-label#searchTagsInput:focus:not([readonly]){
+label#searchTagsInput:focus:not([readonly]) {
   color: white;
 }
 
@@ -109,15 +113,15 @@ label#searchTagsInput:focus:not([readonly]){
 }
 
 .tagsContainer.react-tags-wrapper {
-  margin-top:5px;
+  margin-top: 5px;
 }
 
 .tag-wrapper.allSearchTags {
   color: $coral;
   font-weight: 400;
   display: inline-block;
-  margin:2px;
-  margin-bottom:5px;
+  margin: 2px;
+  margin-bottom: 5px;
   font-size: 1.1rem;
   border: 1px solid lighten($red, 20%);
   padding: 5px;

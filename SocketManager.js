@@ -15,20 +15,11 @@ module.exports = function(socket) {
         receiverId,
         time: sendAt
       };
-      var count = 0;
+
       notification.createNotification(notifData);
-      notification.countNotSeenNotification([receiverId, 0], function(result) {
-        if (result) {
-          result.forEach(element => {
-            count = element.COUNT;
-          });
-        }
-        console.log("count", count);
-        io.to(likeroom).emit("NOTIF_RECEIVED", {
-          fromUser,
-          message,
-          count
-        });
+      io.to(likeroom).emit("NOTIF_RECEIVED", {
+        fromUser,
+        message
       });
     }
   );

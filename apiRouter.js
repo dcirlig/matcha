@@ -53,6 +53,6 @@ exports.router = (function() {
   Router.post("/chat/getLastMessage", chatCtrl.getLastMessage);
   Router.post("/notifications", notificationsCtrl.notifications);
   Router.post("/getAllnotifications", notificationsCtrl.getAllnotifications);
-  
+  Router.post("/updateNotif", notificationsCtrl.updateNotif);
   return Router;
 })();

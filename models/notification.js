@@ -7,15 +7,6 @@ function createNotification(data) {
   });
 }
 
-function getNotificatios(field, data, callback) {
-  sql = "SELECT * FROM notifications WHERE " + field + "=?";
-  connection.query(sql, data, function(err, result) {
-    if (err) console.log(err);
-    if (result) return callback(result);
-    else callback(0);
-  });
-}
-
 function countNotSeenNotification(data, callback) {
   sql =
     "SELECT COUNT(notificationId) AS COUNT FROM notifications INNER JOIN users ON notifications.receiverId=users.userId WHERE notifications.receiverId=? AND notifications.seen=?";
@@ -36,7 +27,15 @@ function getAllNotif(data, callback) {
   });
 }
 
+function updateNotif(objUpdate, userData) {
+  sql = "UPDATE notifications SET ? WHERE receiverId=?";
+  connection.query(sql, [objUpdate, userData], function(err, result) {
+    if (err) console.log(err);
+    console.log("res", result);
+  });
+}
+
 exports.createNotification = createNotification;
-exports.getNotificatios = getNotificatios;
 exports.countNotSeenNotification = countNotSeenNotification;
 exports.getAllNotif = getAllNotif;
+exports.updateNotif = updateNotif;

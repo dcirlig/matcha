@@ -34,6 +34,7 @@ const INITIAL_STATE = {
 };
 
 class SearchUsersPage extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
@@ -44,40 +45,56 @@ class SearchUsersPage extends Component {
     this.openSearchFrame = this.openSearchFrame.bind(this);
   }
 
-  componentWillMount() {
-    axios
-      .post(`/api/notifications`, { userId: sessionStorage.getItem("userId") })
-      .then(async res => {
-        if (res.data.success) {
-          await this.setState({ count: res.data.success });
-        } else {
-          console.log("error");
-        }
+  async componentWillMount() {
+    this._isMounted = true;
+    if (this._isMounted) {
+      await this.setState({
+        userId: { userId: sessionStorage.getItem("userId") }
       });
+
+      axios
+        .post(`/api/notifications`, { userId: this.state.userId.userId })
+        .then(res => {
+          console.log(res.data);
+          if (res.data.success) {
+            this.setState({ count: res.data.count });
+          } else {
+            console.log("error");
+          }
+        });
+    }
   }
 
-  handleNotification = notification => {
-    console.log(notification);
-  };
-
   async componentDidMount() {
+    this._isMounted = true;
     var socket = this.props.socket;
     await socket.on("connect", () => {
       console.log("connected");
-      socket.emit("notif", sessionStorage.getItem("userId"));
+      socket.emit("notif", this.state.userId.userId);
       socket.on("NOTIF_RECEIVED", async data => {
         const openNotificationWithIcon = type => {
           notification[type]({
             message: data.fromUser + " " + data.message
           });
         };
+        axios
+          .post(`/api/notifications`, { userId: this.state.userId.userId })
+          .then(async res => {
+            console.log(res.data);
+
+            if (res.data.success) {
+              if (this._isMounted) {
+                await this.setState({ count: res.data.count });
+              }
+            } else {
+              console.log("error");
+            }
+          });
+
         openNotificationWithIcon("info");
-        await this.setState({ count: data.count });
       });
     });
-    await this.setState({
-      userId: { userId: sessionStorage.getItem("userId") }
-    });
+
     axios
       .post(`/api/explorer`, { userId: this.state.userId })
       .then(async res => {
@@ -187,6 +204,10 @@ class SearchUsersPage extends Component {
       sendAt
     });
   };
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   render() {
     const { searchOptions, usersList, sortBy, open, count } = this.state;

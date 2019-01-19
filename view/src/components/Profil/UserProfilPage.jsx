@@ -70,9 +70,9 @@ class UserProfilPage extends Component {
     await this.setState({ username: sessionStorage.getItem("userData") });
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
-      .then(async res => {
-        if (res.data) {
-          await this.setState({ count: res.data.success });
+      .then(res => {
+        if (res.data.success) {
+          this.setState({ count: res.data.count });
         } else {
           console.log("error");
         }
@@ -80,6 +80,7 @@ class UserProfilPage extends Component {
   }
 
   async componentDidMount() {
+    this._isMounted = true;
     var socket = this.props.socket;
     await socket.on("connect", () => {
       console.log("connected");
@@ -90,11 +91,20 @@ class UserProfilPage extends Component {
             message: data.fromUser + " " + data.message
           });
         };
+        axios
+          .post(`/api/notifications`, { userId: this.state.userId })
+          .then(async res => {
+            console.log(res.data);
+            if (res.data.success) {
+              await this.setState({ count: res.data.count });
+            } else {
+              console.log("error");
+            }
+          });
         openNotificationWithIcon("info");
-        await this.setState({ count: data.count });
       });
     });
-    this._isMounted = true;
+
     sessionStorage.getItem("userData");
   }
 
@@ -112,7 +122,13 @@ class UserProfilPage extends Component {
   }
 
   render() {
-    const { profileSettings, accountSettings, refresh, count, username } = this.state;
+    const {
+      profileSettings,
+      accountSettings,
+      refresh,
+      count,
+      username
+    } = this.state;
     const userData = sessionStorage.getItem("userData");
     if (!this._isMounted && !sessionStorage.getItem("userData")) {
       return <Redirect to={routes.SIGN_IN} />;
@@ -198,36 +214,36 @@ class UserProfilPage extends Component {
                 </MDBCol>
               </MDBRow>
             </div>
+            <ProfilePreviewModal
+              profilePreview={this.state.profilePreview}
+              closeProfilePreview={this.closeProfilePreview}
+              username={username}
+            />
           </div>
         ) : (
-            <div>
-              {" "}
-              <Header
-                isLoggedIn={this.state.isLoggedIn}
-                notSeenNotifications={count}
-              />
-              <MDBRow>
-                <MDBCol size="3" />
-                <MDBCol
-                  className="profilePreview"
-                  size="6"
-                  style={{ height: this.props.windowHeight - 50 }}
-                >
-                  <ProfilePreview
-                    {...this.props}
-                    refresh={refresh}
-                    stopRefresh={this.stopRefresh}
-                  />
-                </MDBCol>
-                <MDBCol size="3" />
-              </MDBRow>
-            </div>
-          )}
-        <ProfilePreviewModal
-          profilePreview={this.state.profilePreview}
-          closeProfilePreview={this.closeProfilePreview}
-          username={username}
-        />
+          <div>
+            {" "}
+            <Header
+              isLoggedIn={this.state.isLoggedIn}
+              notSeenNotifications={count}
+            />
+            <MDBRow>
+              <MDBCol size="3" />
+              <MDBCol
+                className="profilePreview"
+                size="6"
+                style={{ height: this.props.windowHeight - 50 }}
+              >
+                <ProfilePreview
+                  {...this.props}
+                  refresh={refresh}
+                  stopRefresh={this.stopRefresh}
+                />
+              </MDBCol>
+              <MDBCol size="3" />
+            </MDBRow>
+          </div>
+        )}
       </div>
     );
   }
