@@ -159,10 +159,8 @@ con.connect(function (err) {
       content              VARCHAR(255) NOT NULL,
       time                 VARCHAR(255) NOT NULL,
       chatRoom             VARCHAR(255) NOT NULL,
-      matchId              INTEGER NOT NULL,
       FOREIGN KEY (senderId) REFERENCES users(userId),
-      FOREIGN KEY (receiverId) REFERENCES users(userId),
-      FOREIGN KEY (matchId) REFERENCES likes(likeId)
+      FOREIGN KEY (receiverId) REFERENCES users(userId)
       )`;
 
       con.query(sql, function (err, result) {

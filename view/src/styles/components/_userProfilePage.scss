@@ -83,7 +83,7 @@
   }
   .col-4 {
     min-width: 100% !important;
-    overflow: visible;
+    overflow: scroll;
     position: relative;
     display: block;
     margin-left: auto;
@@ -127,21 +127,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
   // position: fixed;
   // margin-right:0;
 }
 
 .profile-preview-page {
   margin-top: 100px;
-  max-width: 50%;
+  max-width: 40%;
+  margin-left: auto;
+  margin-right: auto;
 }
 @media screen and (max-width: 1000px) {
   .profilePreview {
     display: none;
   }
   .profile-preview-page {
-    max-width: 80%;
-    margin-top: 0;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
   }
 }
 .cardElementProfile {
@@ -154,25 +159,37 @@
 
 .ant-card.ant-card-bordered.ant-card-hoverable {
   max-width: 100%;
-  height: auto;
+  max-height: 100%;
 }
 
 .slider-wrapper-profile {
-  top: $m-size;
   margin-bottom: $m-size;
   position: relative;
   margin-right: auto;
   margin-left: auto;
   height: 30vh;
-  max-width: 80%;
+  max-width: 100%;
   overflow: hidden;
 }
 
 .slider-content-profile {
-  max-height: 30vh;
+  max-height: 40vh;
   max-width: 100%;
 }
 
 .profilePic {
-  max-height: 40vh;
+  max-height: auto;
+  // object-fit: contain;
+}
+
+.lateralScrollProfile {
+  height: 100vh;
+  // margin-top: 10rem;
+  // display: flex;
+  // flex-direction: row;
+  // flex-wrap: wrap;
+  // justify-content: center;
+  // margin-bottom: 10rem;
+  // overflow: scroll;
+  // overflow-x: hidden;
 }
