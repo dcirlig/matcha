@@ -6,8 +6,10 @@ import ChatContainer from "./ChatContainer";
 import { Helmet } from "react-helmet";
 import { ChatList } from 'react-chat-elements'
 import 'react-chat-elements/dist/main.css';
+import { notification } from "antd";
 
 export default class ChatPage extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +30,7 @@ export default class ChatPage extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     const socket = this.props.socket
     axios
       .post(`/api/chat/getRooms`, sessionStorage)
@@ -41,16 +44,29 @@ export default class ChatPage extends Component {
               .then(res => {
                 if (res.data.error && res.data.error === "No last message found.") {
                   data = { chatRoom: element.room, receiverId: element.receiverId, receiverName: element.receiverName, senderId: element.senderId, senderName: element.senderName, title: element.receiverName, subtitle: 'Start a conversation with ' + element.receiverName, avatar: element.receiverPhoto, myAvatar: element.senderPhoto, date: new Date(), lastMessageContent: '', unread: 0 }
-                  this.setState({ usersMatched: [...this.state.usersMatched, data] })
+                  if (this._isMounted === true) {
+                    this.setState({ usersMatched: [...this.state.usersMatched, data] })
+                  }
                 } else {
                   data = { chatRoom: element.room, receiverId: element.receiverId, title: element.receiverName, subtitle: res.data.lastMessage[0].content, date: new Date(parseInt(res.data.lastMessage[0].time)), unread: 0, receiverName: element.receiverName, avatar: element.receiverPhoto, lastMessageContent: res.data.lastMessage[0].content }
-                  this.setState({ existingConv: [...this.state.existingConv, data] })
+                  if (this._isMounted === true) {
+                    this.setState({ existingConv: [...this.state.existingConv, data] })
+                  }
                 }
               })
               .catch(err => { console.log(err) });
           })
         }
         socket.on('MESSAGE_RECEIVED', async (data) => {
+          if (data.fromUser !== sessionStorage.getItem('userData')) {
+            const openNotificationWithIcon = type => {
+              notification[type]({
+                message: data.fromUser + " send you a new message"
+              });
+            };
+            openNotificationWithIcon("info");
+            // await this.setState({ count: data.count });
+          }
           var newLastMessages = this.state.existingConv
           var newConvDetected = 0
           this.state.existingConv.forEach((conv, i) => {
@@ -69,11 +85,15 @@ export default class ChatPage extends Component {
             })
             var newConvItem = { chatRoom: data.chatRoom, receiverId: data.receiverId, title: data.fromUser, subtitle: data.message, date: new Date(parseInt(data.sendAt)), unread: 0, receiverName: data.receiverName, avatar: data.myAvatar, lastMessageContent: data.message }
             newLastMessages = [...newLastMessages, newConvItem]
-            await this.setState({ existingConv: newLastMessages })
+            if (this._isMounted === true) {
+              await this.setState({ existingConv: newLastMessages })
+            }
           }
           var newMessage = { senderId: data.senderId, receiverId: data.receiverId, content: data.message, time: data.sendAt, receiverUsername: data.toUser, senderUsername: data.fromUser }
           if (data.chatRoom === this.state.activeConv.chatRoom) {
-            await this.setState({ messages: [...this.state.messages, newMessage], existingConv: newLastMessages })
+            if (this._isMounted === true) {
+              await this.setState({ messages: [...this.state.messages, newMessage], existingConv: newLastMessages })
+            }
           }
         })
         socket.on('MESSAGE_SENT', async (data) => {
@@ -85,7 +105,9 @@ export default class ChatPage extends Component {
               newLastMessages[i].date = new Date(parseInt(data.sendAt))
             }
           })
-          this.setState({ existingConv: newLastMessages })
+          if (this._isMounted === true) {
+            this.setState({ existingConv: newLastMessages })
+          }
         })
       })
       .catch(err => {
@@ -102,9 +124,13 @@ export default class ChatPage extends Component {
       usersMatchedUpdate.splice(index, 1)
       existingConvUpdate = existingConv.concat(item)
       if (usersMatchedUpdate.length !== 0) {
-        await this.setState({ usersMatched: usersMatchedUpdate, existingConv: existingConvUpdate, activeConv: item, display: 'messages', messages: [] })
+        if (this._isMounted === true) {
+          await this.setState({ usersMatched: usersMatchedUpdate, existingConv: existingConvUpdate, activeConv: item, display: 'messages', messages: [] })
+        }
       } else {
-        await this.setState({ usersMatched: [], existingConv: existingConvUpdate, activeConv: item, display: 'messages' })
+        if (this._isMounted === true) {
+          await this.setState({ usersMatched: [], existingConv: existingConvUpdate, activeConv: item, display: 'messages' })
+        }
       }
     }
   }
@@ -113,26 +139,40 @@ export default class ChatPage extends Component {
     axios
       .post(`/api/chat/getConv`, item)
       .then(async res => {
-        if (res.data.error && res.data.error === "No messages found.") {
+        if (res.data.error && res.data.error === "No messages found." && this._isMounted === true) {
           await this.setState({ messages: [] })
         } else {
-          await this.setState({ messages: res.data.messages })
+          if (this._isMounted === true) {
+            await this.setState({ messages: res.data.messages })
+          }
         }
       })
       .catch(err => { console.log(err) });
-    await this.setState({ activeConv: item })
+    if (this._isMounted === true) {
+      await this.setState({ activeConv: item })
+    }
   }
 
   openMatches() {
-    this.setState({ display: 'matches' })
+    if (this._isMounted === true) {
+      this.setState({ display: 'matches' })
+    }
   }
 
   openMessages() {
-    this.setState({ display: 'messages' })
+    if (this._isMounted === true) {
+      this.setState({ display: 'messages' })
+    }
   }
 
   openSelectChats() {
-    this.setState({ open: !this.state.open });
+    if (this._isMounted === true) {
+      this.setState({ open: !this.state.open });
+    }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

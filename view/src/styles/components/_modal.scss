@@ -46,13 +46,17 @@
 // }
 
 .profilePreviewOverlay {
-    position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: rgb(255, 255, 255) !important; 
-        height: auto;
-        max-height:100%;
-        overflow:auto;
-        align-items: flex-start;
-        display: block !important;
-    
+    position: fixed; 
+    top: 0px; 
+    left: 0px; 
+    right: 0px; 
+    bottom: 0px; 
+    background-color: rgb(255, 255, 255) !important; 
+    height: auto;
+    max-height:100%;
+    overflow:auto;
+    align-items: flex-start;
+    display: inline-block !important;
 }
 
 // .profilePreviewModal {
@@ -60,16 +64,10 @@
 // }
 
 .profilePreviewModal.ReactModalPortal .ReactModal__Overlay {
-    align-items: center;
-    display: flex;
-    justify-content: center;
     transition: opacity 200ms ease-in-out;
 }
 
 .ReactModal__Content.ReactModal__Content--after-open.profilePreviewModal {
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: center;
     margin-top: 0;
     max-height: 100%;
 }    
@@ -77,7 +75,6 @@
 .profilePreviewModal.ReactModalPortal .ReactModal__Overlay--after-open {
     opacity: 1;
     z-index: 290 !important;
-    display:flex;
 }
 
 .profilePreviewModal.ReactModalPortal .ReactModal__Overlay--before-close {
@@ -107,16 +104,16 @@
 }
 
 .modalButton {
-    background: lighten($coral, 5%);
     border: none;
-    border-bottom: .6rem solid $coral;
+    background-color: $coral;
     color: white;
     font-weight: bold;
-    font-size: $m-size;
-    margin-top: $l-size;
-    margin-bottom: 0;
-    padding: 1.5rem;
-    width: 50%;
+    max-width: 40%;
+    max-height: $l-size;
     text-transform: none !important;
-    outline: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: $l-size;
+    margin-top: $l-size;
+    display: block;
 }

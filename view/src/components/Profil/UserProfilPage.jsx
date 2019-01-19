@@ -7,10 +7,10 @@ import UserProfileSettings from "./Settings/userProfileSettings";
 import UserAccountSettings from "./Settings/userAccountSettings";
 import ProfilePreview from "./Preview/profilePreview";
 import ProfilePreviewModal from "./Preview/profilePreviewModal";
-import windowSize from "react-window-size";
 import axios from "axios";
 import { notification } from "antd";
 import { Redirect } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 class UserProfilPage extends Component {
   _isMounted = false;
@@ -51,7 +51,9 @@ class UserProfilPage extends Component {
   }
 
   closeProfilePreview() {
-    this.setState({ profilePreview: false });
+    if (this._isMounted === true) {
+      this.setState({ profilePreview: false });
+    }
   }
 
   profileSettings() {
@@ -80,6 +82,7 @@ class UserProfilPage extends Component {
   }
 
   async componentDidMount() {
+    this._isMounted = true;
     var socket = this.props.socket;
     await socket.on("connect", () => {
       console.log("connected");
@@ -91,10 +94,22 @@ class UserProfilPage extends Component {
           });
         };
         openNotificationWithIcon("info");
-        await this.setState({ count: data.count });
+        if (this._isMounted === true) {
+          await this.setState({ count: data.count });
+        }
+      });
+      socket.on("MESSAGE_RECEIVED", async data => {
+        const openNotificationWithIcon = type => {
+          notification[type]({
+            message: data.fromUser + " sent you a new message"
+          });
+        };
+        openNotificationWithIcon("info");
+        if (this._isMounted === true) {
+          await this.setState({ count: data.count });
+        }
       });
     });
-    this._isMounted = true;
     sessionStorage.getItem("userData");
   }
 
@@ -125,12 +140,15 @@ class UserProfilPage extends Component {
               isLoggedIn={this.state.isLoggedIn}
               notSeenNotifications={count}
             />
+            <Helmet>
+              <style>{"body { overflow: hidden }"}</style>
+            </Helmet>
             <div className="container-fluid searchPage">
               <MDBRow>
                 <MDBCol
                   id="lateralScroll"
                   size="4"
-                  style={{ height: this.props.windowHeight - 50 }}
+                  className="lateralScrollProfile"
                 >
                   <div className="lateral">
                     <div className="avatarBlock">
@@ -176,19 +194,18 @@ class UserProfilPage extends Component {
                   </div>
                   <div>
                     {profileSettings && (
-                      <UserProfileSettings getInfos={this.getInfos} />
+                      <UserProfileSettings className="userProfilSettingsBlock" getInfos={this.getInfos} />
                     )}
                   </div>
                   <div>
                     {accountSettings && (
-                      <UserAccountSettings getInfos={this.getInfos} />
+                      <UserAccountSettings className="userAccountSettingsBlock" getInfos={this.getInfos} />
                     )}
                   </div>
                 </MDBCol>
                 <MDBCol
                   className="profilePreview"
                   size="8"
-                  style={{ height: this.props.windowHeight - 50 }}
                 >
                   <ProfilePreview
                     {...this.props}
@@ -211,7 +228,6 @@ class UserProfilPage extends Component {
                 <MDBCol
                   className="profilePreview"
                   size="6"
-                  style={{ height: this.props.windowHeight - 50 }}
                 >
                   <ProfilePreview
                     {...this.props}
@@ -233,8 +249,8 @@ class UserProfilPage extends Component {
   }
 }
 
-export default (sessionStorage.getItem("userData")
-  ? windowSize(UserProfilPage)
-  : UserProfilPage);
+// export default (sessionStorage.getItem("userData")
+//   ? windowSize(UserProfilPage)
+//   : UserProfilPage);
 
-// export default windowSize(UserProfilPage);
+export default UserProfilPage;

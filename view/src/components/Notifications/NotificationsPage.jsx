@@ -75,7 +75,6 @@ class NotificationsPage extends Component {
     if (!this._isMounted && !userData) {
       return <Redirect to={routes.SIGN_IN} />;
     }
-    console.log(list_notif.length);
     return (
       <div>
         {list_notif.length > 0 ? (
@@ -98,7 +97,7 @@ class NotificationsPage extends Component {
                     title={""}
                     subtitle={item.username + " " + item.content}
                     date={new Date(parseInt(item.time))}
-                    //   unread={0}
+                  //   unread={0}
                   />
 
                   {/* <a
@@ -113,8 +112,8 @@ class NotificationsPage extends Component {
             <MDBCol size="3" />
           </MDBRow>
         ) : (
-          <div />
-        )}
+            <div />
+          )}
       </div>
     );
   }

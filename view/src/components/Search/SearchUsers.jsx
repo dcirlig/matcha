@@ -393,7 +393,7 @@ class SearchUsersPage extends Component {
                   >
                     <Card
                       hoverable
-                      style={{ height: 765, overflow: "visible" }}
+                      style={{ overflow: "visible" }}
                       cover={
                         <img
                           alt="example"
