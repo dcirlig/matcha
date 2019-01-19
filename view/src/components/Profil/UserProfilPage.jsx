@@ -93,34 +93,13 @@ class UserProfilPage extends Component {
             message: data.fromUser + " " + data.message
           });
         };
-        axios
-          .post(`/api/notifications`, { userId: this.state.userId })
-          .then(async res => {
-            console.log(res.data);
-            if (res.data.success) {
-              await this.setState({ count: res.data.count });
-            } else {
-              console.log("error");
-            }
-          });
-        openNotificationWithIcon("info");
-        if (this._isMounted === true) {
-          await this.setState({ count: data.count });
+        var count = data.count + this.state.count
+        if (this._isMounted) {
+          this.setState({ count: count })
         }
-      });
-      socket.on("MESSAGE_RECEIVED", async data => {
-        const openNotificationWithIcon = type => {
-          notification[type]({
-            message: data.fromUser + " sent you a new message"
-          });
-        };
         openNotificationWithIcon("info");
-        if (this._isMounted === true) {
-          await this.setState({ count: data.count });
-        }
       });
     });
-    sessionStorage.getItem("userData");
   }
 
   componentDidUpdate() {
@@ -241,25 +220,25 @@ class UserProfilPage extends Component {
             />
           </div>
         ) : (
-          <div>
-            {" "}
-            <Header
-              isLoggedIn={this.state.isLoggedIn}
-              notSeenNotifications={count}
-            />
-            <MDBRow>
-              <MDBCol size="3" />
-              <MDBCol className="profilePreview" size="6">
-                <ProfilePreview
-                  {...this.props}
-                  refresh={refresh}
-                  stopRefresh={this.stopRefresh}
-                />
-              </MDBCol>
-              <MDBCol size="3" />
-            </MDBRow>
-          </div>
-        )}
+            <div>
+              {" "}
+              <Header
+                isLoggedIn={this.state.isLoggedIn}
+                notSeenNotifications={count}
+              />
+              <MDBRow>
+                <MDBCol size="3" />
+                <MDBCol className="profilePreview" size="6">
+                  <ProfilePreview
+                    {...this.props}
+                    refresh={refresh}
+                    stopRefresh={this.stopRefresh}
+                  />
+                </MDBCol>
+                <MDBCol size="3" />
+              </MDBRow>
+            </div>
+          )}
         <ProfilePreviewModal
           profilePreview={this.state.profilePreview}
           closeProfilePreview={this.closeProfilePreview}

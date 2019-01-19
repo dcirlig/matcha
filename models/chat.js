@@ -42,7 +42,35 @@ function getMessages(roomName, callback) {
   })
 }
 
+function isChat(userId1, userId2, callback) {
+  sql = "SELECT room as chatRoom FROM chats WHERE (userId1 = ? AND userId2 = ?) OR (userId2 = ? AND userId1 = ?)"
+  connection.query(sql, [userId1, userId2, userId1, userId2], function (err, result) {
+    if (err) console.log(err)
+    callback(result)
+  })
+}
+
+function deleteChat(chatRoom) {
+  sql = "DELETE FROM `messages` WHERE chatRoom = ?"
+  connection.query(sql, chatRoom, function (err, result) {
+    if (err) {
+      console.log(err)
+      return false
+    }
+  })
+  sql = "DELETE FROM `chats` WHERE room = ?"
+  connection.query(sql, chatRoom, function (err, result) {
+    if (err) {
+      console.log(err)
+      return false
+    }
+  })
+  return true
+}
+
 exports.createChat = createChat
 exports.getRooms = getRooms
 exports.getMessages = getMessages;
 exports.getLastMessage = getLastMessage;
+exports.isChat = isChat;
+exports.deleteChat = deleteChat;

@@ -34,7 +34,16 @@ export default class Layout extends Component {
     const sendAt = Date.now()
     const avatar = this.props.chatInfo.avatar
     const myAvatar = this.props.chatInfo.myAvatar
+    var likeroom = receiverId
     socket.emit('MESSAGE_SENT', { chatRoom, message, fromUser, toUser, senderId, receiverId, sendAt, avatar, myAvatar })
+    socket.emit("NOTIF_SENT", {
+      likeroom,
+      message,
+      fromUser,
+      senderId,
+      receiverId,
+      sendAt
+    });
     this.setState({ message: "" })
   }
 

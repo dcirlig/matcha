@@ -13,6 +13,7 @@ export default class ChatPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: sessionStorage.getItem("userId"),
       isLoggedIn: true,
       usersMatched: [],
       existingConv: [],
@@ -20,7 +21,8 @@ export default class ChatPage extends Component {
       socket: this.props.socket,
       messages: [],
       display: 'messages',
-      open: false
+      open: false,
+      count: ""
     }
     this.newChat = this.newChat.bind(this)
     this.openChat = this.openChat.bind(this)
@@ -29,9 +31,36 @@ export default class ChatPage extends Component {
     this.openSelectChats = this.openSelectChats.bind(this)
   }
 
+  componentWillMount() {
+    axios
+      .post(`/api/notifications`, { userId: this.state.userId })
+      .then(res => {
+        if (res.data.success) {
+          this.setState({ count: res.data.count });
+        } else {
+          console.log("error");
+        }
+      });
+  }
+
   componentDidMount() {
     this._isMounted = true;
     const socket = this.props.socket
+    socket.on("connect", () => {
+      socket.emit("notif", sessionStorage.getItem("userId"));
+      socket.on("NOTIF_RECEIVED", async data => {
+        const openNotificationWithIcon = type => {
+          notification[type]({
+            message: data.fromUser + " " + data.message
+          });
+        };
+        var count = data.count + this.state.count
+        if (this._isMounted) {
+          this.setState({ count: count })
+        }
+        openNotificationWithIcon("info");
+      });
+    });
     axios
       .post(`/api/chat/getRooms`, sessionStorage)
       .then(res => {
@@ -58,15 +87,6 @@ export default class ChatPage extends Component {
           })
         }
         socket.on('MESSAGE_RECEIVED', async (data) => {
-          if (data.fromUser !== sessionStorage.getItem('userData')) {
-            const openNotificationWithIcon = type => {
-              notification[type]({
-                message: data.fromUser + " send you a new message"
-              });
-            };
-            openNotificationWithIcon("info");
-            // await this.setState({ count: data.count });
-          }
           var newLastMessages = this.state.existingConv
           var newConvDetected = 0
           this.state.existingConv.forEach((conv, i) => {
@@ -176,11 +196,11 @@ export default class ChatPage extends Component {
   }
 
   render() {
-    const { usersMatched, existingConv, activeConv, messages, display, open } = this.state
+    const { usersMatched, existingConv, activeConv, messages, display, open, count } = this.state
     const { socket } = this.props
     return (
       <div>
-        <Header isLoggedIn={this.state.isLoggedIn} />
+        <Header notSeenNotifications={count} isLoggedIn={this.state.isLoggedIn} />
         <Helmet>
           <style>{"body { overflow: hidden }"}</style>
         </Helmet>
