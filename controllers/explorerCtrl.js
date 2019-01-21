@@ -128,7 +128,6 @@ module.exports = {
                       result.forEach(element => {
                         likedUsersList.push(element.likedUser);
                       });
-
                       if (JSON.parse(JSON.stringify(results)).length > 0) {
                         results.forEach(user => {
                           if (likedUsersList.includes(user.userId))
@@ -194,7 +193,6 @@ module.exports = {
                                 );
                               }
                             }
-
                             if (
                               user.age < ageMin ||
                               (user.age > ageMax && ageMax != 99)
@@ -208,7 +206,6 @@ module.exports = {
                                 el => el.userId !== user.userId
                               );
                             }
-
                             if (
                               user.popularity_score < popularityScoreMin ||
                               (user.popularity_score > popularityScoreMax &&
@@ -234,14 +231,12 @@ module.exports = {
                         return res.json({ success: "0 resultat" });
                       }
                       var list_sort_users = JSON.parse(JSON.stringify(results));
-
                       list_sort_users.sort(
                         (a, b) =>
                           a.dist - b.dist ||
                           b.common_tags - a.common_tags ||
                           b.popularity_score - a.popularity_score
                       );
-
                       return res.json({ user_list: list_sort_users });
                     }
                   });

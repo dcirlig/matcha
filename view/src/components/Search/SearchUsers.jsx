@@ -8,6 +8,7 @@ import Header from "../Navigation/Navigation";
 import Like from "./Like";
 import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -46,30 +47,25 @@ class SearchUsersPage extends Component {
   }
 
   async componentWillMount() {
-    this._isMounted = true;
-    if (this._isMounted) {
-      await this.setState({
-        userId: { userId: sessionStorage.getItem("userId") }
-      });
+    await this.setState({
+      userId: { userId: sessionStorage.getItem("userId") }
+    });
 
-      axios
-        .post(`/api/notifications`, { userId: this.state.userId.userId })
-        .then(res => {
-          console.log(res.data);
-          if (res.data.success) {
-            this.setState({ count: res.data.count });
-          } else {
-            console.log("error");
-          }
-        });
-    }
+    axios
+      .post(`/api/notifications`, { userId: this.state.userId.userId })
+      .then(res => {
+        if (res.data.success) {
+          this.setState({ count: res.data.count });
+        } else {
+          console.log("error");
+        }
+      });
   }
 
   async componentDidMount() {
     this._isMounted = true;
     var socket = this.props.socket;
     await socket.on("connect", () => {
-      console.log("connected");
       socket.emit("notif", this.state.userId.userId);
       socket.on("NOTIF_RECEIVED", async data => {
         const openNotificationWithIcon = type => {
@@ -80,8 +76,6 @@ class SearchUsersPage extends Component {
         axios
           .post(`/api/notifications`, { userId: this.state.userId.userId })
           .then(async res => {
-            console.log(res.data);
-
             if (res.data.success) {
               if (this._isMounted) {
                 await this.setState({ count: res.data.count });
@@ -194,7 +188,6 @@ class SearchUsersPage extends Component {
     const fromUser = sessionStorage.getItem("userData");
     const sendAt = Date.now();
     const message = "have visited your profile";
-    console.log(e);
     socket.emit("NOTIF_SENT", {
       likeroom,
       message,
@@ -203,6 +196,40 @@ class SearchUsersPage extends Component {
       receiverId,
       sendAt
     });
+  };
+
+  getDate = date => {
+    var Days = ["Mon", "Tu", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var Months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Dec"
+    ];
+    var day = Days[date.getDay()];
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var dd = date.getDate();
+    var mm = Months[date.getMonth()]; //January is 0!
+    var yyyy = date.getFullYear();
+
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+
+    // if (mm < 10) {
+    //   mm = "0" + mm;
+    // }
+
+    var data =
+      day + ", " + dd + " " + mm + " " + yyyy + ", " + hour + ":" + minutes;
+    return data;
   };
 
   componentWillUnmount() {
@@ -419,7 +446,7 @@ class SearchUsersPage extends Component {
                         <img
                           alt="example"
                           src={
-                            item.profil_image.includes("amazonaws")
+                            item.profil_image.includes("unsplash")
                               ? item.profil_image
                               : `https://localhost:4000/${item.profil_image}`
                           }
@@ -432,6 +459,15 @@ class SearchUsersPage extends Component {
                         liked={item.liked}
                         socket={this.props.socket}
                       />
+                      {item.online === "online" ? (
+                        <div className="onlineUsers" />
+                      ) : (
+                        <div>
+                          <div className="offlineUsers" />
+                          {this.getDate(new Date(parseInt(item.online)))}
+                        </div>
+                      )}
+
                       <Meta
                         title={`${item.firstname} ${item.lastname}, ${
                           item.age
@@ -452,13 +488,12 @@ class SearchUsersPage extends Component {
                         {item.gender === "male" ? "Man" : "Woman"},{" "}
                         {item.sexual_orientation}
                       </p>
-
-                      <a
-                        href={`https://localhost:4000/users/${item.username}`}
+                      <Link
+                        to={`/users/${item.username}`}
                         onClick={e => this.sendVisitNotification(item)}
                       >
                         Show more...
-                      </a>
+                      </Link>
                     </Card>
                   </div>
                 ))}

@@ -34,6 +34,22 @@
   float: right;
 }
 
+.onlineUsers,
+.offlineUsers {
+  width: 10px;
+  height: 10px;
+  box-sizing: initial;
+  border-radius: 50%;
+}
+
+.onlineUsers {
+  background: green;
+}
+
+.offlineUsers {
+  background: gray;
+}
+
 #notifications {
   width: 40px;
   height: 40px;

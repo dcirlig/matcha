@@ -1,7 +1,25 @@
 const io = require("./server.js").io;
 const connection = require("./database/dbConnection");
 const notification = require("./models/notification");
+const user = require("./models/user");
 module.exports = function(socket) {
+  socket.on("disconnect", function() {
+    sql = "UPDATE users SET ? WHERE socket_id=?";
+    connection.query(sql, [{ online: Date.now() }, socket.id], function(
+      err,
+      result
+    ) {
+      if (err) console.log(err);
+    });
+
+    io.emit("disconnect");
+  });
+
+  socket.on("onlineUser", function(userId, socketId) {
+    var data = { online: "online", socket_id: socketId };
+    user.updateUser(data, userId);
+  });
+
   socket.on("notif", likedUser => {
     socket.join(likedUser);
   });
@@ -25,7 +43,6 @@ module.exports = function(socket) {
   );
 
   socket.on("room", room => {
-    console.log(room);
     socket.join(room);
   });
 

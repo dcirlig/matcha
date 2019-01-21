@@ -46,7 +46,7 @@ class UploadPhoto extends Component {
           });
         }
       })
-      .catch(err => { });
+      .catch(err => {});
   }
 
   handleCancel = () => this.setState({ previewVisible: false });
@@ -83,8 +83,7 @@ class UploadPhoto extends Component {
       axios
         .post("/api/uploadPhoto", formData, config)
         .then(response => {
-          this.props.getImages()
-          console.log("response=", response);
+          this.props.getImages();
         })
         .catch(error => {
           console.log("error=", error);
@@ -100,8 +99,7 @@ class UploadPhoto extends Component {
       axios
         .post("/api/deletephoto", userData)
         .then(response => {
-          this.props.getImages()
-          console.log("response=", response);
+          this.props.getImages();
         })
         .catch(error => {
           console.log("error=", error);
@@ -127,7 +125,7 @@ class UploadPhoto extends Component {
             onPreview={this.handlePreview}
             onChange={this.handleChange}
             fileList={fileList}
-          // accept="image/*"
+            // accept="image/*"
           >
             {fileList.length >= 4 ? null : uploadButton}
           </Upload>

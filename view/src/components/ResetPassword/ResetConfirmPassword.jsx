@@ -95,7 +95,7 @@ class ResetConfirmPassword extends Component {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => { });
+      .catch(err => {});
     this.setState({ ...INITIAL_STATE });
   };
 
@@ -160,7 +160,6 @@ class ResetConfirmPassword extends Component {
             </button>
           </form>
         </div>
-
         {console.log(error)}
         <ResetModal
           errorMessage={error}

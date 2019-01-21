@@ -46,7 +46,7 @@ class Avatar extends Component {
         if (res.data) {
           var filePath = res.data.file;
           var imageUrl = "";
-          if (filePath.includes("amazonaws")) {
+          if (filePath.includes("unsplash")) {
             imageUrl = filePath;
           } else {
             imageUrl = `https://localhost:4000/${filePath}`;
@@ -58,7 +58,7 @@ class Avatar extends Component {
           }
         }
       })
-      .catch(err => { });
+      .catch(err => {});
   }
 
   async handleChange(e) {
@@ -85,13 +85,13 @@ class Avatar extends Component {
           if (response.data.imageUrl) {
             var imageUrl = `${window.location.origin}/${
               response.data.imageUrl
-              }`;
+            }`;
             this.setState({ imageUrl: imageUrl });
-            this.props.getInfos()
+            this.props.getInfos();
           }
         })
         .catch(error => {
-          console.log("error=", error);
+          console.log(error);
         });
     }
   }
@@ -123,8 +123,8 @@ class Avatar extends Component {
               alt="avatar"
             />
           ) : (
-              uploadButton
-            )}
+            uploadButton
+          )}
         </Upload>
       </div>
     );
