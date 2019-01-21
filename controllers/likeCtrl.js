@@ -31,6 +31,7 @@ module.exports = {
                 var chatData = {
                   userId1: bodyLike.likedUser,
                   userId2: bodyLike.likeTransmitter,
+                  time: Date.now(),
                   room: "room" + randomstring.generate() + moment()
                 };
                 chat.createChat(chatData);

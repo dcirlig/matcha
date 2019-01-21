@@ -45,7 +45,8 @@ module.exports = {
                       location: element.localisation,
                       sexualOrientation: element.sexual_orientation,
                       profilImage: element.profil_image,
-                      images: imagesUser
+                      images: imagesUser,
+                      popularityScore: element.popularity_score
                     }
                   ];
                   return res.json({ success: user });

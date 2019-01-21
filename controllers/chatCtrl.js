@@ -23,7 +23,7 @@ module.exports = {
             senderName = find[i].username2
             senderPhoto = find[i].profil_image2
           }
-          rooms = rooms.concat({ room: find[i].room, receiverId: receiverId, senderId: senderId, receiverName: receiverName, senderName: senderName, receiverPhoto: receiverPhoto, senderPhoto: senderPhoto, existingChat: find[i].existingChat })
+          rooms = rooms.concat({ room: find[i].room, receiverId: receiverId, senderId: senderId, receiverName: receiverName, senderName: senderName, receiverPhoto: receiverPhoto, senderPhoto: senderPhoto, existingChat: find[i].existingChat, time: find[i].time })
         }
         return res.json({ success: "Matches found", rooms: rooms })
       })

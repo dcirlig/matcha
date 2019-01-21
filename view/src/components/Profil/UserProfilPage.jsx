@@ -226,16 +226,16 @@ class UserProfilPage extends Component {
                 isLoggedIn={this.state.isLoggedIn}
                 notSeenNotifications={count}
               />
-              <MDBRow>
-                <MDBCol size="3" />
-                <MDBCol className="profilePreview" size="6">
-                  <ProfilePreview
-                    {...this.props}
-                    refresh={refresh}
-                    stopRefresh={this.stopRefresh}
-                  />
-                </MDBCol>
-                <MDBCol size="3" />
+              <Helmet>
+                <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
+              </Helmet>
+              <MDBRow className="publicProfilePreview">
+                <ProfilePreview
+                  {...this.props}
+                  refresh={refresh}
+                  stopRefresh={this.stopRefresh}
+                  publicProfile={true}
+                />
               </MDBRow>
             </div>
           )}
@@ -248,9 +248,5 @@ class UserProfilPage extends Component {
     );
   }
 }
-
-// export default (sessionStorage.getItem("userData")
-//   ? windowSize(UserProfilPage)
-//   : UserProfilPage);
 
 export default UserProfilPage;

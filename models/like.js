@@ -7,15 +7,16 @@ function insertLike(bodyLike) {
   });
 }
 
-function deleteLike(field, bodyLike, callback) {
-  sql = "DELETE FROM likes WHERE " + field + "=?";
-  connection.query(sql, bodyLike, function (err, result) {
+function deleteLike(likeTransmitter, likedUser) {
+  sql = "DELETE FROM likes WHERE (likeTransmitter=? && likedUser=?) OR (likeTransmitter=? && likedUser=?)";
+  connection.query(sql, [likeTransmitter, likedUser, likedUser, likeTransmitter], function (err, result) {
     if (err) console.log(err);
-    if (result.length > 0) return callback(result);
-    else callback(0);
-  });
+  }
+  );
 }
+
 function updateLike(objUpdate, bodyLike) {
+  console.log('objUpdate', objUpdate)
   sql = "UPDATE likes SET ? WHERE likeId=?";
   connection.query(sql, [objUpdate, bodyLike], function (err, result) {
     if (err) console.log(err);

@@ -132,6 +132,14 @@
   // margin-right:0;
 }
 
+.publicProfilePreview {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  max-height: 100%;
+  margin-top: 10vh;
+}
+
 .profile-preview-page {
   margin-top: 100px;
   max-width: 40%;
@@ -148,7 +156,15 @@
     margin-right: auto;
     margin-top: 10px;
   }
+  .publicProfilePreview {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
 }
+}
+
 .cardElementProfile {
   z-index: -1000;
 }

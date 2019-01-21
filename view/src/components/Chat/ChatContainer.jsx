@@ -13,6 +13,7 @@ export default class Layout extends Component {
       chatMessages: []
     }
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.onChange = this.onChange.bind(this)
   }
 
   async componentDidUpdate(prevProps) {
@@ -47,10 +48,42 @@ export default class Layout extends Component {
     this.setState({ message: "" })
   }
 
+  onChange(e) {
+    if (e.target.value) {
+      var value = e.target.value
+      value = value.match(
+        /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
+      );
+      console.log('value.length', e.target.value.length)
+      if (value && e.target.value.length >= 140) {
+        this.setState({
+          formError: "Too long! Your message must contain 140 characters maximum."
+        });
+        return;
+      }
+      if (value === null && e.target.value !== "") {
+        this.setState({
+          formError:
+            "Your message must contain only upper and lower case letters, numbers, punctuation and spaces."
+        });
+        return;
+      }
+      this.setState({ message: value, formError: "" });
+    } else {
+      this.setState({
+        formError:
+          "",
+        message: ""
+      });
+      return;
+    }
+  }
+
   render() {
-    const { message, chatMessages } = this.state
+    const { message, chatMessages, formError } = this.state
     const { chatInfo } = this.props
     const thisUserId = sessionStorage.getItem('userId')
+    console.log('message', message)
     return (
       <div className="chatContainerDiv">
         {chatInfo !== "Select a conv" ? <div className="chatContainerDiv"><h3 className="chatHeading">{chatInfo.receiverName} and you</h3>
@@ -76,6 +109,7 @@ export default class Layout extends Component {
               ""}
           </div>
           <div className="message-input">
+            {formError ? formError : ""}
             <form
               onSubmit={this.handleSubmit}
               className="message-form">
@@ -83,17 +117,14 @@ export default class Layout extends Component {
                 ref={"messageinput"}
                 type="text"
                 className="form-control border-0 border-dark"
-                value={message}
+                value={message ? message : ""}
                 autoComplete={'off'}
                 placeholder="Type something interesting"
-                onChange={
-                  ({ target }) => {
-                    this.setState({ message: target.value })
-                  }
-                } />
+                onChange={e => this.onChange(e)}
+              />
               <MDBBtn
                 gradient="peach"
-                disabled={message.length < 1}
+                disabled={message.length < 1 || formError !== ""}
                 type="submit"
                 className="send"
               >Send</MDBBtn>

@@ -5,7 +5,7 @@ const randomstring = require("randomstring");
 
 // Routes
 module.exports = {
-  reset: function(req, res) {
+  reset: function (req, res) {
     // Params
     var userData = {
       email: req.body.email
@@ -15,8 +15,8 @@ module.exports = {
       service: "mailtrap",
       host: "smtp.mailtrap.io",
       auth: {
-        user: "d6476694e8e3a8",
-        pass: "d12c44d19ee9be"
+        user: "08a43c661c7311",
+        pass: "8c65e78b005e6b"
       }
     });
 
@@ -30,9 +30,9 @@ module.exports = {
           error: "Invalid email!"
         });
 
-      models.findOne("email", userData.email, function(find) {
+      models.findOne("email", userData.email, function (find) {
         if (find) {
-          models.getUser("email", userData.email, function(result) {
+          models.getUser("email", userData.email, function (result) {
             if (result) {
               result.forEach(element => {
                 var secretToken = randomstring.generate();
@@ -41,15 +41,16 @@ module.exports = {
                 var url = `https://localhost:4000/password/reset/confirm/${secretToken}`;
 
                 transporter.sendMail({
+                  from: 'matcha@matcha.com',
                   to: userData.email,
-                  subject: "Resset password",
+                  subject: "Reset password",
                   html: `	
                   Hi ${element.username},
                   We got a request to reset your Matcha password. <a href="${url}">${url}</a>`
                 });
               });
               return res.status(200).json({
-                success: "Please verify your email for reset your password!"
+                success: "Please check your emails to reset your password!"
               });
             }
           });

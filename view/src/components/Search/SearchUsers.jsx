@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import axios from "axios";
 import { Card, Select, Slider, notification } from "antd";
@@ -6,6 +7,7 @@ import { WithContext as ReactTags } from "react-tag-input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
 import Like from "./Like";
+import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Helmet } from "react-helmet";
 
@@ -43,6 +45,7 @@ class SearchUsersPage extends Component {
     this.onChangePopularity = this.onChangePopularity.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.openSearchFrame = this.openSearchFrame.bind(this);
+    this.updateUsersListAfterReport = this.updateUsersListAfterReport.bind(this);
   }
 
   async componentWillMount() {
@@ -55,7 +58,6 @@ class SearchUsersPage extends Component {
       axios
         .post(`/api/notifications`, { userId: this.state.userId.userId })
         .then(res => {
-          console.log(res.data);
           if (res.data.success) {
             this.setState({ count: res.data.count });
           } else {
@@ -80,8 +82,6 @@ class SearchUsersPage extends Component {
         axios
           .post(`/api/notifications`, { userId: this.state.userId.userId })
           .then(async res => {
-            console.log(res.data);
-
             if (res.data.success) {
               if (this._isMounted) {
                 await this.setState({ count: res.data.count });
@@ -194,7 +194,6 @@ class SearchUsersPage extends Component {
     const fromUser = sessionStorage.getItem("userData");
     const sendAt = Date.now();
     const message = "have visited your profile";
-    console.log(e);
     socket.emit("NOTIF_SENT", {
       likeroom,
       message,
@@ -204,6 +203,14 @@ class SearchUsersPage extends Component {
       sendAt
     });
   };
+
+  updateUsersListAfterReport(item) {
+    const list = this.state.usersList.usersList
+    list.find(user => user.userId === item.userId).blocked = true;
+    if (this._isMounted) {
+      this.setState({ usersList: { usersList: list } })
+    }
+  }
 
   componentWillUnmount() {
     this._isMounted = false;
@@ -218,7 +225,6 @@ class SearchUsersPage extends Component {
           isLoggedIn={this.state.isLoggedIn}
           notSeenNotifications={count}
         />
-
         <Helmet>
           <style>{"body { overflow: hidden }"}</style>
         </Helmet>
@@ -319,8 +325,8 @@ class SearchUsersPage extends Component {
                   </div>
                 </div>
               ) : (
-                ""
-              )}
+                  ""
+                )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -407,67 +413,73 @@ class SearchUsersPage extends Component {
             {list.length > 0 ? (
               <MDBCol size="8" className="explorer-container">
                 {list.map((item, index) => (
-                  <div
-                    className="searchCardContainer"
-                    style={{ maxWidth: 240 }}
-                    key={index}
-                  >
-                    <Card
-                      hoverable
-                      style={{ overflow: "visible" }}
-                      cover={
-                        <img
-                          alt="example"
-                          src={
-                            item.profil_image.includes("amazonaws")
-                              ? item.profil_image
-                              : `https://localhost:4000/${item.profil_image}`
-                          }
-                        />
-                      }
+                  !item.blocked ?
+                    <div
+                      className="searchCardContainer"
+                      style={{ maxWidth: 240 }}
+                      key={index}
                     >
-                      <Like
-                        item={item}
-                        popularity_score={item.popularity_score}
-                        liked={item.liked}
-                        socket={this.props.socket}
-                      />
-                      <Meta
-                        title={`${item.firstname} ${item.lastname}, ${
-                          item.age
-                        } years old`}
-                        description={item.bio}
-                      />
-                      <ReactTags
-                        classNames={{
-                          tags: "tagsContainer",
-                          selected: "selectedSearchTags",
-                          tag: "allSearchTags"
-                        }}
-                        tags={item.tags}
-                        readOnly={true}
-                      />
-                      <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
-                      <p>
-                        {item.gender === "male" ? "Man" : "Woman"},{" "}
-                        {item.sexual_orientation}
-                      </p>
-
-                      <a
-                        href={`https://localhost:4000/users/${item.username}`}
-                        onClick={e => this.sendVisitNotification(item)}
+                      <Card
+                        hoverable
+                        style={{ overflow: "visible" }}
+                        cover={
+                          <img
+                            alt="example"
+                            src={item.profil_image ?
+                              item.profil_image.includes("amazonaws")
+                                ? item.profil_image
+                                : `https://localhost:4000/${item.profil_image}` : `https://localhost:4000/profilPhoto/avatar-default.jpg`
+                            }
+                          />
+                        }
                       >
-                        Show more...
-                      </a>
-                    </Card>
-                  </div>
+                        <Reports
+                          item={item}
+                          updateUsersListAfterReport={this.updateUsersListAfterReport}
+                        />
+                        {item.profil_image ?
+                          <Like
+                            item={item}
+                            popularity_score={item.popularity_score}
+                            liked={item.liked}
+                            socket={this.props.socket}
+                          /> : <h3>Incomplete profile.</h3>
+                        }
+                        <Meta
+                          title={`${item.firstname} ${item.lastname}, ${
+                            item.age
+                            } years old`}
+                          description={item.bio}
+                        />
+                        <ReactTags
+                          classNames={{
+                            tags: "tagsContainer",
+                            selected: "selectedSearchTags",
+                            tag: "allSearchTags"
+                          }}
+                          tags={item.tags}
+                          readOnly={true}
+                        />
+                        <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
+                        <p>
+                          {item.gender === "male" ? "Man" : "Woman"},{" "}
+                          {item.sexual_orientation}
+                        </p>
+
+                        <Link to={{ pathname: `/users/${item.username}`, state: { distance: item.dist, userId: item.userId, profileComplete: item.profil_image, item: item } }}
+                          onClick={e => this.sendVisitNotification(item)}
+                        >
+                          Show more...
+                      </Link>
+                      </Card>
+                    </div> : ""
                 ))}
               </MDBCol>
             ) : (
-              <div className="col-md-4">
-                <p>No user finds</p>
-              </div>
-            )}
+                <div className="col-md-4">
+                  <p>No user finds</p>
+                </div>
+              )}
           </MDBRow>
         </div>
       </div>

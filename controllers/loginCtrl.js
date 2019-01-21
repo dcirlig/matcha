@@ -12,6 +12,7 @@ module.exports = {
       latitude: req.body.coords.latitude,
       longitude: req.body.coords.longitude
     };
+    console.log('userData', userData)
     if (userData.username != null && userData.passwd != null) {
       if (!userData.username.match(/^[a-zA-Z0-9_]+$/)) {
         return res.json({
@@ -19,7 +20,7 @@ module.exports = {
         });
       } else {
         models.getUser("username", userData.username, function (result) {
-          if (result) {
+          if (result && result.length > 0) {
             result.forEach(function (element) {
               if (element.emailVerified == false && element.secretToken != "") {
                 return res.json({ error: "Please verify your email" });

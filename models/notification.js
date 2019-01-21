@@ -38,7 +38,16 @@ function updateNotif(objUpdate, userData) {
   });
 }
 
+function deleteNotif(senderId, receiverId) {
+  sql = "DELETE FROM notifications WHERE (senderId=? && receiverId=?) OR (senderId=? && receiverId=?)";
+  connection.query(sql, [senderId, receiverId, receiverId, senderId], function (err, result) {
+    if (err) console.log(err);
+  }
+  );
+}
+
 exports.createNotification = createNotification;
 exports.countNotSeenNotification = countNotSeenNotification;
 exports.getAllNotif = getAllNotif;
 exports.updateNotif = updateNotif;
+exports.deleteNotif = deleteNotif;

@@ -58,9 +58,9 @@ module.exports = function (socket) {
         myAvatar
       });
       const chatData = {
-        senderId: senderId,
-        receiverId: receiverId,
-        content: message,
+        senderId: parseInt(senderId),
+        receiverId: parseInt(receiverId),
+        content: check(message),
         time: sendAt,
         chatRoom: chatRoom
       };
@@ -82,3 +82,19 @@ module.exports = function (socket) {
     }
   );
 };
+
+function check(message) {
+  if (message) {
+    if (!message.toString().match(
+      /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
+    )) {
+      return 'Use of forbidden characters in your message.'
+    }
+    if (message.length >= 140) {
+      return message.slice(0, 139)
+    }
+    return message
+  } else {
+    return 'Empty message sent.'
+  }
+}

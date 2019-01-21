@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import "antd/dist/antd.css";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
-import { notification } from "antd";
 
 const INITIAL_STATE = {
   likeTransmitter: sessionStorage.getItem("userId"),
@@ -49,7 +47,7 @@ class Like extends Component {
     const sendAt = Date.now();
     axios.post(`/api/like`, this.state).then(async res => {
       if (res.data.success) {
-        console.log("succes");
+        console.log("success");
         await this.setState({
           popularity_score: res.data.popularity_score
         });

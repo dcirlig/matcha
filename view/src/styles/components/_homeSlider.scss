@@ -25,7 +25,12 @@
     bottom: 0;
     left: 0;
   }
-
+  .nextButton.disabled {
+    display: none;
+  }
+  .previousButton.disabled {
+    display: none;
+  }
   .sliderButton {
     -webkit-appearance: none;
         appearance: none;

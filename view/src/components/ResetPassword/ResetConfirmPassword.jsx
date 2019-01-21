@@ -1,8 +1,13 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { Input, Button } from "mdbreact";
 import axios from "axios";
 import { FormErrors } from "../../constants/utils";
 import "../../index.css";
 import ResetModal from "../RegisterAndConnection/RegisterModal";
+import Header from "../Navigation/Navigation";
+import matchaLogo from "../../images/matcha_logo_full.png";
 
 const INITIAL_STATE = {
   newpasswd: "",
@@ -14,7 +19,7 @@ const INITIAL_STATE = {
   newPasswdValid: false,
   confNewPasswdValid: false,
   error: null,
-  succes: null
+  success: null
 };
 
 class ResetConfirmPassword extends Component {
@@ -68,10 +73,10 @@ class ResetConfirmPassword extends Component {
     );
   }
 
-  response = (err, succes) => {
+  response = (err, success) => {
     var res = null;
     if (err) res = err;
-    else res = succes;
+    else res = success;
     return res;
   };
 
@@ -90,7 +95,7 @@ class ResetConfirmPassword extends Component {
       )
       .then(res => {
         if (res.data.success) {
-          this.setState({ succes: res.data.succes });
+          this.setState({ success: res.data.success });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
@@ -104,66 +109,76 @@ class ResetConfirmPassword extends Component {
   }
 
   handleClearErrorMessage() {
-    this.setState({ error: null });
+    if (this.state.error) {
+      this.setState({ error: null });
+    } else if (this.state.success) {
+      this.setState({ success: null })
+    }
   }
 
   render() {
-    const { newpasswd, confnewpasswd, error, succes } = this.state;
+    const { newpasswd, confnewpasswd, error, success } = this.state;
     return (
-      <div className="container">
-        <div>
+      <div>
+        <Header isLoggedIn={false} />
+        <Link to="/">
+          <img id="logoLogin" src={matchaLogo} alt={"logo"} />
+        </Link>
+        <Helmet>
+          <style>{"body { overflow: hidden }"}</style>
+        </Helmet>
+        <div className="subscriptionForm grey-text">
           <form>
             <div
-              className={`form-group row
+              className={`
                ${this.errorClass(this.state.formErrors.newpasswd)}`}
             >
-              <label htmlFor="newUserPassword">New Password *</label>
-              <input
-                name="newpasswd"
-                type="password"
-                className="form-control"
-                id="newUserPassword"
-                placeholder="Password"
-                onChange={e => this.onChange(e)}
-                value={newpasswd}
-              />
+              <label className="subscriptionForm__field" htmlFor="newUserPassword">
+                <Input
+                  name="newpasswd"
+                  type="password"
+                  className="subscriptionForm__input"
+                  id="newUserPassword"
+                  label="New password*"
+                  onChange={e => this.onChange(e)}
+                  value={newpasswd}
+                />
+              </label>
             </div>
             <div
-              className={`form-group row
+              className={`
                ${this.errorClass(this.state.formErrors.confnewpasswd)}`}
             >
-              <label htmlFor="confNewUserPassword">
-                Confirm New Password *
+              <label className="subscriptionForm__field" htmlFor="confNewUserPassword">
+                <Input
+                  name="confnewpasswd"
+                  type="password"
+                  className="subscriptionForm__input"
+                  id="confNewUserPassword"
+                  label="Confirm password*"
+                  onChange={e => this.onChange(e)}
+                  value={confnewpasswd}
+                />
               </label>
-              <input
-                name="confnewpasswd"
-                type="password"
-                className="form-control"
-                id="confNewUserPassword"
-                placeholder="Password"
-                onChange={e => this.onChange(e)}
-                value={confnewpasswd}
-              />
             </div>
-
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              <p>{this.response(error, succes)}</p>
+              <p>{this.response(error, success)}</p>
             </div>
-            <button
+            <Button
               disabled={!this.state.formValid}
               type="submit"
-              className="btn btn-primary"
+              rounded
+              gradient="peach"
+              className="big-button"
               onClick={this.onSubmit}
             >
               Register
-            </button>
+            </Button>
           </form>
         </div>
-
-        {console.log(error)}
         <ResetModal
-          errorMessage={error}
+          errorMessage={error ? error : success}
           handleClearErrorMessage={this.handleClearErrorMessage}
         />
       </div>

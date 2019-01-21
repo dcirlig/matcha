@@ -49,3 +49,16 @@
   width: 80%;
   text-transform: none !important;
 }
+
+.reportsModalButton {
+  border: none;
+  color: white;
+  background-color: $coral;
+  border-bottom: 2px solid darken($coral, 20%);
+  font-weight: bold;
+  max-width: 40%;
+  text-transform: none !important;
+  margin: 5px;
+  display: inline-block;
+  outline: none !important;
+}

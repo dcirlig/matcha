@@ -67,17 +67,21 @@ export default class ChatPage extends Component {
         if (res.data.success) {
           res.data.rooms.forEach((element) => {
             var data = []
+            var avatar = ""
+            var myAvatar = ""
             socket.emit('room', element.room)
             axios
               .post(`/api/chat/getLastMessage`, { chatRoom: element.room })
               .then(res => {
+                if (!element.receiverPhoto.includes('http') || !element.receiverPhoto.includes('https')) { avatar = 'https://localhost:4000/' + element.receiverPhoto } else { avatar = element.receiverPhoto }
+                if (!element.senderPhoto.includes('http') || !element.senderPhoto.includes('https')) { myAvatar = 'https://localhost:4000/' + element.senderPhoto } else { myAvatar = element.senderPhoto }
                 if (res.data.error && res.data.error === "No last message found.") {
-                  data = { chatRoom: element.room, receiverId: element.receiverId, receiverName: element.receiverName, senderId: element.senderId, senderName: element.senderName, title: element.receiverName, subtitle: 'Start a conversation with ' + element.receiverName, avatar: element.receiverPhoto, myAvatar: element.senderPhoto, date: new Date(), lastMessageContent: '', unread: 0 }
+                  data = { chatRoom: element.room, receiverId: element.receiverId, receiverName: element.receiverName, senderId: element.senderId, senderName: element.senderName, title: element.receiverName, subtitle: 'Start a conversation with ' + element.receiverName, avatar: avatar, myAvatar: myAvatar, date: new Date(parseInt(element.time)), lastMessageContent: '', unread: 0 }
                   if (this._isMounted === true) {
                     this.setState({ usersMatched: [...this.state.usersMatched, data] })
                   }
                 } else {
-                  data = { chatRoom: element.room, receiverId: element.receiverId, title: element.receiverName, subtitle: res.data.lastMessage[0].content, date: new Date(parseInt(res.data.lastMessage[0].time)), unread: 0, receiverName: element.receiverName, avatar: element.receiverPhoto, lastMessageContent: res.data.lastMessage[0].content }
+                  data = { chatRoom: element.room, receiverId: element.receiverId, title: element.receiverName, subtitle: res.data.lastMessage[0].content, date: new Date(parseInt(res.data.lastMessage[0].time)), unread: 0, receiverName: element.receiverName, avatar: avatar, lastMessageContent: res.data.lastMessage[0].content }
                   if (this._isMounted === true) {
                     this.setState({ existingConv: [...this.state.existingConv, data] })
                   }

@@ -160,7 +160,7 @@ class Preferences extends Component {
         value = value.match(
           /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
         );
-        if (value && value.length >= 500) {
+        if (value && e.target.value.length >= 500) {
           await this.setState({
             formError: "Too long! Your bio must contain 500 characters maximum."
           });
