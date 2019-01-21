@@ -1,8 +1,11 @@
 import React, { Component } from "react";
+import { MDBContainer, MDBAlert, MDBBtn } from 'mdbreact';
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as routes from "../../constants/routes";
 import { Link, Redirect } from "react-router-dom";
+import Header from "../Navigation/Navigation";
+import { Helmet } from "react-helmet";
 
 const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value
@@ -11,15 +14,15 @@ const byPropKey = (propertyName, value) => () => ({
 class ConfirmEmailPage extends Component {
   state = {
     error: null,
-    succes: null,
+    success: null,
     divAlert: null
   };
 
-  response = (err, succes) => {
+  response = (err, success) => {
     if (err) {
       return <Redirect to="/register" />;
     } else {
-      return succes;
+      return success;
     }
   };
 
@@ -29,28 +32,42 @@ class ConfirmEmailPage extends Component {
 
       .then(res => {
         if (res.data.success) {
-          this.setState(byPropKey("succes", res.data.succes));
+          this.setState(byPropKey("success", res.data.success));
           this.setState(byPropKey("divAlert", "alert alert-success"));
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
           this.setState(byPropKey("divAlert", "alert alert-danger"));
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   render() {
-    const { error, succes, divAlert } = this.state;
+    const { success } = this.state;
     return (
-      <div className="container">
-        <div className="row">
-          <div className={divAlert} role="alert">
-            {this.response(error, succes)}
-          </div>
-          <Link className="nav-link" to={routes.SIGN_IN}>
-            <button className="btn btn-primary">Sign In</button>
-          </Link>
-        </div>
+      <div>
+        <Header isLoggedIn={false} />
+        <Helmet>
+          <style>{"body { overflow: hidden }"}</style>
+        </Helmet>
+        <MDBContainer style={{ marginTop: '10vh' }}>
+          {success ? <div><MDBAlert color="success">
+            <p>You have successfully confirmed your email address. Please sign in to start using Matcha!</p>
+            <hr />
+            <p className="mb-0">If you can't remember your password, you can reset it on the connection page.</p>
+
+          </MDBAlert>            <Link className="nav-link" to={routes.SIGN_IN}>
+              <MDBBtn className="big-button" rounded
+                gradient="peach">Sign In</MDBBtn>
+            </Link></div> : <div><MDBAlert color="danger">
+              <p>Something went wrong while confirming your email address. Please try again or sign in if you've already confirmed your email.</p>
+              <hr />
+              <p className="mb-0">If you can't remember your password, you can reset it on the connection page.</p>
+            </MDBAlert><Link className="nav-link" to={routes.SIGN_IN}>
+                <MDBBtn className="big-button" rounded
+                  gradient="peach">Sign In</MDBBtn>
+              </Link></div>}
+        </MDBContainer>
       </div>
     );
   }

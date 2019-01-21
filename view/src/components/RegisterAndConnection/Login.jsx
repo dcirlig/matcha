@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import * as routes from "../../constants/routes";
 import { FormErrors } from "../../constants/utils";
 import axios from "axios";
@@ -23,7 +24,7 @@ const INITIAL_STATE = {
   usernameValid: false,
   passwdValid: false,
   error: null,
-  succes: null,
+  success: null,
   isLoggedIn: false,
   geoloc: 0,
   checkbox: false,
@@ -156,10 +157,10 @@ class LoginPage extends Component {
     }
   }
 
-  response = (err, succes) => {
+  response = (err, success) => {
     var res = null;
     if (err) res = err;
-    else res = succes;
+    else res = success;
     return res;
   };
 
@@ -179,21 +180,12 @@ class LoginPage extends Component {
         if (res.data.success) {
           sessionStorage.setItem("userData", res.data.username);
           sessionStorage.setItem("userId", res.data.userId);
-          // sessionStorage.setItem("latitude", res.data.coords.latitude);
-          // sessionStorage.setItem("longitude", res.data.coords.longitude);
-          // if (this._isMounted) {
-          // this._isMounted = false
-          // await this.setState({ success: res.data.success });
           await this.setState({ redirect: true });
-          // }
-          // window.location = 'https://localhost:4000/users/' + res.data.username
         } else if (res.data.error) {
-          // this.setState({ error: res.data.error });
+          this.setState({ error: res.data.error });
         }
       })
-
-      .catch(err => {});
-    // this.setState({ ...INITIAL_STATE });
+      .catch(err => { });
     event.preventDefault();
   };
 
@@ -203,12 +195,16 @@ class LoginPage extends Component {
 
   handleClearErrorMessage() {
     if (this._isMounted) {
-      this.setState({ error: undefined });
+      if (this.state.error) {
+        this.setState({ error: undefined });
+      } else if (this.state.success) {
+        this.setState({ success: undefined });
+      }
     }
   }
 
   render() {
-    const { username, passwd, error, succes, redirect } = this.state;
+    const { username, passwd, error, success, redirect } = this.state;
 
     if (redirect) {
       return <Redirect to={`/users/${username}`} />;
@@ -221,6 +217,9 @@ class LoginPage extends Component {
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
+        <Helmet>
+          <style>{"body { overflow: hidden }"}</style>
+        </Helmet>
         <Link to="/">
           <img id="logoLogin" src={matchaLogo} alt={"logo"} />
         </Link>
@@ -264,7 +263,7 @@ class LoginPage extends Component {
             />
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              <p>{this.response(error, succes)}</p>
+              <p>{this.response(error, success)}</p>
             </div>
             <Button
               disabled={!this.state.formValid}
@@ -290,7 +289,7 @@ class LoginPage extends Component {
           </form>
         </div>
         <LoginModal
-          errorMessage={this.state.error}
+          errorMessage={error ? error : success}
           handleClearErrorMessage={this.handleClearErrorMessage}
         />
       </div>

@@ -13,7 +13,7 @@ const SubscriptionModal = props => (
   >
     <h3 className="modal__title">Invalid field(s)</h3>
     {props.errorMessage && <p className="modal__body">{props.errorMessage}</p>}
-    <button className="button" onClick={props.handleClearErrorMessage}>
+    <button className="modalButton" onClick={props.handleClearErrorMessage}>
       Close
     </button>
   </Modal>

@@ -58,11 +58,13 @@ function fakeUsers() {
   getPhotos(function(res) {
     for (i = 0; i <= 499; i++) {
       var birthdate = faker.date.between("1960-01-01", "2001-01-01");
+      var firstname = faker.name.firstName()
+      var lastname = faker.name.lastName()
       let user = {
-        firstname: faker.name.firstName(),
-        lastname: faker.name.lastName(),
+        firstname: firstname,
+        lastname: lastname,
         email: faker.internet.email(),
-        username: faker.internet.userName(),
+        username: firstname + lastname + faker.random.number({ min: 1, max: 99 }),
         passwd: password,
         gender: faker.random.arrayElement(["male", "female"]),
         birthdate: birthdate,

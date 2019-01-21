@@ -1,6 +1,7 @@
 const io = require("./server.js").io;
 const connection = require("./database/dbConnection");
 const notification = require("./models/notification");
+
 const user = require("./models/user");
 module.exports = function(socket) {
   socket.on("disconnect", function() {
@@ -33,12 +34,16 @@ module.exports = function(socket) {
         receiverId,
         time: sendAt
       };
-
-      notification.createNotification(notifData);
-      io.to(likeroom).emit("NOTIF_RECEIVED", {
-        fromUser,
-        message
-      });
+      var count = 0;
+      notification.createNotification(notifData, function (data) {
+        if (data) {
+          count = count + 1;
+          io.to(likeroom).emit("NOTIF_RECEIVED", {
+            fromUser,
+            message, count
+          });
+        }
+      })
     }
   );
 
@@ -71,14 +76,14 @@ module.exports = function(socket) {
         myAvatar
       });
       const chatData = {
-        senderId: senderId,
-        receiverId: receiverId,
-        content: message,
+        senderId: parseInt(senderId),
+        receiverId: parseInt(receiverId),
+        content: check(message),
         time: sendAt,
         chatRoom: chatRoom
       };
       sql = "INSERT INTO messages SET ?";
-      connection.query(sql, chatData, function(err, result) {
+      connection.query(sql, chatData, function (err, result) {
         if (err) console.log(err);
       });
       io.to(chatRoom).emit("MESSAGE_RECEIVED", {
@@ -95,3 +100,19 @@ module.exports = function(socket) {
     }
   );
 };
+
+function check(message) {
+  if (message) {
+    if (!message.toString().match(
+      /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
+    )) {
+      return 'Use of forbidden characters in your message.'
+    }
+    if (message.length >= 140) {
+      return message.slice(0, 139)
+    }
+    return message
+  } else {
+    return 'Empty message sent.'
+  }
+}

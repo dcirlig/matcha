@@ -31,6 +31,7 @@ module.exports = {
                 var chatData = {
                   userId1: bodyLike.likedUser,
                   userId2: bodyLike.likeTransmitter,
+                  time: Date.now(),
                   room: "room" + randomstring.generate() + moment()
                 };
                 chat.createChat(chatData);
@@ -62,6 +63,13 @@ module.exports = {
               if (err) console.log(err);
             }
           );
+          chat.isChat(bodyLike.likeTransmitter, bodyLike.likedUser, function (data) {
+            if (data.length > 0) {
+              if (data[0].chatRoom) {
+                chat.deleteChat(data[0].chatRoom)
+              }
+            }
+          })
           return res.json({
             success: "You have disliked  this user!",
             popularity_score: popularity_score - 1,

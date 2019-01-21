@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import axios from "axios";
 import { Card, Select, Slider, notification } from "antd";
@@ -6,6 +7,7 @@ import { WithContext as ReactTags } from "react-tag-input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
 import Like from "./Like";
+import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -44,6 +46,7 @@ class SearchUsersPage extends Component {
     this.onChangePopularity = this.onChangePopularity.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.openSearchFrame = this.openSearchFrame.bind(this);
+    this.updateUsersListAfterReport = this.updateUsersListAfterReport.bind(this);
   }
 
   async componentWillMount() {
@@ -198,6 +201,14 @@ class SearchUsersPage extends Component {
     });
   };
 
+  updateUsersListAfterReport(item) {
+    const list = this.state.usersList.usersList
+    list.find(user => user.userId === item.userId).blocked = true;
+    if (this._isMounted) {
+      this.setState({ usersList: { usersList: list } })
+    }
+  }
+
   getDate = date => {
     var Days = ["Mon", "Tu", "Wed", "Thu", "Fri", "Sat", "Sun"];
     var Months = [
@@ -245,7 +256,6 @@ class SearchUsersPage extends Component {
           isLoggedIn={this.state.isLoggedIn}
           notSeenNotifications={count}
         />
-
         <Helmet>
           <style>{"body { overflow: hidden }"}</style>
         </Helmet>
@@ -346,8 +356,8 @@ class SearchUsersPage extends Component {
                   </div>
                 </div>
               ) : (
-                ""
-              )}
+                  ""
+                )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -434,32 +444,39 @@ class SearchUsersPage extends Component {
             {list.length > 0 ? (
               <MDBCol size="8" className="explorer-container">
                 {list.map((item, index) => (
-                  <div
-                    className="searchCardContainer"
-                    style={{ maxWidth: 240 }}
-                    key={index}
-                  >
-                    <Card
-                      hoverable
-                      style={{ overflow: "visible" }}
-                      cover={
-                        <img
-                          alt="example"
-                          src={
-                            item.profil_image.includes("unsplash")
-                              ? item.profil_image
-                              : `https://localhost:4000/${item.profil_image}`
-                          }
-                        />
-                      }
+                  !item.blocked ?
+                    <div
+                      className="searchCardContainer"
+                      style={{ maxWidth: 240 }}
+                      key={index}
                     >
-                      <Like
-                        item={item}
-                        popularity_score={item.popularity_score}
-                        liked={item.liked}
-                        socket={this.props.socket}
-                      />
-                      {item.online === "online" ? (
+                      <Card
+                        hoverable
+                        style={{ overflow: "visible" }}
+                        cover={
+                          <img
+                            alt="example"
+                            src={item.profil_image ?
+                              item.profil_image.includes("amazonaws")
+                                ? item.profil_image
+                                : `https://localhost:4000/${item.profil_image}` : `https://localhost:4000/profilPhoto/avatar-default.jpg`
+                            }
+                          />
+                        }
+                      >
+                        <Reports
+                          item={item}
+                          updateUsersListAfterReport={this.updateUsersListAfterReport}
+                        />
+                        {item.profil_image ?
+                          <Like
+                            item={item}
+                            popularity_score={item.popularity_score}
+                            liked={item.liked}
+                            socket={this.props.socket}
+                          /> : <h3>Incomplete profile.</h3>
+                        }
+                                              {item.online === "online" ? (
                         <div className="onlineUsers" />
                       ) : (
                         <div>
@@ -467,42 +484,41 @@ class SearchUsersPage extends Component {
                           {this.getDate(new Date(parseInt(item.online)))}
                         </div>
                       )}
+                        <Meta
+                          title={`${item.firstname} ${item.lastname}, ${
+                            item.age
+                            } years old`}
+                          description={item.bio}
+                        />
+                        <ReactTags
+                          classNames={{
+                            tags: "tagsContainer",
+                            selected: "selectedSearchTags",
+                            tag: "allSearchTags"
+                          }}
+                          tags={item.tags}
+                          readOnly={true}
+                        />
+                        <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
+                        <p>
+                          {item.gender === "male" ? "Man" : "Woman"},{" "}
+                          {item.sexual_orientation}
+                        </p>
 
-                      <Meta
-                        title={`${item.firstname} ${item.lastname}, ${
-                          item.age
-                        } years old`}
-                        description={item.bio}
-                      />
-                      <ReactTags
-                        classNames={{
-                          tags: "tagsContainer",
-                          selected: "selectedSearchTags",
-                          tag: "allSearchTags"
-                        }}
-                        tags={item.tags}
-                        readOnly={true}
-                      />
-                      <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
-                      <p>
-                        {item.gender === "male" ? "Man" : "Woman"},{" "}
-                        {item.sexual_orientation}
-                      </p>
-                      <Link
-                        to={`/users/${item.username}`}
-                        onClick={e => this.sendVisitNotification(item)}
-                      >
-                        Show more...
+                        <Link to={{ pathname: `/users/${item.username}`, state: { distance: item.dist, userId: item.userId, profileComplete: item.profil_image, item: item } }}
+                          onClick={e => this.sendVisitNotification(item)}
+                        >
+                          Show more...
                       </Link>
-                    </Card>
-                  </div>
+                      </Card>
+                    </div> : ""
                 ))}
               </MDBCol>
             ) : (
-              <div className="col-md-4">
-                <p>No user finds</p>
-              </div>
-            )}
+                <div className="col-md-4">
+                  <p>No user finds</p>
+                </div>
+              )}
           </MDBRow>
         </div>
       </div>

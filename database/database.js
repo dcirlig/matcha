@@ -44,6 +44,16 @@ con.connect(function(err) {
         if (err) console.log(err);
         console.log("Delete likes table");
       });
+      sql = "DROP TABLE IF EXISTS `blocked`";
+      con.query(sql, function (err, result) {
+        if (err) console.log(err);
+        console.log("Delete blocked table");
+      });
+      sql = "DROP TABLE IF EXISTS `fake`";
+      con.query(sql, function (err, result) {
+        if (err) console.log(err);
+        console.log("Delete fake table");
+      });
       sql = "DROP TABLE IF EXISTS `interests`";
       con.query(sql, function(err, result) {
         if (err) console.log(err);
@@ -138,11 +148,38 @@ con.connect(function(err) {
         console.log("Create table likes");
       });
 
+      var sql = `CREATE TABLE if NOT EXISTS blocked
+      (
+      blockId            INTEGER AUTO_INCREMENT PRIMARY KEY,
+      blockTransmitter             INTEGER NOT NULL,
+      blockedUser                   INTEGER NOT NULL,
+      FOREIGN KEY (blockedUser) REFERENCES users(userId)
+      )`;
+
+      con.query(sql, function (err, result) {
+        if (err) console.log(err);
+        console.log("Create table blocked");
+      });
+
+      var sql = `CREATE TABLE if NOT EXISTS fake
+      (
+      fakeId            INTEGER AUTO_INCREMENT PRIMARY KEY,
+      fakeReporter             INTEGER NOT NULL,
+      fakeUser                   INTEGER NOT NULL,
+      FOREIGN KEY (fakeUser) REFERENCES users(userId)
+      )`;
+
+      con.query(sql, function (err, result) {
+        if (err) console.log(err);
+        console.log("Create table fake");
+      });
+
       var sql = `CREATE TABLE if NOT EXISTS chats
       (
       chatId            INTEGER AUTO_INCREMENT PRIMARY KEY,
       userId1             INTEGER NOT NULL,
       userId2                   INTEGER NOT NULL,
+      time                 VARCHAR(255) NOT NULL,
       room                       VARCHAR(255) NOT NULL,
       FOREIGN KEY (userId1) REFERENCES users(userId),
       FOREIGN KEY (userId2) REFERENCES users(userId)
@@ -194,14 +231,6 @@ con.connect(function(err) {
       con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Create table interests");
-      });
-
-      const tags = [["organic"], ["geek"], ["piercing"], ["vegan"], ["PHP"]];
-      var sql = "INSERT INTO interests (content) VALUES ?";
-
-      con.query(sql, [tags], function(err, result) {
-        if (err) console.log(err);
-        console.log("Create suggested interests");
       });
     });
   });

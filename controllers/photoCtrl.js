@@ -32,11 +32,11 @@ module.exports = {
           };
           if (req.body.status == "done") {
             images.insertImage(userData);
-            res.json({ success: "you have add photo" });
+            return res.json({ success: "you have add photo" });
           }
         }
       } else {
-        res.json({ error: "Error upload photo" });
+        return res.json({ error: "Error upload photo" });
       }
     });
   },
@@ -52,14 +52,14 @@ module.exports = {
               );
               fs.unlink(filepath, function (err) { });
               images.deleteImage("uid", element.uid, function (find) { });
-              res.json({ success: "you have delete a photo" });
+              return res.json({ success: "you have delete a photo" });
             });
           } else {
-            res.json({ error: "Image not found" });
+            return res.json({ error: "Image not found" });
           }
         });
       } else {
-        res.json({ error: "Image not found" });
+        return res.json({ error: "Image not found" });
       }
     });
   },
@@ -67,7 +67,9 @@ module.exports = {
   displayPhoto: function (req, res) {
     images.getImage("userId", req.body.userId, function (result) {
       if (result) {
-        res.send({ fileList: result });
+        return res.json({ success: "Found user's photo in db.", fileList: result });
+      } else {
+        return res.json({ error: "Photo not found." })
       }
     });
   }

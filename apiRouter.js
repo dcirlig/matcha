@@ -17,8 +17,9 @@ var explorerCtrl = require("./controllers/explorerCtrl");
 var likeCtrl = require("./controllers/likeCtrl");
 var chatCtrl = require("./controllers/chatCtrl");
 var notificationsCtrl = require("./controllers/notificationsCtrl");
+var reportsCtrl = require("./controllers/reportsCtrl");
 //Routes
-exports.router = (function() {
+exports.router = (function () {
   var Router = express.Router();
 
   // Users routes
@@ -54,5 +55,7 @@ exports.router = (function() {
   Router.post("/notifications", notificationsCtrl.notifications);
   Router.post("/getAllnotifications", notificationsCtrl.getAllnotifications);
   Router.post("/updateNotif", notificationsCtrl.updateNotif);
+  Router.post("/blockUser", reportsCtrl.blockUser);
+  Router.post("/reportUser", reportsCtrl.reportUser);
   return Router;
 })();

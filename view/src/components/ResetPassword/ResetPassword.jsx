@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   },
   emailValid: false,
   error: null,
-  succes: null
+  success: null
 };
 
 class ResetPassword extends Component {
@@ -59,10 +59,10 @@ class ResetPassword extends Component {
     );
   }
 
-  response = (err, succes) => {
+  response = (err, success) => {
     var res = null;
     if (err) res = err;
-    else res = succes;
+    else res = success;
     return res;
   };
 
@@ -77,12 +77,12 @@ class ResetPassword extends Component {
       .post(`/api/users/password/reset`, this.state)
       .then(res => {
         if (res.data.success) {
-          this.setState({ succes: res.data.succes });
+          this.setState({ success: res.data.success });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
     this.setState({ ...INITIAL_STATE });
 
     event.preventDefault();
@@ -97,12 +97,12 @@ class ResetPassword extends Component {
   }
 
   render() {
-    const { email, error, succes } = this.state;
+    const { email, error, success } = this.state;
     return (
       <div>
         <Header isLoggedIn={this.state.isLoggedIn} />
         <Link to="/">
-          <img id="logo" src={matchaLogo} alt={"logo"} />
+          <img id="logo" src={matchaLogo} alt={"logo"} style={{ marginTop: '10vh' }} />
         </Link>
         <div className="subscriptionForm grey-text">
           <form>
@@ -120,7 +120,7 @@ class ResetPassword extends Component {
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              <p>{this.response(error, succes)}</p>
+              <p>{this.response(error, success)}</p>
             </div>
             <Button
               disabled={!this.state.formValid}
