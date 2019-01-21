@@ -7,7 +7,6 @@ import ResetConfirmPasswordPage from "./components/ResetPassword/ResetConfirmPas
 import UserProfilPage from "./components/Profil/UserProfilPage";
 import ChatPage from "./components/Chat/ChatPage";
 import HomePage from "./components/Navigation/HomePage";
-// import Footer from "./components/Navigation/Footer";
 import NotFoundPage from "./components/Navigation/NotFoundPage";
 import SearchUsersPage from "./components/Search/SearchUsers";
 import NotificationsPage from "./components/Notifications/NotificationsPage";
@@ -24,6 +23,15 @@ import io from "socket.io-client";
 
 const socketUrl = "localhost:8081";
 const socket = io(socketUrl);
+
+socket.on("connect", function() {
+  if (sessionStorage.getItem("userId")) {
+    socket.emit("notif", sessionStorage.getItem("userId"));
+    socket.emit("onlineUser", sessionStorage.getItem("userId"), socket.id);
+  }
+
+  socket.on("disconnect", function() {});
+});
 
 const App = () => (
   <Router history={history}>

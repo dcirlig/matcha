@@ -220,7 +220,6 @@ module.exports = {
                                   el => el.userId !== user.userId
                                 );
                               }
-
                               if (
                                 user.popularity_score < popularityScoreMin ||
                                 (user.popularity_score > popularityScoreMax &&
@@ -258,6 +257,7 @@ module.exports = {
                       }
                     });
                   })
+
                 });
               });
             } else {

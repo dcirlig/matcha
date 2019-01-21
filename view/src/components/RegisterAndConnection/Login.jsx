@@ -62,8 +62,8 @@ class LoginPage extends Component {
         if (this._isMounted === true) {
           this.setState({ coords });
         }
-        await sessionStorage.setItem('latitude', location.coords.latitude)
-        await sessionStorage.setItem('longitude', location.coords.longitude)
+        await sessionStorage.setItem("latitude", location.coords.latitude);
+        await sessionStorage.setItem("longitude", location.coords.longitude);
       },
       error => {
         iplocation(this.state.ip)
@@ -75,21 +75,20 @@ class LoginPage extends Component {
             if (this._isMounted === true) {
               this.setState({ coords });
             }
-            await sessionStorage.setItem('latitude', res.latitude)
-            await sessionStorage.setItem('longitude', res.longitude)
+            await sessionStorage.setItem("latitude", res.latitude);
+            await sessionStorage.setItem("longitude", res.longitude);
           })
-          .catch(err => { });
+          .catch(err => {});
       }
     );
-
   }
 
   getIpLocation() {
     publicIp.v4().then(ip => {
       iplocation(ip)
         .then(async res => {
-          await sessionStorage.setItem('latitude', res.latitude)
-          await sessionStorage.setItem('longitude', res.longitude)
+          await sessionStorage.setItem("latitude", res.latitude);
+          await sessionStorage.setItem("longitude", res.longitude);
           const coords = Object.assign({}, this.state.coords, {
             latitude: res.latitude,
             longitude: res.longitude
@@ -98,33 +97,32 @@ class LoginPage extends Component {
             this.setState({ coords });
           }
         })
-        .catch(err => { });
+        .catch(err => {});
     });
   }
 
   onChange = e => {
-    const name = e.target.name
-    var value = e.target.value
-    const { geoloc } = this.state
+    const name = e.target.name;
+    var value = e.target.value;
+    const { geoloc } = this.state;
 
     if (name === "checkbox") {
       if (this._isMounted === true) {
-        this.setState({ geoloc: 1 })
+        this.setState({ geoloc: 1 });
       }
 
-      value = e.target.checked
+      value = e.target.checked;
       this.getGeolocation();
     }
     if (geoloc === 0) {
-      this.getIpLocation()
+      this.getIpLocation();
     }
     if (this._isMounted === true) {
       this.setState({ [name]: value }, () => {
         this.validateField(name, value);
       });
     }
-  }
-
+  };
 
   validateField(fieldName, value) {
     let fieldValidationErrors = this.state.formErrors;
@@ -187,7 +185,6 @@ class LoginPage extends Component {
           this.setState({ error: res.data.error });
         }
       })
-
       .catch(err => { });
     event.preventDefault();
   };

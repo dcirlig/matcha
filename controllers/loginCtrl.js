@@ -5,7 +5,7 @@ var models = require("../models/user");
 
 // Routes
 module.exports = {
-  login: function (req, res) {
+  login: function(req, res) {
     var userData = {
       username: req.body.username,
       passwd: req.body.passwd,
@@ -25,11 +25,13 @@ module.exports = {
               if (element.emailVerified == false && element.secretToken != "") {
                 return res.json({ error: "Please verify your email" });
               } else {
-                bcrypt.compare(userData.passwd, element.passwd, function (
+                bcrypt.compare(userData.passwd, element.passwd, function(
                   errBycrypt,
                   resBycrypt
                 ) {
                   if (resBycrypt) {
+                    var objUpdate = { online: "online" };
+                    models.updateUser(objUpdate, element.userId);
                     return res.status(200).json({
                       success: "you are login",
                       userId: element.userId,

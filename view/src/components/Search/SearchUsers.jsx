@@ -10,6 +10,7 @@ import Like from "./Like";
 import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -49,29 +50,25 @@ class SearchUsersPage extends Component {
   }
 
   async componentWillMount() {
-    this._isMounted = true;
-    if (this._isMounted) {
-      await this.setState({
-        userId: { userId: sessionStorage.getItem("userId") }
-      });
+    await this.setState({
+      userId: { userId: sessionStorage.getItem("userId") }
+    });
 
-      axios
-        .post(`/api/notifications`, { userId: this.state.userId.userId })
-        .then(res => {
-          if (res.data.success) {
-            this.setState({ count: res.data.count });
-          } else {
-            console.log("error");
-          }
-        });
-    }
+    axios
+      .post(`/api/notifications`, { userId: this.state.userId.userId })
+      .then(res => {
+        if (res.data.success) {
+          this.setState({ count: res.data.count });
+        } else {
+          console.log("error");
+        }
+      });
   }
 
   async componentDidMount() {
     this._isMounted = true;
     var socket = this.props.socket;
     await socket.on("connect", () => {
-      console.log("connected");
       socket.emit("notif", this.state.userId.userId);
       socket.on("NOTIF_RECEIVED", async data => {
         const openNotificationWithIcon = type => {
@@ -211,6 +208,40 @@ class SearchUsersPage extends Component {
       this.setState({ usersList: { usersList: list } })
     }
   }
+
+  getDate = date => {
+    var Days = ["Mon", "Tu", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var Months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Dec"
+    ];
+    var day = Days[date.getDay()];
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var dd = date.getDate();
+    var mm = Months[date.getMonth()]; //January is 0!
+    var yyyy = date.getFullYear();
+
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+
+    // if (mm < 10) {
+    //   mm = "0" + mm;
+    // }
+
+    var data =
+      day + ", " + dd + " " + mm + " " + yyyy + ", " + hour + ":" + minutes;
+    return data;
+  };
 
   componentWillUnmount() {
     this._isMounted = false;
@@ -445,6 +476,14 @@ class SearchUsersPage extends Component {
                             socket={this.props.socket}
                           /> : <h3>Incomplete profile.</h3>
                         }
+                                              {item.online === "online" ? (
+                        <div className="onlineUsers" />
+                      ) : (
+                        <div>
+                          <div className="offlineUsers" />
+                          {this.getDate(new Date(parseInt(item.online)))}
+                        </div>
+                      )}
                         <Meta
                           title={`${item.firstname} ${item.lastname}, ${
                             item.age

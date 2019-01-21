@@ -28,10 +28,11 @@ const options = {
 };
 
 var app = https.createServer(options, server);
-var io = (module.exports.io = require("socket.io")(app));
 
-const SocketManager = require("./SocketManager.js");
-io.on("connection", SocketManager);
 app.listen(8081, () => {
   console.log("Server en ecoute");
 });
+var io = (module.exports.io = require("socket.io").listen(app));
+
+const SocketManager = require("./SocketManager.js");
+io.on("connection", SocketManager);

@@ -47,7 +47,6 @@ class Like extends Component {
     const sendAt = Date.now();
     axios.post(`/api/like`, this.state).then(async res => {
       if (res.data.success) {
-        console.log("success");
         await this.setState({
           popularity_score: res.data.popularity_score
         });
@@ -61,6 +60,17 @@ class Like extends Component {
           receiverId,
           sendAt
         });
+        if (res.data.match) {
+          message = " likes you back. It's a match!";
+          socket.emit("NOTIF_SENT", {
+            likeroom,
+            message,
+            fromUser,
+            senderId,
+            receiverId,
+            sendAt
+          });
+        }
       }
     });
   };
