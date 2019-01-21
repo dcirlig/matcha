@@ -2,6 +2,8 @@ var connection = require("../database/dbConnection");
 var notification = require("../models/notification");
 var users = require("../models/user");
 var notif_list = [];
+var distance = require("../models/distance");
+
 module.exports = {
   notifications: function(req, res) {
     var userId = req.body.userId;
@@ -26,20 +28,42 @@ module.exports = {
   },
   getAllnotifications: function(req, res) {
     var userId = req.body.userId;
-    if (userId !== null) {
-      users.findOne("userId", userId, function(find) {
-        if (find) {
-          notification.getAllNotif([userId], function(results) {
-            return res.json({
-              success: "you have get all notif",
-              list_notif: results
+    var sql = "SELECT latitude, longitude from geolocation WHERE userId=?";
+    connection.query(sql, userId, function(err, result) {
+      if (err) {
+        console.log("error");
+      }
+      if (result) {
+        result.forEach(element => {
+          if (userId !== null) {
+            users.findOne("userId", userId, function(find) {
+              if (find) {
+                notification.getAllNotif(userId, function(results) {
+                  if (results) {
+                    results.forEach(user => {
+                      user.dist = Math.round(
+                        distance.distance(
+                          element.latitude,
+                          element.longitude,
+                          user.latitude,
+                          user.longitude
+                        )
+                      );
+                    });
+                    return res.json({
+                      success: "you have get all notif",
+                      list_notif: results
+                    });
+                  }
+                });
+              } else {
+                res.json({ error: "User does not exists!" });
+              }
             });
-          });
-        } else {
-          res.json({ error: "User does not exists!" });
-        }
-      });
-    }
+          }
+        });
+      }
+    });
   },
   updateNotif: function(req, res) {
     var userId = req.body.userId;

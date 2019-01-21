@@ -1,27 +1,9 @@
 var users = require("../models/user");
 var connection = require("../database/dbConnection");
-
-function distance(lat1, lon1, lat2, lon2) {
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2 - lat1); // deg2rad below
-  var dLon = deg2rad(lon2 - lon1);
-  var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-    Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c; // Distance in km
-  return d;
-}
-
-function deg2rad(deg) {
-  return deg * (Math.PI / 180);
-}
+var distance = require("../models/distance");
 
 module.exports = {
-  explorer: function (req, res) {
+  explorer: function(req, res) {
     if (req.body.sortBy) {
       var sortBy = req.body.sortBy.sortBy;
       var list_sort_users = req.body.usersList.usersList;
@@ -69,11 +51,11 @@ module.exports = {
       FROM users
       INNER JOIN geolocation ON users.userId = geolocation.userId
       WHERE`;
-      users.findOne("userId", userId, function (find) {
+      users.findOne("userId", userId, function(find) {
         if (find) {
           condition = ` users.userId=?`;
           sql = sql_start + condition;
-          connection.query(sql, userId, function (err, result) {
+          connection.query(sql, userId, function(err, result) {
             if (err) console.log(err);
             if (JSON.parse(JSON.stringify(result)).length > 0) {
               result.forEach(element => {
@@ -118,20 +100,24 @@ module.exports = {
                     objData = [userId, "female", "heterosexual", "bisexual"];
                   }
                 }
-                connection.query(sql, objData, function (error, results) {
+                connection.query(sql, objData, function(error, results) {
                   if (error) console.log(error);
-                  var sql = "SELECT * FROM blocked WHERE blockTransmitter=? OR blockedUser = ?"
-                  connection.query(sql, [userId, userId], function (err, dataReports) {
-                    var blockedUsersList = []
-                    if (err) console.log(err)
+                  var sql =
+                    "SELECT * FROM blocked WHERE blockTransmitter=? OR blockedUser = ?";
+                  connection.query(sql, [userId, userId], function(
+                    err,
+                    dataReports
+                  ) {
+                    var blockedUsersList = [];
+                    if (err) console.log(err);
                     if (dataReports) {
                       dataReports.forEach(element => {
-                        blockedUsersList.push(element.blockedUser)
-                        blockedUsersList.push(element.blockTransmitter)
-                      })
+                        blockedUsersList.push(element.blockedUser);
+                        blockedUsersList.push(element.blockTransmitter);
+                      });
                     }
                     var sql = "SELECT  * FROM likes WHERE likeTransmitter=?";
-                    connection.query(sql, userId, function (err, result) {
+                    connection.query(sql, userId, function(err, result) {
                       var likedUsersList = [];
                       if (err) console.log(err);
                       if (result) {
@@ -147,7 +133,7 @@ module.exports = {
                               user.blocked = true;
                             else user.blocked = false;
                             user.dist = Math.round(
-                              distance(
+                              distance.distance(
                                 element.latitude,
                                 element.longitude,
                                 user.latitude,
@@ -172,8 +158,10 @@ module.exports = {
                               var distMax = searchOptions.distMax;
                               var popularityScoreInterval =
                                 searchOptions.popularityScoreInterval;
-                              var popularityScoreMin = popularityScoreInterval[0];
-                              var popularityScoreMax = popularityScoreInterval[1];
+                              var popularityScoreMin =
+                                popularityScoreInterval[0];
+                              var popularityScoreMax =
+                                popularityScoreInterval[1];
                               if (searchOptions.listTags) {
                                 listTags = searchOptions.listTags;
                                 if (searchOptions.listTags.length > 0) {
@@ -188,12 +176,12 @@ module.exports = {
                                   if (user.tags !== null) {
                                     var regex = new RegExp(
                                       "(^" +
-                                      tag +
-                                      ", | " +
-                                      tag +
-                                      ",|, " +
-                                      tag +
-                                      "$)"
+                                        tag +
+                                        ", | " +
+                                        tag +
+                                        ",|, " +
+                                        tag +
+                                        "$)"
                                     );
                                     if (user.tags.search(regex) !== -1) {
                                       count += 1;
@@ -244,7 +232,9 @@ module.exports = {
                         } else {
                           return res.json({ success: "0 resultat" });
                         }
-                        var list_sort_users = JSON.parse(JSON.stringify(results));
+                        var list_sort_users = JSON.parse(
+                          JSON.stringify(results)
+                        );
 
                         list_sort_users.sort(
                           (a, b) =>
@@ -256,8 +246,7 @@ module.exports = {
                         return res.json({ user_list: list_sort_users });
                       }
                     });
-                  })
-
+                  });
                 });
               });
             } else {
