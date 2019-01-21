@@ -79,6 +79,7 @@ class profilePreview extends React.Component {
             }
         }
         const publicProfile = this.props.publicProfile
+        console.log(this.props)
         return (
             <div className="profile-preview-page">
                 {user.map((item, index) => (
@@ -92,7 +93,7 @@ class profilePreview extends React.Component {
                                         className="slider-content-profile"
                                         style={
                                             item.profilImage
-                                                ? item.profilImage.includes("amazonaws")
+                                                ? item.profilImage.includes("unsplash")
                                                     ? { background: `url('${item.profilImage}') no-repeat center center` }
                                                     : { background: `url('https://localhost:4000/${item.profilImage}')  no-repeat center center` }
                                                 : ""
@@ -116,7 +117,7 @@ class profilePreview extends React.Component {
                                             className="slider-content-profile"
                                             style={
                                                 item.profilImage
-                                                    ? item.profilImage.includes("amazonaws")
+                                                    ? item.profilImage.includes("unsplash")
                                                         ? { background: `url('${item.profilImage}') no-repeat center center` }
                                                         : { background: `url('https://localhost:4000/${item.profilImage}')  no-repeat center center` }
                                                     : ""

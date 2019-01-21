@@ -55,7 +55,7 @@ const getPhotos = cb => {
 };
 
 function fakeUsers() {
-  getPhotos(function(res) {
+  getPhotos(function (res) {
     for (i = 0; i <= 499; i++) {
       var birthdate = faker.date.between("1960-01-01", "2001-01-01");
       var firstname = faker.name.firstName()
@@ -118,7 +118,7 @@ function fakeUsers() {
         }
       }
     }
-    cleanArray.forEach(function(element) {
+    cleanArray.forEach(function (element) {
       if (element.length > 1) {
         tagsModels.createTag(element);
       }

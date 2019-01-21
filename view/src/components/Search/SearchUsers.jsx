@@ -10,7 +10,6 @@ import Like from "./Like";
 import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -457,7 +456,7 @@ class SearchUsersPage extends Component {
                           <img
                             alt="example"
                             src={item.profil_image ?
-                              item.profil_image.includes("amazonaws")
+                              item.profil_image.includes("unsplash")
                                 ? item.profil_image
                                 : `https://localhost:4000/${item.profil_image}` : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                             }
@@ -476,14 +475,14 @@ class SearchUsersPage extends Component {
                             socket={this.props.socket}
                           /> : <h3>Incomplete profile.</h3>
                         }
-                                              {item.online === "online" ? (
-                        <div className="onlineUsers" />
-                      ) : (
-                        <div>
-                          <div className="offlineUsers" />
-                          {this.getDate(new Date(parseInt(item.online)))}
-                        </div>
-                      )}
+                        {item.online === "online" ? (
+                          <div className="onlineUsers" />
+                        ) : (
+                            <div>
+                              <div className="offlineUsers" />
+                              {this.getDate(new Date(parseInt(item.online)))}
+                            </div>
+                          )}
                         <Meta
                           title={`${item.firstname} ${item.lastname}, ${
                             item.age
