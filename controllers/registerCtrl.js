@@ -6,7 +6,7 @@ const randomstring = require("randomstring");
 
 // Routes
 module.exports = {
-  register: function (req, res) {
+  register: function(req, res) {
     // Params
     var userData = {
       firstname: req.body.firstname,
@@ -14,15 +14,16 @@ module.exports = {
       email: req.body.email,
       username: req.body.username,
       passwd: req.body.passwd,
-      gender: req.body.gender
+      gender: req.body.gender,
+      online: "noOnline"
     };
 
     var transporter = nodemailer.createTransport({
       service: "mailtrap",
       host: "smtp.mailtrap.io",
       auth: {
-        user: "08a43c661c7311",
-        pass: "8c65e78b005e6b"
+        user: "cbad2ebee212cb",
+        pass: "3dcfd9fa48b900"
       }
     });
 
@@ -72,13 +73,13 @@ module.exports = {
           error: "Wrong gender!"
         });
 
-      models.findOne("email", userData.email, function (find) {
+      models.findOne("email", userData.email, function(find) {
         if (find) {
           return res.json({
             error: "This email is used! Please choose another email!"
           });
         } else {
-          models.findOne("username", userData.username, function (find) {
+          models.findOne("username", userData.username, function(find) {
             if (find) {
               return res.json({
                 error: "This username is used! Please choose another username!"
@@ -92,7 +93,7 @@ module.exports = {
               var url = `https://localhost:4000/verify/${userData.secretToken}`;
 
               transporter.sendMail({
-                from: 'matcha@matcha.com',
+                from: "matcha@matcha.com",
                 to: userData.email,
                 subject: "confirm mail",
                 html: `Please click this email to confirm your email <a href="${url}">${url}</a>`

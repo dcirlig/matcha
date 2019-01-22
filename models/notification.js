@@ -21,7 +21,7 @@ function countNotSeenNotification(data, callback) {
 
 function getAllNotif(data, callback) {
   var sql =
-    "SELECT * FROM notifications INNER JOIN users ON notifications.senderId=users.userId  INNER JOIN geolocation ON users.userId = geolocation.userId WHERE notifications.receiverId=?";
+    "SELECT * FROM notifications INNER JOIN users ON notifications.senderId=users.userId  INNER JOIN geolocation ON users.userId = geolocation.userId WHERE notifications.receiverId=? ORDER BY notificationId DESC";
   connection.query(sql, data, function(err, result) {
     if (err) console.log(err);
     if (result) return callback(result);

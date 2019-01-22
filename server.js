@@ -5,7 +5,9 @@ var bodyParser = require("body-parser");
 var Router = require("./apiRouter").router;
 const https = require("https");
 const fs = require("fs");
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+//desactive a cause d une error in terminal "Node v11 Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification."
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.NODE_NO_WARNINGS = 1;
 var server = express();
 server.use(cors());
 // Body Parser configuration

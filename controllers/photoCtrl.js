@@ -7,7 +7,7 @@ var images = require("../models/images");
 
 var storage = multer.diskStorage({
   destination: "./view/public/images/",
-  filename: function (req, file, cb) {
+  filename: function(req, file, cb) {
     cb(null, "IMAGE-" + Date.now() + path.extname(file.originalname));
   }
 });
@@ -18,7 +18,7 @@ var upload = multer({
 }).single("myImage");
 
 module.exports = {
-  uploadPhoto: function (req, res) {
+  uploadPhoto: function(req, res) {
     upload(req, res, err => {
       if (req.file) {
         if (!req.file.originalname.match(/\.(jpg|jpeg|png)$/)) {
@@ -40,37 +40,48 @@ module.exports = {
       }
     });
   },
-  deletePhoto: function (req, res) {
-    images.findOne("uid", req.body.uid, function (find) {
-      if (find) {
-        images.getImage("uid", req.body.uid, function (result) {
-          if (result) {
-            result.forEach(element => {
-              var filepath = element.url.replace(
-                "images",
-                "view/public/images"
-              );
-              fs.unlink(filepath, function (err) { });
-              images.deleteImage("uid", element.uid, function (find) { });
-              return res.json({ success: "you have delete a photo" });
-            });
-          } else {
-            return res.json({ error: "Image not found" });
-          }
-        });
-      } else {
-        return res.json({ error: "Image not found" });
-      }
-    });
+  deletePhoto: function(req, res) {
+    if (req.body.uid) {
+      images.findOne("uid", req.body.uid, function(find) {
+        if (find) {
+          images.getImage("uid", req.body.uid, function(result) {
+            if (result) {
+              result.forEach(element => {
+                var filepath = element.url.replace(
+                  "images",
+                  "view/public/images"
+                );
+                fs.unlink(filepath, function(err) {});
+                images.deleteImage("uid", element.uid, function(find) {});
+                return res.json({ success: "you have delete a photo" });
+              });
+            } else {
+              return res.json({ error: "Image not found" });
+            }
+          });
+        } else {
+          return res.json({ error: "Image not found" });
+        }
+      });
+    } else {
+      return res.json({ error: "image does not exists" });
+    }
   },
 
-  displayPhoto: function (req, res) {
-    images.getImage("userId", req.body.userId, function (result) {
-      if (result) {
-        return res.json({ success: "Found user's photo in db.", fileList: result });
-      } else {
-        return res.json({ error: "Photo not found." })
-      }
-    });
+  displayPhoto: function(req, res) {
+    if (req.body.userId) {
+      images.getImage("userId", req.body.userId, function(result) {
+        if (result) {
+          return res.json({
+            success: "Found user's photo in db.",
+            fileList: result
+          });
+        } else {
+          return res.json({ error: "Photo not found." });
+        }
+      });
+    } else {
+      return res.json({ error: "user null" });
+    }
   }
 };

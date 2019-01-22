@@ -45,12 +45,12 @@ con.connect(function(err) {
         console.log("Delete likes table");
       });
       sql = "DROP TABLE IF EXISTS `blocked`";
-      con.query(sql, function (err, result) {
+      con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Delete blocked table");
       });
       sql = "DROP TABLE IF EXISTS `fake`";
-      con.query(sql, function (err, result) {
+      con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Delete fake table");
       });
@@ -85,7 +85,7 @@ con.connect(function(err) {
     email               VARCHAR(45) NOT NULL,
     username            VARCHAR(45) NOT NULL,
     passwd              VARCHAR(255) NOT NULL,
-    emailVerified       VARCHAR(45) DEFAULT false,
+    emailVerified      VARCHAR(45) DEFAULT false,
     secretToken         VARCHAR(255) NOT NULL,
     gender              VARCHAR(45) DEFAULT 'female',
     age                 INT(2) DEFAULT 18,
@@ -95,8 +95,8 @@ con.connect(function(err) {
     localisation        VARCHAR(255) DEFAULT '',
     sexual_orientation  VARCHAR(255) DEFAULT 'bisexual',
     profil_image        VARCHAR(255) DEFAULT NULL,
-    popularity_score    INT DEFAULT 0,
-    online                VARCHAR(255) NOT NULL,
+    popularity_score    VARCHAR(45) DEFAULT false,
+    online               VARCHAR(45) DEFAULT false,
     socket_id             VARCHAR(255) DEFAULT ''  
     )`;
 
@@ -139,7 +139,7 @@ con.connect(function(err) {
       likeId            INTEGER AUTO_INCREMENT PRIMARY KEY,
       likeTransmitter             INTEGER NOT NULL,
       likedUser                   INTEGER NOT NULL,
-      liked                       INT DEFAULT 0,
+      liked                      VARCHAR(45) DEFAULT false,
       FOREIGN KEY (likedUser) REFERENCES users(userId)
       )`;
 
@@ -156,7 +156,7 @@ con.connect(function(err) {
       FOREIGN KEY (blockedUser) REFERENCES users(userId)
       )`;
 
-      con.query(sql, function (err, result) {
+      con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Create table blocked");
       });
@@ -169,7 +169,7 @@ con.connect(function(err) {
       FOREIGN KEY (fakeUser) REFERENCES users(userId)
       )`;
 
-      con.query(sql, function (err, result) {
+      con.query(sql, function(err, result) {
         if (err) console.log(err);
         console.log("Create table fake");
       });
@@ -214,7 +214,7 @@ con.connect(function(err) {
       receiverId           INTEGER NOT NULL,
       content              VARCHAR(255) NOT NULL,
       time                 VARCHAR(255) NOT NULL,
-      seen                 INT DEFAULT 0
+      seen                 VARCHAR(45) DEFAULT false
       )`;
 
       con.query(sql, function(err, result) {

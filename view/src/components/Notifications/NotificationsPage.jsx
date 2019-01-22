@@ -3,7 +3,6 @@ import { MDBRow, MDBCol, MDBContainer } from "mdbreact";
 import Header from "../Navigation/Navigation";
 import * as routes from "../../constants/routes";
 import axios from "axios";
-import { notification } from "antd";
 import { Redirect, Link } from "react-router-dom";
 import "react-chat-elements/dist/main.css";
 import { ChatItem } from "react-chat-elements";
@@ -36,53 +35,38 @@ class NotificationsPage extends Component {
       });
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this._isMounted = true;
     var socket = this.props.socket;
-    await socket.on("connect", () => {
-      socket.emit("notif", sessionStorage.getItem("userId"));
-      socket.on("NOTIF_RECEIVED", async data => {
-        const openNotificationWithIcon = type => {
-          notification[type]({
-            message: data.fromUser + " " + data.message
-          });
-        };
-        axios
-          .post(`/api/notifications`, { userId: this.state.userId })
-          .then(async res => {
-            if (res.data.success) {
-              await this.setState({ count: res.data.count });
-            } else {
-              console.log("error");
-            }
-          });
-        openNotificationWithIcon("info");
-        axios
-          .post(`/api/getAllnotifications`, {
-            userId: this.state.userId
-          })
-          .then(async res => {
-            if (res.data.success) {
+    socket.on("NOTIF_RECEIVED", async data => {
+      var count = data.count + this.state.count;
+      if (this._isMounted) this.setState({ count: count });
+      axios
+        .post(`/api/getAllnotifications`, {
+          userId: this.state.userId
+        })
+        .then(async res => {
+          if (res.data.success) {
+            if (this._isMounted)
               await this.setState({ list_notif: res.data.list_notif });
-            } else {
-              console.log("error");
-            }
-          });
-      });
+          } else {
+            console.log("error");
+          }
+        });
     });
+
     axios
       .post(`/api/getAllnotifications`, {
         userId: this.state.userId
       })
       .then(async res => {
         if (res.data.success) {
-          await this.setState({ list_notif: res.data.list_notif });
+          if (this._isMounted)
+            await this.setState({ list_notif: res.data.list_notif });
         } else {
           console.log("error");
         }
       });
-
-    this._isMounted = true;
-    sessionStorage.getItem("userData");
   }
 
   componentWillUnmount() {
@@ -142,7 +126,7 @@ class NotificationsPage extends Component {
                           title={""}
                           subtitle={item.username + " " + item.content}
                           date={new Date(parseInt(item.time))}
-                        //   unread={0}
+                          //   unread={0}
                         />
                       </Link>
                     </div>
@@ -153,13 +137,13 @@ class NotificationsPage extends Component {
             </MDBContainer>
           </div>
         ) : (
-            <div>
-              <Header
-                isLoggedIn={this.state.isLoggedIn}
-                notSeenNotifications={count}
-              />
-            </div>
-          )}
+          <div>
+            <Header
+              isLoggedIn={this.state.isLoggedIn}
+              notSeenNotifications={count}
+            />
+          </div>
+        )}
       </div>
     );
   }

@@ -112,7 +112,7 @@ class ResetConfirmPassword extends Component {
     if (this.state.error) {
       this.setState({ error: null });
     } else if (this.state.success) {
-      this.setState({ success: null })
+      this.setState({ success: null });
     }
   }
 
@@ -133,7 +133,10 @@ class ResetConfirmPassword extends Component {
               className={`
                ${this.errorClass(this.state.formErrors.newpasswd)}`}
             >
-              <label className="subscriptionForm__field" htmlFor="newUserPassword">
+              <label
+                className="subscriptionForm__field"
+                htmlFor="newUserPassword"
+              >
                 <Input
                   name="newpasswd"
                   type="password"
@@ -149,7 +152,10 @@ class ResetConfirmPassword extends Component {
               className={`
                ${this.errorClass(this.state.formErrors.confnewpasswd)}`}
             >
-              <label className="subscriptionForm__field" htmlFor="confNewUserPassword">
+              <label
+                className="subscriptionForm__field"
+                htmlFor="confNewUserPassword"
+              >
                 <Input
                   name="confnewpasswd"
                   type="password"

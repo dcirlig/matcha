@@ -52,7 +52,7 @@ class Like extends Component {
         });
         var message = " have " + res.data.status + " your profile !";
 
-        socket.emit("NOTIF_SENT", {
+        await socket.emit("NOTIF_SENT", {
           likeroom,
           message,
           fromUser,
@@ -62,7 +62,7 @@ class Like extends Component {
         });
         if (res.data.match) {
           message = " likes you back. It's a match!";
-          socket.emit("NOTIF_SENT", {
+          await socket.emit("NOTIF_SENT", {
             likeroom,
             message,
             fromUser,

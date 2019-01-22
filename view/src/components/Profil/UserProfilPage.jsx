@@ -8,7 +8,6 @@ import UserAccountSettings from "./Settings/userAccountSettings";
 import ProfilePreview from "./Preview/profilePreview";
 import ProfilePreviewModal from "./Preview/profilePreviewModal";
 import axios from "axios";
-import { notification } from "antd";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
@@ -81,24 +80,12 @@ class UserProfilPage extends Component {
       });
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this._isMounted = true;
     var socket = this.props.socket;
-    await socket.on("connect", () => {
-      console.log("connected");
-      socket.emit("notif", sessionStorage.getItem("userId"));
-      socket.on("NOTIF_RECEIVED", async data => {
-        const openNotificationWithIcon = type => {
-          notification[type]({
-            message: data.fromUser + " " + data.message
-          });
-        };
-        var count = data.count + this.state.count
-        if (this._isMounted) {
-          this.setState({ count: count })
-        }
-        openNotificationWithIcon("info");
-      });
+    socket.on("NOTIF_RECEIVED", data => {
+      var count = data.count + this.state.count;
+      if (this._isMounted) this.setState({ count: count });
     });
   }
 
@@ -220,25 +207,25 @@ class UserProfilPage extends Component {
             />
           </div>
         ) : (
-            <div>
-              {" "}
-              <Header
-                isLoggedIn={this.state.isLoggedIn}
-                notSeenNotifications={count}
+          <div>
+            {" "}
+            <Header
+              isLoggedIn={this.state.isLoggedIn}
+              notSeenNotifications={count}
+            />
+            <Helmet>
+              <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
+            </Helmet>
+            <MDBRow className="publicProfilePreview">
+              <ProfilePreview
+                {...this.props}
+                refresh={refresh}
+                stopRefresh={this.stopRefresh}
+                publicProfile={true}
               />
-              <Helmet>
-                <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
-              </Helmet>
-              <MDBRow className="publicProfilePreview">
-                <ProfilePreview
-                  {...this.props}
-                  refresh={refresh}
-                  stopRefresh={this.stopRefresh}
-                  publicProfile={true}
-                />
-              </MDBRow>
-            </div>
-          )}
+            </MDBRow>
+          </div>
+        )}
         <ProfilePreviewModal
           profilePreview={this.state.profilePreview}
           closeProfilePreview={this.closeProfilePreview}

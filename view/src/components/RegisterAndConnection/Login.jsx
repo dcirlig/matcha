@@ -48,10 +48,6 @@ class LoginPage extends Component {
     this._isMounted = true;
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
   getGeolocation() {
     navigator.geolocation.getCurrentPosition(
       async location => {
@@ -178,14 +174,14 @@ class LoginPage extends Component {
 
       .then(async res => {
         if (res.data.success) {
-          sessionStorage.setItem("userData", res.data.username);
-          sessionStorage.setItem("userId", res.data.userId);
+          await sessionStorage.setItem("userData", res.data.username);
+          await sessionStorage.setItem("userId", res.data.userId);
           await this.setState({ redirect: true });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => { });
+      .catch(err => {});
     event.preventDefault();
   };
 
@@ -201,6 +197,10 @@ class LoginPage extends Component {
         this.setState({ success: undefined });
       }
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

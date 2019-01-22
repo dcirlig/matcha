@@ -2,7 +2,7 @@ var modelsLoc = require("../models/geoloc");
 var modelsUser = require("../models/user");
 
 module.exports = {
-  fillAddress: function (req, res) {
+  fillAddress: function(req, res) {
     var locationData = {
       latitude: req.body.coords.latitude,
       longitude: req.body.coords.longitude,
@@ -36,30 +36,38 @@ module.exports = {
         error: "Invalid latitude or/and longitude value(s)."
       });
     }
-    modelsLoc.doesExist(userData, function (find) {
-      if (find) {
-        modelsLoc.updateLocation(locationData, userData.userId);
-      } else {
-        modelsLoc.createLocation(locationData);
-      }
-      modelsUser.updateUser(locationUser, userData.userId);
-      return res.status(200).json({
-        fullAddress: locationUser.localisation,
-        success: "User address successfully created or updated."
-      });
-    });
-  },
-  displayAddress: function (req, res) {
-    const userId = req.body.userId;
-    modelsUser.getUser("userId", userId, function (result) {
-      if (result) {
+    if (userData) {
+      modelsLoc.doesExist(userData, function(find) {
+        if (find) {
+          modelsLoc.updateLocation(locationData, userData.userId);
+        } else {
+          modelsLoc.createLocation(locationData);
+        }
+        modelsUser.updateUser(locationUser, userData.userId);
         return res.status(200).json({
-          fullAddress: result[0].localisation,
-          success: "User address successfully extracted."
+          fullAddress: locationUser.localisation,
+          success: "User address successfully created or updated."
         });
-      } else {
-        return res.json({ error: "Address extraction failed." });
-      }
-    });
+      });
+    } else {
+      return res.json({ error: "user null" });
+    }
+  },
+  displayAddress: function(req, res) {
+    const userId = req.body.userId;
+    if (userId) {
+      modelsUser.getUser("userId", userId, function(result) {
+        if (result) {
+          return res.status(200).json({
+            fullAddress: result[0].localisation,
+            success: "User address successfully extracted."
+          });
+        } else {
+          return res.json({ error: "Address extraction failed." });
+        }
+      });
+    } else {
+      return res.json({ error: "user null" });
+    }
   }
 };

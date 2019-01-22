@@ -5,16 +5,20 @@ module.exports = {
     models.allTags(function(globalTags) {
       if (globalTags) {
         globalTags = JSON.parse(JSON.stringify(globalTags));
-        models.findTags(req.body.userId, function(tags) {
-          if (tags) {
-            return res.json({ globalTags: globalTags, tags: tags });
-          } else {
-            return res.json({
-              globalTags: globalTags,
-              empty: "No tags in the user's list"
-            });
-          }
-        });
+        if (req.body.userId) {
+          models.findTags(req.body.userId, function(tags) {
+            if (tags) {
+              return res.json({ globalTags: globalTags, tags: tags });
+            } else {
+              return res.json({
+                globalTags: globalTags,
+                empty: "No tags in the user's list"
+              });
+            }
+          });
+        } else {
+          return res.json({ error: "user null" });
+        }
       }
     });
   },
@@ -29,34 +33,38 @@ module.exports = {
           error:
             "Invalid tag! Your tag must contain only letters, numbers or '_' !"
         });
-      models.findTags(userId, function(tags) {
-        if (!tags) {
-          index = -1;
-        } else {
-          index = tags.indexOf(tag.text);
-        }
-        if (index !== -1) {
-          return res.json({
-            error:
-              "This tag is already in your list. Please choose another one!"
-          });
-        } else {
+      if (userId) {
+        models.findTags(userId, function(tags) {
           if (!tags) {
-            newTagsList = tag.text;
-          } else if (tags) {
-            newTagsList = tags.concat(", " + [tag.text]);
+            index = -1;
+          } else {
+            index = tags.indexOf(tag.text);
           }
-          models.addTagsUser(newTagsList, userId);
-          models.findTag("content", tag.text, function(find) {
-            if (!find) {
-              models.createTag(tag.text);
-              return res.status(200).json({
-                success: "Tag successfully added to interests global database"
-              });
+          if (index !== -1) {
+            return res.json({
+              error:
+                "This tag is already in your list. Please choose another one!"
+            });
+          } else {
+            if (!tags) {
+              newTagsList = tag.text;
+            } else if (tags) {
+              newTagsList = tags.concat(", " + [tag.text]);
             }
-          });
-        }
-      });
+            models.addTagsUser(newTagsList, userId);
+            models.findTag("content", tag.text, function(find) {
+              if (!find) {
+                models.createTag(tag.text);
+                return res.status(200).json({
+                  success: "Tag successfully added to interests global database"
+                });
+              }
+            });
+          }
+        });
+      } else {
+        return res.json({ error: "user null" });
+      }
     } else {
       return res.json({
         error: "Empty parameters"
@@ -64,9 +72,15 @@ module.exports = {
     }
   },
   deleteTag: function(req, res) {
-    models.deleteTagUser(req.body.userId, req.body.tagToDelete, function(tags) {
-      if (tags) return res.json({ tags });
-      else return res.json({ empty: "Empty tags list" });
-    });
+    if (req.body.userId && req.body.tagToDelete) {
+      models.deleteTagUser(req.body.userId, req.body.tagToDelete, function(
+        tags
+      ) {
+        if (tags) return res.json({ tags });
+        else return res.json({ empty: "Empty tags list" });
+      });
+    } else {
+      return res.json({ error: "empty userId or tag to delete'" });
+    }
   }
 };

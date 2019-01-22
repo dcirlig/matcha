@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import axios from "axios";
-import { Card, Select, Slider, notification } from "antd";
+import { Card, Select, Slider } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
@@ -10,6 +10,8 @@ import Like from "./Like";
 import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Helmet } from "react-helmet";
+import { Redirect } from "react-router-dom";
+import * as routes from "../../constants/routes";
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -45,7 +47,9 @@ class SearchUsersPage extends Component {
     this.onChangePopularity = this.onChangePopularity.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.openSearchFrame = this.openSearchFrame.bind(this);
-    this.updateUsersListAfterReport = this.updateUsersListAfterReport.bind(this);
+    this.updateUsersListAfterReport = this.updateUsersListAfterReport.bind(
+      this
+    );
   }
 
   async componentWillMount() {
@@ -64,41 +68,23 @@ class SearchUsersPage extends Component {
       });
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this._isMounted = true;
     var socket = this.props.socket;
-    await socket.on("connect", () => {
-      socket.emit("notif", this.state.userId.userId);
-      socket.on("NOTIF_RECEIVED", async data => {
-        const openNotificationWithIcon = type => {
-          notification[type]({
-            message: data.fromUser + " " + data.message
-          });
-        };
-        axios
-          .post(`/api/notifications`, { userId: this.state.userId.userId })
-          .then(async res => {
-            if (res.data.success) {
-              if (this._isMounted) {
-                await this.setState({ count: res.data.count });
-              }
-            } else {
-              console.log("error");
-            }
-          });
-
-        openNotificationWithIcon("info");
-      });
+    socket.on("NOTIF_RECEIVED", async data => {
+      var count = data.count + this.state.count;
+      if (this._isMounted) this.setState({ count: count });
     });
-
     axios
       .post(`/api/explorer`, { userId: this.state.userId })
       .then(async res => {
         if (res.data.user_list) {
-          const usersList = Object.assign({}, this.state.usersList, {
-            usersList: res.data.user_list
-          });
-          await this.setState({ usersList });
+          if (this._isMounted) {
+            const usersList = Object.assign({}, this.state.usersList, {
+              usersList: res.data.user_list
+            });
+            await this.setState({ usersList });
+          }
         } else {
           console.log("error");
         }
@@ -182,7 +168,6 @@ class SearchUsersPage extends Component {
   };
 
   sendVisitNotification = e => {
-    // e.preventDefault();
     var socket = this.props.socket;
     const likeroom = e.userId;
     const receiverId = e.userId;
@@ -201,10 +186,10 @@ class SearchUsersPage extends Component {
   };
 
   updateUsersListAfterReport(item) {
-    const list = this.state.usersList.usersList
+    const list = this.state.usersList.usersList;
     list.find(user => user.userId === item.userId).blocked = true;
     if (this._isMounted) {
-      this.setState({ usersList: { usersList: list } })
+      this.setState({ usersList: { usersList: list } });
     }
   }
 
@@ -226,16 +211,12 @@ class SearchUsersPage extends Component {
     var hour = date.getHours();
     var minutes = date.getMinutes();
     var dd = date.getDate();
-    var mm = Months[date.getMonth()]; //January is 0!
+    var mm = Months[date.getMonth()];
     var yyyy = date.getFullYear();
 
     if (dd < 10) {
       dd = "0" + dd;
     }
-
-    // if (mm < 10) {
-    //   mm = "0" + mm;
-    // }
 
     var data =
       day + ", " + dd + " " + mm + " " + yyyy + ", " + hour + ":" + minutes;
@@ -249,6 +230,12 @@ class SearchUsersPage extends Component {
   render() {
     const { searchOptions, usersList, sortBy, open, count } = this.state;
     var list = usersList.usersList;
+
+    const userData = sessionStorage.getItem("userData");
+    if (!this._isMounted && !userData) {
+      return <Redirect to={routes.SIGN_IN} />;
+    }
+
     return (
       <div>
         <Header
@@ -355,8 +342,8 @@ class SearchUsersPage extends Component {
                   </div>
                 </div>
               ) : (
-                  ""
-                )}
+                ""
+              )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -442,8 +429,8 @@ class SearchUsersPage extends Component {
             </MDBCol>
             {list.length > 0 ? (
               <MDBCol size="8" className="explorer-container">
-                {list.map((item, index) => (
-                  !item.blocked ?
+                {list.map((item, index) =>
+                  !item.blocked ? (
                     <div
                       className="searchCardContainer"
                       style={{ maxWidth: 240 }}
@@ -455,38 +442,46 @@ class SearchUsersPage extends Component {
                         cover={
                           <img
                             alt="example"
-                            src={item.profil_image ?
-                              item.profil_image.includes("unsplash")
-                                ? item.profil_image
-                                : `https://localhost:4000/${item.profil_image}` : `https://localhost:4000/profilPhoto/avatar-default.jpg`
+                            src={
+                              item.profil_image
+                                ? item.profil_image.includes("unsplash")
+                                  ? item.profil_image
+                                  : `https://localhost:4000/${
+                                      item.profil_image
+                                    }`
+                                : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                             }
                           />
                         }
                       >
                         <Reports
                           item={item}
-                          updateUsersListAfterReport={this.updateUsersListAfterReport}
+                          updateUsersListAfterReport={
+                            this.updateUsersListAfterReport
+                          }
                         />
-                        {item.profil_image ?
+                        {item.profil_image ? (
                           <Like
                             item={item}
                             popularity_score={item.popularity_score}
                             liked={item.liked}
                             socket={this.props.socket}
-                          /> : <h3>Incomplete profile.</h3>
-                        }
+                          />
+                        ) : (
+                          <h3>Incomplete profile.</h3>
+                        )}
                         {item.online === "online" ? (
                           <div className="onlineUsers" />
                         ) : (
-                            <div>
-                              <div className="offlineUsers" />
-                              {this.getDate(new Date(parseInt(item.online)))}
-                            </div>
-                          )}
+                          <div>
+                            <div className="offlineUsers" />
+                            {this.getDate(new Date(parseInt(item.online)))}
+                          </div>
+                        )}
                         <Meta
                           title={`${item.firstname} ${item.lastname}, ${
                             item.age
-                            } years old`}
+                          } years old`}
                           description={item.bio}
                         />
                         <ReactTags
@@ -504,20 +499,32 @@ class SearchUsersPage extends Component {
                           {item.sexual_orientation}
                         </p>
 
-                        <Link to={{ pathname: `/users/${item.username}`, state: { distance: item.dist, userId: item.userId, profileComplete: item.profil_image, item: item } }}
+                        <Link
+                          to={{
+                            pathname: `/users/${item.username}`,
+                            state: {
+                              distance: item.dist,
+                              userId: item.userId,
+                              profileComplete: item.profil_image,
+                              item: item
+                            }
+                          }}
                           onClick={e => this.sendVisitNotification(item)}
                         >
                           Show more...
-                      </Link>
+                        </Link>
                       </Card>
-                    </div> : ""
-                ))}
+                    </div>
+                  ) : (
+                    ""
+                  )
+                )}
               </MDBCol>
             ) : (
-                <div className="col-md-4">
-                  <p>No user finds</p>
-                </div>
-              )}
+              <div className="col-md-4">
+                <p>No user finds</p>
+              </div>
+            )}
           </MDBRow>
         </div>
       </div>

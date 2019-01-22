@@ -35,15 +35,16 @@ module.exports = function(socket) {
         time: sendAt
       };
       var count = 0;
-      notification.createNotification(notifData, function (data) {
+      notification.createNotification(notifData, function(data) {
         if (data) {
           count = count + 1;
           io.to(likeroom).emit("NOTIF_RECEIVED", {
             fromUser,
-            message, count
+            message,
+            count
           });
         }
-      })
+      });
     }
   );
 
@@ -83,7 +84,7 @@ module.exports = function(socket) {
         chatRoom: chatRoom
       };
       sql = "INSERT INTO messages SET ?";
-      connection.query(sql, chatData, function (err, result) {
+      connection.query(sql, chatData, function(err, result) {
         if (err) console.log(err);
       });
       io.to(chatRoom).emit("MESSAGE_RECEIVED", {
@@ -103,16 +104,20 @@ module.exports = function(socket) {
 
 function check(message) {
   if (message) {
-    if (!message.toString().match(
-      /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
-    )) {
-      return 'Use of forbidden characters in your message.'
+    if (
+      !message
+        .toString()
+        .match(
+          /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
+        )
+    ) {
+      return "Use of forbidden characters in your message.";
     }
     if (message.length >= 140) {
-      return message.slice(0, 139)
+      return message.slice(0, 139);
     }
-    return message
+    return message;
   } else {
-    return 'Empty message sent.'
+    return "Empty message sent.";
   }
 }
