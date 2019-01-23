@@ -65,7 +65,7 @@
     display: none;
   }
   .ant-card.ant-card-bordered.ant-card-hoverable {
-    height: 765px;
+    height: 800px;
     max-width: 100% !important;
   }
 }
@@ -129,8 +129,8 @@ label#searchTagsInput:focus:not([readonly]) {
   text-transform: none !important;
 }
 
-.tagsContainer.react-tags-wrapper {
-  margin-top: 5px;
+.react-tags-wrapper {
+  margin-top: 1rem;
 }
 
 .tag-wrapper.allSearchTags {

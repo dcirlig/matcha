@@ -24,7 +24,7 @@ import { notification } from "antd";
 const socketUrl = "localhost:8081";
 const socket = io(socketUrl);
 
-socket.on("connect", async function() {
+socket.on("connect", async function () {
   if (sessionStorage.getItem("userId")) {
     var userId = sessionStorage.getItem("userId");
     await socket.emit("notif", userId);
@@ -43,7 +43,7 @@ socket.on("connect", async function() {
     );
   }
 
-  socket.on("disconnect", function() {});
+  socket.on("disconnect", function () { });
 });
 
 const App = () => (

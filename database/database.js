@@ -7,10 +7,10 @@ var con = mysql.createConnection({
   password: "rootnode"
 });
 
-con.connect(function(err) {
+con.connect(function (err) {
   if (err) console.log(err);
   var sql = `CREATE DATABASE IF NOT EXISTS db_matcha`;
-  con.query(sql, function(err, result) {
+  con.query(sql, function (err, result) {
     if (err) console.log(err);
     console.log("Database created!");
 
@@ -21,60 +21,71 @@ con.connect(function(err) {
       database: "db_matcha"
     });
 
-    con.connect(function(err) {
+    con.connect(function (err) {
       if (err) console.log(err);
       console.log("Connected to database!");
       sql = "DROP TABLE IF EXISTS `images`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete images table");
       });
       sql = "DROP TABLE IF EXISTS `messages`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete messages table");
       });
       sql = "DROP TABLE IF EXISTS `chats`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete chats table");
       });
       sql = "DROP TABLE IF EXISTS `likes`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete likes table");
       });
       sql = "DROP TABLE IF EXISTS `blocked`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete blocked table");
       });
       sql = "DROP TABLE IF EXISTS `fake`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete fake table");
       });
       sql = "DROP TABLE IF EXISTS `interests`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete interests table");
       });
       sql = "DROP TABLE IF EXISTS `geolocation`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete geolocation table");
       });
 
       sql = "DROP TABLE IF EXISTS `notifications`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete notifications table");
       });
 
       sql = "DROP TABLE IF EXISTS `users`";
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Delete users table");
+      });
+
+      var sql = `CREATE TABLE if NOT EXISTS interests
+      (
+      interestId         INTEGER AUTO_INCREMENT PRIMARY KEY,
+      content            VARCHAR(45) NOT NULL
+      )`;
+
+      con.query(sql, function (err, result) {
+        if (err) console.log(err);
+        console.log("Create table interests");
       });
 
       var sql = `CREATE TABLE if NOT EXISTS users
@@ -100,7 +111,7 @@ con.connect(function(err) {
     socket_id             VARCHAR(255) DEFAULT ''  
     )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table users");
         var sql = `CREATE TABLE if NOT EXISTS geolocation
@@ -112,11 +123,16 @@ con.connect(function(err) {
       FOREIGN KEY (userId) REFERENCES users(userId)
       )`;
 
-        con.query(sql, function(err, result) {
+        con.query(sql, function (err, result) {
           if (err) console.log(err);
           console.log("Create table geolocation");
-          fakeUsers.fakeUsers();
           console.log("Insert random users");
+          fakeUsers.fakeUsers((data) => {
+            if (data) {
+              console.log(data)
+            }
+          });
+
         });
       });
 
@@ -129,7 +145,7 @@ con.connect(function(err) {
     FOREIGN KEY (userId) REFERENCES users(userId)
     )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table images");
       });
@@ -143,7 +159,7 @@ con.connect(function(err) {
       FOREIGN KEY (likedUser) REFERENCES users(userId)
       )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table likes");
       });
@@ -156,7 +172,7 @@ con.connect(function(err) {
       FOREIGN KEY (blockedUser) REFERENCES users(userId)
       )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table blocked");
       });
@@ -169,7 +185,7 @@ con.connect(function(err) {
       FOREIGN KEY (fakeUser) REFERENCES users(userId)
       )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table fake");
       });
@@ -185,7 +201,7 @@ con.connect(function(err) {
       FOREIGN KEY (userId2) REFERENCES users(userId)
       )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table chats");
       });
@@ -202,7 +218,7 @@ con.connect(function(err) {
       FOREIGN KEY (receiverId) REFERENCES users(userId)
       )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table messages");
       });
@@ -217,20 +233,9 @@ con.connect(function(err) {
       seen                 VARCHAR(45) DEFAULT false
       )`;
 
-      con.query(sql, function(err, result) {
+      con.query(sql, function (err, result) {
         if (err) console.log(err);
         console.log("Create table notifications");
-      });
-
-      var sql = `CREATE TABLE if NOT EXISTS interests
-      (
-      interestId         INTEGER AUTO_INCREMENT PRIMARY KEY,
-      content            VARCHAR(45) NOT NULL
-      )`;
-
-      con.query(sql, function(err, result) {
-        if (err) console.log(err);
-        console.log("Create table interests");
       });
     });
   });

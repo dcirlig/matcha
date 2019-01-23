@@ -6,7 +6,7 @@ const randomstring = require("randomstring");
 
 // Routes
 module.exports = {
-  register: function(req, res) {
+  register: function (req, res) {
     // Params
     var userData = {
       firstname: req.body.firstname,
@@ -22,8 +22,8 @@ module.exports = {
       service: "mailtrap",
       host: "smtp.mailtrap.io",
       auth: {
-        user: "cbad2ebee212cb",
-        pass: "3dcfd9fa48b900"
+        user: "08a43c661c7311",
+        pass: "8c65e78b005e6b"
       }
     });
 
@@ -73,13 +73,13 @@ module.exports = {
           error: "Wrong gender!"
         });
 
-      models.findOne("email", userData.email, function(find) {
+      models.findOne("email", userData.email, function (find) {
         if (find) {
           return res.json({
             error: "This email is used! Please choose another email!"
           });
         } else {
-          models.findOne("username", userData.username, function(find) {
+          models.findOne("username", userData.username, function (find) {
             if (find) {
               return res.json({
                 error: "This username is used! Please choose another username!"

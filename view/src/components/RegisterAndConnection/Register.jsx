@@ -137,7 +137,7 @@ class RegisterPage extends Component {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
     this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
