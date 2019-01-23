@@ -25,7 +25,8 @@ class UserProfilPage extends Component {
       redirect: "not upgraded",
       profilePreview: false,
       refresh: false,
-      count: ""
+      count: "",
+      not_found: false
     };
     this.profileSettings = this.profileSettings.bind(this);
     this.accountSettings = this.accountSettings.bind(this);
@@ -67,21 +68,32 @@ class UserProfilPage extends Component {
     }
   }
 
-  async componentWillMount() {
-    await this.setState({ username: sessionStorage.getItem("userData") });
+  componentWillMount() {
     axios
-      .post(`/api/notifications`, { userId: this.state.userId })
-      .then(res => {
-        if (res.data.success) {
-          this.setState({ count: res.data.count });
-        } else {
-          console.log("error");
+      .get(`/api/users/${this.props.match.params.username}`)
+      .then(async res => {
+        if (res.data.error) {
+          console.log(res.data.error);
+          await this.setState({ not_found: true });
         }
       });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this._isMounted = true;
+    axios
+      .post(`/api/notifications`, { userId: this.state.userId })
+      .then(res => {
+        console.log(res.data);
+        if (res.data.success) {
+          if (this._isMounted) this.setState({ count: res.data.count });
+        } else {
+          console.log("error");
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     var socket = this.props.socket;
     socket.on("NOTIF_RECEIVED", data => {
       var count = data.count + this.state.count;
@@ -108,12 +120,18 @@ class UserProfilPage extends Component {
       accountSettings,
       refresh,
       count,
-      username
+      username,
+      not_found
     } = this.state;
     const userData = sessionStorage.getItem("userData");
+
     if (!this._isMounted && !sessionStorage.getItem("userData")) {
       return <Redirect to={routes.SIGN_IN} />;
     }
+    if (not_found) {
+      return <Redirect to={routes.NOT_FOUND} />;
+    }
+    console.log(not_found);
     return (
       <div>
         {this.props.match.params.username === userData ? (

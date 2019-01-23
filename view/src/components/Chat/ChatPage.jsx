@@ -6,6 +6,8 @@ import ChatContainer from "./ChatContainer";
 import { Helmet } from "react-helmet";
 import { ChatList } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
+import { Redirect } from "react-router-dom";
+import * as routes from "../../constants/routes";
 
 export default class ChatPage extends Component {
   _isMounted = false;
@@ -37,7 +39,7 @@ export default class ChatPage extends Component {
         if (res.data.success) {
           this.setState({ count: res.data.count });
         } else {
-          console.log("error");
+          // console.log("error");
         }
       });
   }
@@ -287,6 +289,12 @@ export default class ChatPage extends Component {
       count
     } = this.state;
     const { socket } = this.props;
+
+    const userData = sessionStorage.getItem("userData");
+    if (!this._isMounted && !userData) {
+      return <Redirect to={routes.SIGN_IN} />;
+    }
+
     return (
       <div>
         <Header
