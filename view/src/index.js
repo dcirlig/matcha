@@ -24,8 +24,9 @@ import { notification } from "antd";
 const socketUrl = "localhost:8081";
 const socket = io(socketUrl);
 
-socket.on("connect", async function () {
-  if (sessionStorage.getItem("userId")) {
+if (sessionStorage.getItem("userId")) {
+  socket.on("connect", async function() {
+    console.log("connect");
     var userId = sessionStorage.getItem("userId");
     await socket.emit("notif", userId);
     socket.on("NOTIF_RECEIVED", data => {
@@ -41,10 +42,9 @@ socket.on("connect", async function () {
       sessionStorage.getItem("userId"),
       socket.id
     );
-  }
-
-  socket.on("disconnect", function () { });
-});
+    socket.on("disconnect", function() {});
+  });
+}
 
 const App = () => (
   <Router history={history}>
