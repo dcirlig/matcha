@@ -36,6 +36,8 @@
 
 .onlineUsers,
 .offlineUsers {
+  margin-top: 1rem;
+
   width: 10px;
   height: 10px;
   box-sizing: initial;
@@ -43,6 +45,7 @@
 }
 
 .onlineUsers {
+  margin-bottom: 1rem;
   background: green;
 }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import "antd/dist/antd.css";
 import axios from "axios";
 import { Card, Select, Slider } from "antd";
@@ -10,7 +10,6 @@ import Like from "./Like";
 import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
 import { Helmet } from "react-helmet";
-import { Redirect } from "react-router-dom";
 import * as routes from "../../constants/routes";
 
 const { Meta } = Card;
@@ -34,7 +33,8 @@ const INITIAL_STATE = {
   },
   isLoggedIn: true,
   open: false,
-  count: ""
+  count: "",
+  profileComplete: true
 };
 
 class SearchUsersPage extends Component {
@@ -56,11 +56,18 @@ class SearchUsersPage extends Component {
     await this.setState({
       userId: { userId: sessionStorage.getItem("userId") }
     });
-
+    axios
+      .post(`/api/profileComplete`, { userId: this.state.userId.userId })
+      .then(res => {
+        console.log('res.data', res.data)
+        if (res.data && res.data.error)
+          this.setState({ profileComplete: false })
+      })
+      .catch(err => console.log(err))
     axios
       .post(`/api/notifications`, { userId: this.state.userId.userId })
       .then(res => {
-        if (res.data.success) {
+        if (res.data.success && this.state.profileComplete) {
           this.setState({ count: res.data.count });
         } else {
           console.log("error");
@@ -228,14 +235,16 @@ class SearchUsersPage extends Component {
   }
 
   render() {
-    const { searchOptions, usersList, sortBy, open, count } = this.state;
+    const { searchOptions, usersList, sortBy, open, count, profileComplete } = this.state;
     var list = usersList.usersList;
 
     const userData = sessionStorage.getItem("userData");
     if (!this._isMounted && !userData) {
       return <Redirect to={routes.SIGN_IN} />;
     }
-
+    if (!profileComplete) {
+      return <Redirect to={{ pathname: `/users/${sessionStorage.getItem("userData")}`, state: { completeProfile: profileComplete } }} />;
+    }
     return (
       <div>
         <Header
@@ -342,8 +351,8 @@ class SearchUsersPage extends Component {
                   </div>
                 </div>
               ) : (
-                ""
-              )}
+                  ""
+                )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -447,8 +456,8 @@ class SearchUsersPage extends Component {
                                 ? item.profil_image.includes("unsplash")
                                   ? item.profil_image
                                   : `https://localhost:4000/${
-                                      item.profil_image
-                                    }`
+                                  item.profil_image
+                                  }`
                                 : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                             }
                           />
@@ -468,20 +477,23 @@ class SearchUsersPage extends Component {
                             socket={this.props.socket}
                           />
                         ) : (
-                          <h3>Incomplete profile.</h3>
-                        )}
+                            <h3>Incomplete profile.</h3>
+                          )}
                         {item.online === "online" ? (
-                          <div className="onlineUsers" />
-                        ) : (
                           <div>
-                            <div className="offlineUsers" />
-                            {this.getDate(new Date(parseInt(item.online)))}
+                            <div className="onlineUsers" />
+                            <h4>Online</h4>
                           </div>
-                        )}
+                        ) : (
+                            <div>
+                              <div className="offlineUsers" />
+                              {this.getDate(new Date(parseInt(item.online)))}
+                            </div>
+                          )}
                         <Meta
                           title={`${item.firstname} ${item.lastname}, ${
                             item.age
-                          } years old`}
+                            } years old`}
                           description={item.bio}
                         />
                         <ReactTags
@@ -516,15 +528,15 @@ class SearchUsersPage extends Component {
                       </Card>
                     </div>
                   ) : (
-                    ""
-                  )
+                      ""
+                    )
                 )}
               </MDBCol>
             ) : (
-              <div className="col-md-4">
-                <p>No user finds</p>
-              </div>
-            )}
+                <div className="col-md-4">
+                  <p>No user finds</p>
+                </div>
+              )}
           </MDBRow>
         </div>
       </div>

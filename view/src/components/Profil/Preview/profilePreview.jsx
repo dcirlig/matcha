@@ -102,15 +102,15 @@ class profilePreview extends React.Component {
                         item.profilImage
                           ? item.profilImage.includes("unsplash")
                             ? {
-                                background: `url('${
-                                  item.profilImage
+                              background: `url('${
+                                item.profilImage
                                 }') no-repeat center center`
-                              }
+                            }
                             : {
-                                background: `url('https://localhost:4000/${
-                                  item.profilImage
+                              background: `url('https://localhost:4000/${
+                                item.profilImage
                                 }')  no-repeat center center`
-                              }
+                            }
                           : ""
                       }
                     />
@@ -121,7 +121,7 @@ class profilePreview extends React.Component {
                         style={{
                           background: `url('https://localhost:4000/${
                             element.url
-                          }') no-repeat center center`
+                            }') no-repeat center center`
                         }}
                       />
                     ))}
@@ -140,35 +140,35 @@ class profilePreview extends React.Component {
                         item.profilImage
                           ? item.profilImage.includes("unsplash")
                             ? {
-                                background: `url('${
-                                  item.profilImage
+                              background: `url('${
+                                item.profilImage
                                 }') no-repeat center center`
-                              }
+                            }
                             : {
-                                background: `url('https://localhost:4000/${
-                                  item.profilImage
+                              background: `url('https://localhost:4000/${
+                                item.profilImage
                                 }')  no-repeat center center`
-                              }
+                            }
                           : ""
                       }
                     />
                   </Slider>
                 ) : (
-                  <Slider
-                    className="slider-wrapper-profile"
-                    style={{ width: "50" }}
-                    infinite={true}
-                    buttonDisabled="disabled"
-                  >
-                    <div
-                      key={"profilImagePreview"}
-                      className="slider-content-profile"
-                      style={{
-                        background: `url('https://localhost:4000/profilPhoto/avatar-default.jpg') no-repeat center center`
-                      }}
-                    />
-                  </Slider>
-                )
+                      <Slider
+                        className="slider-wrapper-profile"
+                        style={{ width: "50" }}
+                        infinite={true}
+                        buttonDisabled="disabled"
+                      >
+                        <div
+                          key={"profilImagePreview"}
+                          className="slider-content-profile"
+                          style={{
+                            background: `url('https://localhost:4000/profilPhoto/avatar-default.jpg') no-repeat center center`
+                          }}
+                        />
+                      </Slider>
+                    )
               }
             >
               <br />
@@ -191,17 +191,17 @@ class profilePreview extends React.Component {
                       />
                     </span>
                   ) : (
-                    <span>
-                      Incomplete profile
+                      <span>
+                        Incomplete profile
                       <br />
-                    </span>
-                  )
+                      </span>
+                    )
                 ) : (
-                  <span>
-                    <i className="fas fa-heart" style={{ color: "red" }} />
-                    {item.popularityScore} <br />
-                  </span>
-                )}
+                    <span>
+                      <i className="fas fa-heart" style={{ color: "red" }} />
+                      {item.popularityScore} <br />
+                    </span>
+                  )}
                 {item.firstname} {item.lastname} -{" "}
                 {distance || distance === 0
                   ? distance <= 1

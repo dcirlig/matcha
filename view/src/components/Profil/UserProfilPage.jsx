@@ -7,6 +7,7 @@ import UserProfileSettings from "./Settings/userProfileSettings";
 import UserAccountSettings from "./Settings/userAccountSettings";
 import ProfilePreview from "./Preview/profilePreview";
 import ProfilePreviewModal from "./Preview/profilePreviewModal";
+import ErrorModal from "../RegisterAndConnection/RegisterModal";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -26,6 +27,7 @@ class UserProfilPage extends Component {
       profilePreview: false,
       refresh: false,
       count: "",
+      error: undefined,
       not_found: false
     };
     this.profileSettings = this.profileSettings.bind(this);
@@ -34,6 +36,7 @@ class UserProfilPage extends Component {
     this.profilePreview = this.profilePreview.bind(this);
     this.getInfos = this.getInfos.bind(this);
     this.stopRefresh = this.stopRefresh.bind(this);
+    this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
   async getInfos() {
@@ -69,6 +72,9 @@ class UserProfilPage extends Component {
   }
 
   componentWillMount() {
+   if (this.props.location.state && !this.props.location.state.completeProfile) {
+      await this.setState({ error: "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications." })
+    }
     axios
       .get(`/api/users/${this.props.match.params.username}`)
       .then(async res => {
@@ -108,6 +114,10 @@ class UserProfilPage extends Component {
       var myDiv = document.getElementById("lateralScroll");
       myDiv.scrollTop = 0;
     }
+  }
+
+  handleClearErrorMessage() {
+    this.setState({ error: undefined });
   }
 
   componentWillUnmount() {
@@ -223,27 +233,31 @@ class UserProfilPage extends Component {
               closeProfilePreview={this.closeProfilePreview}
               username={username}
             />
+            <ErrorModal
+              errorMessage={this.state.error}
+              handleClearErrorMessage={this.handleClearErrorMessage}
+            />
           </div>
         ) : (
-          <div>
-            {" "}
-            <Header
-              isLoggedIn={this.state.isLoggedIn}
-              notSeenNotifications={count}
-            />
-            <Helmet>
-              <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
-            </Helmet>
-            <MDBRow className="publicProfilePreview">
-              <ProfilePreview
-                {...this.props}
-                refresh={refresh}
-                stopRefresh={this.stopRefresh}
-                publicProfile={true}
+            <div>
+              {" "}
+              <Header
+                isLoggedIn={this.state.isLoggedIn}
+                notSeenNotifications={count}
               />
-            </MDBRow>
-          </div>
-        )}
+              <Helmet>
+                <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
+              </Helmet>
+              <MDBRow className="publicProfilePreview">
+                <ProfilePreview
+                  {...this.props}
+                  refresh={refresh}
+                  stopRefresh={this.stopRefresh}
+                  publicProfile={true}
+                />
+              </MDBRow>
+            </div>
+          )}
         <ProfilePreviewModal
           profilePreview={this.state.profilePreview}
           closeProfilePreview={this.closeProfilePreview}

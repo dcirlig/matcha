@@ -19,7 +19,7 @@ var chatCtrl = require("./controllers/chatCtrl");
 var notificationsCtrl = require("./controllers/notificationsCtrl");
 var reportsCtrl = require("./controllers/reportsCtrl");
 //Routes
-exports.router = (function() {
+exports.router = (function () {
   var Router = express.Router();
 
   // Users routes
@@ -32,6 +32,7 @@ exports.router = (function() {
     resetConfirmPassword.resetConfirm
   );
   Router.get("/users/:username", profilCtrl.userProfil);
+  Router.post("/profileComplete", profilCtrl.profileComplete);
   Router.post("/tags/display", tagCtrl.displayTags);
   Router.post("/tags/add", tagCtrl.addTag);
   Router.post("/tags/delete", tagCtrl.deleteTag);

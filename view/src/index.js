@@ -23,6 +23,7 @@ import io from "socket.io-client";
 import { notification } from "antd";
 const socketUrl = "localhost:8081";
 const socket = io(socketUrl);
+
 if (sessionStorage.getItem("userId")) {
   socket.on("connect", async function() {
     console.log("connect");
@@ -41,7 +42,6 @@ if (sessionStorage.getItem("userId")) {
       sessionStorage.getItem("userId"),
       socket.id
     );
-
     socket.on("disconnect", function() {});
   });
 }

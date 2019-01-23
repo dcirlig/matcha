@@ -10,8 +10,6 @@ function calculateAge(birthday) {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-const Geo = require("open-street-map-reverse-geo-node-client/dist");
-
 const password = bcrypt.hashSync("to1A");
 var allTags = [];
 let cleanArray = [];
@@ -54,7 +52,7 @@ const getPhotos = cb => {
     });
 };
 
-function fakeUsers() {
+function fakeUsers(callback) {
   getPhotos(function (res) {
     for (i = 0; i <= 499; i++) {
       var birthdate = faker.date.between("1960-01-01", "2001-01-01");
@@ -69,7 +67,7 @@ function fakeUsers() {
         gender: faker.random.arrayElement(["male", "female"]),
         birthdate: birthdate,
         age: calculateAge(birthdate),
-        bio: faker.lorem.sentences(3, 3),
+        bio: faker.hacker.phrase(),
         tags: faker.random
           .words(5)
           .split(" ")
@@ -83,7 +81,6 @@ function fakeUsers() {
           res.man[Math.floor(Math.random() * res.man.length)],
           res.woman[Math.floor(Math.random() * res.woman.length)]
         ]),
-        // faker.image.avatar(),
         popularity_score: faker.random.number({ min: 2, max: 1000 }),
         localisation: "",
         secretToken: "",
@@ -95,21 +92,6 @@ function fakeUsers() {
         longitude: faker.finance.amount(2.259519, 2.415387, 6),
         userId: 0
       };
-      // const reverse = new Geo.ReverseGeocoder();
-      // await reverse
-      //     .getReverse(userCoords.latitude, userCoords.longitude)
-      //     .then(async location => {
-      //         if (location.address.city && location.address.cityDistrict) {
-      //             user.localisation = location.address.city + " " + location.address.cityDistrict
-      //         }
-      //         else if (location.address.town) {
-      //             user.localisation = location.address.town
-      //         }
-      //         models.createUser(user);
-      //     })
-      //     .catch(err => {
-      //         console.error(err);
-      //     });
       userModels.createUserAndLocation(user, userCoords);
       allTags = allTags.concat(user.tags.split(", "));
       for (let i = 0; i < allTags.length; i++) {
@@ -123,6 +105,7 @@ function fakeUsers() {
         tagsModels.createTag(element);
       }
     });
+    callback("Random users inserted")
   });
 }
 
