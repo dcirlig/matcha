@@ -7,8 +7,8 @@ import ChatContainer from "./ChatContainer";
 import { Helmet } from "react-helmet";
 import { ChatList } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
-import { Redirect } from "react-router-dom";
 import * as routes from "../../constants/routes";
+import { notification } from "antd";
 
 export default class ChatPage extends Component {
   _isMounted = false;
@@ -38,11 +38,11 @@ export default class ChatPage extends Component {
     axios
       .post(`/api/profileComplete`, { userId: this.state.userId })
       .then(res => {
-        console.log('res.data', res.data)
+        console.log("res.data", res.data);
         if (res.data && res.data.error)
-          this.setState({ profileComplete: false })
+          this.setState({ profileComplete: false });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
       .then(res => {
@@ -57,11 +57,18 @@ export default class ChatPage extends Component {
   componentDidMount() {
     this._isMounted = true;
     const socket = this.props.socket;
+    socket.emit("notif", this.state.userId);
     socket.on("NOTIF_RECEIVED", async data => {
       var count = data.count + this.state.count;
       if (this._isMounted) {
         this.setState({ count: count });
       }
+      const openNotificationWithIcon = type => {
+        notification[type]({
+          message: data.fromUser + " " + data.message
+        });
+      };
+      if (this._isMounted) openNotificationWithIcon("info");
     });
     axios
       .post(`/api/chat/getRooms`, sessionStorage)
@@ -301,7 +308,14 @@ export default class ChatPage extends Component {
     } = this.state;
     const { socket } = this.props;
     if (!profileComplete) {
-      return <Redirect to={{ pathname: `/users/${sessionStorage.getItem("userData")}`, state: { completeProfile: profileComplete } }} />;
+      return (
+        <Redirect
+          to={{
+            pathname: `/users/${sessionStorage.getItem("userData")}`,
+            state: { completeProfile: profileComplete }
+          }}
+        />
+      );
     }
     const userData = sessionStorage.getItem("userData");
     if (!this._isMounted && !userData) {
@@ -360,73 +374,73 @@ export default class ChatPage extends Component {
                           onClick={this.openChat}
                         />
                       ) : (
-                          "You have no chats yet."
-                        )}
+                        "You have no chats yet."
+                      )}
                     </div>
                   ) : (
-                      <div className="matchesColMenu">
-                        {usersMatched.length > 0 ? (
-                          <ChatList
-                            className="chat-list"
-                            dataSource={usersMatched}
-                            onClick={this.newChat}
-                          />
-                        ) : (
-                            <h4>You have no new matches.</h4>
-                          )}
-                      </div>
-                    )}
+                    <div className="matchesColMenu">
+                      {usersMatched.length > 0 ? (
+                        <ChatList
+                          className="chat-list"
+                          dataSource={usersMatched}
+                          onClick={this.newChat}
+                        />
+                      ) : (
+                        <h4>You have no new matches.</h4>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
-                  <div className="sideBarContent">
-                    <h3 className="welcomeChat">Welcome to your private chat!</h3>
-                    <MDBRow>
-                      <MDBCol>
-                        <MDBBtn
-                          gradient="peach"
-                          className="chatMenuButton"
-                          onClick={this.openMessages}
-                        >
-                          Your messages
+                <div className="sideBarContent">
+                  <h3 className="welcomeChat">Welcome to your private chat!</h3>
+                  <MDBRow>
+                    <MDBCol>
+                      <MDBBtn
+                        gradient="peach"
+                        className="chatMenuButton"
+                        onClick={this.openMessages}
+                      >
+                        Your messages
                       </MDBBtn>
-                      </MDBCol>
-                      <MDBCol>
-                        <MDBBtn
-                          gradient="peach"
-                          className="chatMenuButton"
-                          onClick={this.openMatches}
-                        >
-                          Your matches
+                    </MDBCol>
+                    <MDBCol>
+                      <MDBBtn
+                        gradient="peach"
+                        className="chatMenuButton"
+                        onClick={this.openMatches}
+                      >
+                        Your matches
                       </MDBBtn>
-                      </MDBCol>
-                    </MDBRow>
-                    {display === "messages" ? (
-                      <div className="messagesColMenu">
-                        {existingConv.length > 0 ? (
-                          <ChatList
-                            className="chat-list"
-                            dataSource={existingConv}
-                            onClick={this.openChat}
-                          />
-                        ) : (
-                            "You have no chats yet."
-                          )}
-                      </div>
-                    ) : (
-                        <div className="matchesColMenu">
-                          {usersMatched.length > 0 ? (
-                            <ChatList
-                              className="chat-list"
-                              dataSource={usersMatched}
-                              onClick={this.newChat}
-                            />
-                          ) : (
-                              <h4>You have no new matches.</h4>
-                            )}
-                        </div>
+                    </MDBCol>
+                  </MDBRow>
+                  {display === "messages" ? (
+                    <div className="messagesColMenu">
+                      {existingConv.length > 0 ? (
+                        <ChatList
+                          className="chat-list"
+                          dataSource={existingConv}
+                          onClick={this.openChat}
+                        />
+                      ) : (
+                        "You have no chats yet."
                       )}
-                  </div>
-                )}
+                    </div>
+                  ) : (
+                    <div className="matchesColMenu">
+                      {usersMatched.length > 0 ? (
+                        <ChatList
+                          className="chat-list"
+                          dataSource={usersMatched}
+                          onClick={this.newChat}
+                        />
+                      ) : (
+                        <h4>You have no new matches.</h4>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </MDBCol>
             <MDBCol size="8" className="chatContainer">
               <ChatContainer

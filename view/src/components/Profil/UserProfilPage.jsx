@@ -11,6 +11,7 @@ import ErrorModal from "../RegisterAndConnection/RegisterModal";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { notification } from "antd";
 
 class UserProfilPage extends Component {
   _isMounted = false;
@@ -71,9 +72,15 @@ class UserProfilPage extends Component {
     }
   }
 
-  componentWillMount() {
-   if (this.props.location.state && !this.props.location.state.completeProfile) {
-      await this.setState({ error: "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications." })
+  async componentWillMount() {
+    if (
+      this.props.location.state &&
+      !this.props.location.state.completeProfile
+    ) {
+      await this.setState({
+        error:
+          "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications."
+      });
     }
     axios
       .get(`/api/users/${this.props.match.params.username}`)
@@ -87,6 +94,18 @@ class UserProfilPage extends Component {
 
   async componentDidMount() {
     this._isMounted = true;
+    var socket = this.props.socket;
+    socket.emit("notif", this.state.userId);
+    socket.on("NOTIF_RECEIVED", data => {
+      var count = data.count + this.state.count;
+      if (this._isMounted) this.setState({ count: count });
+      const openNotificationWithIcon = type => {
+        notification[type]({
+          message: data.fromUser + " " + data.message
+        });
+      };
+      if (this._isMounted) openNotificationWithIcon("info");
+    });
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
       .then(res => {
@@ -100,11 +119,6 @@ class UserProfilPage extends Component {
       .catch(err => {
         console.log(err);
       });
-    var socket = this.props.socket;
-    socket.on("NOTIF_RECEIVED", data => {
-      var count = data.count + this.state.count;
-      if (this._isMounted) this.setState({ count: count });
-    });
   }
 
   componentDidUpdate() {
@@ -239,25 +253,25 @@ class UserProfilPage extends Component {
             />
           </div>
         ) : (
-            <div>
-              {" "}
-              <Header
-                isLoggedIn={this.state.isLoggedIn}
-                notSeenNotifications={count}
+          <div>
+            {" "}
+            <Header
+              isLoggedIn={this.state.isLoggedIn}
+              notSeenNotifications={count}
+            />
+            <Helmet>
+              <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
+            </Helmet>
+            <MDBRow className="publicProfilePreview">
+              <ProfilePreview
+                {...this.props}
+                refresh={refresh}
+                stopRefresh={this.stopRefresh}
+                publicProfile={true}
               />
-              <Helmet>
-                <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
-              </Helmet>
-              <MDBRow className="publicProfilePreview">
-                <ProfilePreview
-                  {...this.props}
-                  refresh={refresh}
-                  stopRefresh={this.stopRefresh}
-                  publicProfile={true}
-                />
-              </MDBRow>
-            </div>
-          )}
+            </MDBRow>
+          </div>
+        )}
         <ProfilePreviewModal
           profilePreview={this.state.profilePreview}
           closeProfilePreview={this.closeProfilePreview}

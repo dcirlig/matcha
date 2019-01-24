@@ -1,5 +1,4 @@
 import React from "react";
-// import { Link } from "react-router-dom";
 import {
   Navbar,
   NavbarBrand,
@@ -23,6 +22,7 @@ class LoginHeader extends React.Component {
       isActive: false
     };
     this.onClick = this.onClick.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
   onClick() {
@@ -31,6 +31,15 @@ class LoginHeader extends React.Component {
       isActive: true
     });
   }
+
+  logOut() {
+    sessionStorage.setItem("userData", "");
+    sessionStorage.setItem("latitude", "");
+    sessionStorage.setItem("longitude", "");
+    sessionStorage.clear();
+    window.location.href = "/login";
+  }
+
   render() {
     const username = sessionStorage.getItem("userData");
     const { notSeenNotifications } = this.props;
@@ -80,9 +89,12 @@ class LoginHeader extends React.Component {
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to={routes.LOG_OUT} activeClassName="is-active">
+                <button className="logOutButton" onClick={this.logOut}>
                   Log out
-                </NavLink>
+                </button>
+                {/* <NavLink to={routes.LOG_OUT} activeClassName="is-active">
+                  Log out
+                </NavLink> */}
               </NavItem>
             </NavbarNav>
           </Collapse>

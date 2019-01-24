@@ -16,9 +16,9 @@ module.exports = function(socket) {
     io.emit("disconnect");
   });
 
-  socket.on("onlineUser", function(userId, socketId) {
+  socket.on("onlineUser", async function(userId, socketId) {
     var data = { online: "online", socket_id: socketId };
-    user.updateUser(data, userId);
+    await user.updateUser(data, userId);
   });
 
   socket.on("notif", likedUser => {
