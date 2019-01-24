@@ -85,6 +85,7 @@ class Like extends Component {
             <i
               className="fas fa-heart"
               style={{
+                marginRight: '0.5rem',
                 color: like == null ? (liked ? "red" : "") : like ? "red" : ""
               }}
             />

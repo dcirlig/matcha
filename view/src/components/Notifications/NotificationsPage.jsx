@@ -26,7 +26,6 @@ class NotificationsPage extends Component {
     axios
       .post(`/api/profileComplete`, { userId: this.state.userId })
       .then(res => {
-        console.log("res.data", res.data);
         if (res.data && res.data.error)
           this.setState({ profileComplete: false });
       })
@@ -77,7 +76,6 @@ class NotificationsPage extends Component {
       })
       .then(async res => {
         if (res.data.success) {
-          console.log("res data", res.data);
           if (this._isMounted)
             await this.setState({ list_notif: res.data.list_notif });
         } else {

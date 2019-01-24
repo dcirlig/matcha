@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
+import { MDBRow, MDBCol, MDBBtn, MDBAlert } from "mdbreact";
 import Header from "../Navigation/Navigation";
 import ChatContainer from "./ChatContainer";
 import { Helmet } from "react-helmet";
@@ -38,7 +38,6 @@ export default class ChatPage extends Component {
     axios
       .post(`/api/profileComplete`, { userId: this.state.userId })
       .then(res => {
-        console.log("res.data", res.data);
         if (res.data && res.data.error)
           this.setState({ profileComplete: false });
       })
@@ -374,22 +373,22 @@ export default class ChatPage extends Component {
                           onClick={this.openChat}
                         />
                       ) : (
-                        "You have no chats yet."
-                      )}
+                          <MDBAlert color="info" dismiss>You have no chats yet.</MDBAlert>
+                        )}
                     </div>
                   ) : (
-                    <div className="matchesColMenu">
-                      {usersMatched.length > 0 ? (
-                        <ChatList
-                          className="chat-list"
-                          dataSource={usersMatched}
-                          onClick={this.newChat}
-                        />
-                      ) : (
-                        <h4>You have no new matches.</h4>
-                      )}
-                    </div>
-                  )}
+                      <div className="matchesColMenu">
+                        {usersMatched.length > 0 ? (
+                          <ChatList
+                            className="chat-list"
+                            dataSource={usersMatched}
+                            onClick={this.newChat}
+                          />
+                        ) : (
+                            <MDBAlert color="info" dismiss>You have no new matches.</MDBAlert>
+                          )}
+                      </div>
+                    )}
                 </div>
               ) : (
                 <div className="sideBarContent">
@@ -412,31 +411,32 @@ export default class ChatPage extends Component {
                       >
                         Your matches
                       </MDBBtn>
-                    </MDBCol>
-                  </MDBRow>
-                  {display === "messages" ? (
-                    <div className="messagesColMenu">
-                      {existingConv.length > 0 ? (
-                        <ChatList
-                          className="chat-list"
-                          dataSource={existingConv}
-                          onClick={this.openChat}
-                        />
-                      ) : (
-                        "You have no chats yet."
-                      )}
-                    </div>
-                  ) : (
-                    <div className="matchesColMenu">
-                      {usersMatched.length > 0 ? (
-                        <ChatList
-                          className="chat-list"
-                          dataSource={usersMatched}
-                          onClick={this.newChat}
-                        />
-                      ) : (
-                        <h4>You have no new matches.</h4>
-                      )}
+                      </MDBCol>
+                    </MDBRow>
+                    {display === "messages" ? (
+                      <div className="messagesColMenu">
+                        {existingConv.length > 0 ? (
+                          <ChatList
+                            className="chat-list"
+                            dataSource={existingConv}
+                            onClick={this.openChat}
+                          />
+                        ) : (
+                            <MDBAlert color="info" dismiss>You have no chats yet.</MDBAlert>
+                          )}
+                      </div>
+                    ) : (
+                        <div className="matchesColMenu">
+                          {usersMatched.length > 0 ? (
+                            <ChatList
+                              className="chat-list"
+                              dataSource={usersMatched}
+                              onClick={this.newChat}
+                            />
+                          ) : (
+                              <MDBAlert color="info" dismiss>You have no new matches.</MDBAlert>
+                            )}
+                        </div>
                     </div>
                   )}
                 </div>

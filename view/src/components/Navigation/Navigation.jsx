@@ -64,6 +64,7 @@ class LoginHeader extends React.Component {
           </NavbarBrand>
           {!this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
           <Collapse isOpen={this.state.collapse} navbar>
+
             <NavbarNav right>
               <NavItem>
                 <NavLink to={routes.NOTIFICATION} activeClassName="is-active">

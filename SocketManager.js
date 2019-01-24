@@ -3,10 +3,11 @@ const connection = require("./database/dbConnection");
 const notification = require("./models/notification");
 
 const user = require("./models/user");
-module.exports = function(socket) {
-  socket.on("disconnect", function() {
+module.exports = function (socket) {
+  socket.on("disconnect", async function () {
+    console.log("disconnect")
     sql = "UPDATE users SET ? WHERE socket_id=?";
-    connection.query(sql, [{ online: Date.now() }, socket.id], function(
+    await connection.query(sql, [{ online: Date.now() }, socket.id], function (
       err,
       result
     ) {
@@ -35,7 +36,7 @@ module.exports = function(socket) {
         time: sendAt
       };
       var count = 0;
-      notification.createNotification(notifData, function(data) {
+      notification.createNotification(notifData, function (data) {
         if (data) {
           count = count + 1;
           io.to(likeroom).emit("NOTIF_RECEIVED", {
@@ -84,7 +85,7 @@ module.exports = function(socket) {
         chatRoom: chatRoom
       };
       sql = "INSERT INTO messages SET ?";
-      connection.query(sql, chatData, function(err, result) {
+      connection.query(sql, chatData, function (err, result) {
         if (err) console.log(err);
       });
       io.to(chatRoom).emit("MESSAGE_RECEIVED", {
