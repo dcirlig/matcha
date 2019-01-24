@@ -85,8 +85,10 @@ class UserProfilPage extends Component {
             } else {
               this.setState({ error: "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications." })
             }
-          } else {this.setState({ error: "", not_found: false})}
+          } else { this.setState({ error: "", not_found: false }) }
         });
+    }
+  }
 
   async componentDidMount() {
     this._isMounted = true;
@@ -247,12 +249,12 @@ class UserProfilPage extends Component {
             />
           </div>
         ) : (
-          <div>
-            {" "}
-            <Header
-              isLoggedIn={this.state.isLoggedIn}
-              notSeenNotifications={count}
-            />
+            <div>
+              {" "}
+              <Header
+                isLoggedIn={this.state.isLoggedIn}
+                notSeenNotifications={count}
+              />
               <Helmet>
                 <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
               </Helmet>
