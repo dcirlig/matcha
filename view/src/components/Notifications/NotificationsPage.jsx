@@ -6,6 +6,7 @@ import axios from "axios";
 import { Redirect, Link } from "react-router-dom";
 import "react-chat-elements/dist/main.css";
 import { ChatItem } from "react-chat-elements";
+import { notification } from "antd";
 
 class NotificationsPage extends Component {
   _isMounted = false;
@@ -26,9 +27,9 @@ class NotificationsPage extends Component {
       .post(`/api/profileComplete`, { userId: this.state.userId })
       .then(res => {
         if (res.data && res.data.error)
-          this.setState({ profileComplete: false })
+          this.setState({ profileComplete: false });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
     await this.setState({ userId: sessionStorage.getItem("userId"), count: 0 });
     axios
       .post(`/api/updateNotif`, {
@@ -46,9 +47,16 @@ class NotificationsPage extends Component {
   componentDidMount() {
     this._isMounted = true;
     var socket = this.props.socket;
+    socket.emit("notif", this.state.userId);
     socket.on("NOTIF_RECEIVED", async data => {
       var count = data.count + this.state.count;
       if (this._isMounted) this.setState({ count: count });
+      const openNotificationWithIcon = type => {
+        notification[type]({
+          message: data.fromUser + " " + data.message
+        });
+      };
+      if (this._isMounted) openNotificationWithIcon("info");
       axios
         .post(`/api/getAllnotifications`, {
           userId: this.state.userId
@@ -106,7 +114,14 @@ class NotificationsPage extends Component {
       return <Redirect to={routes.SIGN_IN} />;
     }
     if (!profileComplete) {
-      return <Redirect to={{ pathname: `/users/${sessionStorage.getItem("userData")}`, state: { completeProfile: profileComplete } }} />;
+      return (
+        <Redirect
+          to={{
+            pathname: `/users/${sessionStorage.getItem("userData")}`,
+            state: { completeProfile: profileComplete }
+          }}
+        />
+      );
     }
     return (
       <div>
@@ -123,7 +138,15 @@ class NotificationsPage extends Component {
                   {list_notif.map((item, index) => (
                     <div key={index}>
                       <Link
-                        to={{ pathname: `/users/${item.username}`, state: { distance: item.dist, userId: item.userId, profileComplete: item.profil_image, item: item } }}
+                        to={{
+                          pathname: `/users/${item.username}`,
+                          state: {
+                            distance: item.dist,
+                            userId: item.userId,
+                            profileComplete: item.profil_image,
+                            item: item
+                          }
+                        }}
                         onClick={e => this.sendVisitNotification(item)}
                       >
                         <ChatItem
@@ -136,7 +159,7 @@ class NotificationsPage extends Component {
                           title={""}
                           subtitle={item.username + " " + item.content}
                           date={new Date(parseInt(item.time))}
-                        //   unread={0}
+                          //   unread={0}
                         />
                       </Link>
                     </div>
@@ -147,13 +170,13 @@ class NotificationsPage extends Component {
             </MDBContainer>
           </div>
         ) : (
-            <div>
-              <Header
-                isLoggedIn={this.state.isLoggedIn}
-                notSeenNotifications={count}
-              />
-            </div>
-          )}
+          <div>
+            <Header
+              isLoggedIn={this.state.isLoggedIn}
+              notSeenNotifications={count}
+            />
+          </div>
+        )}
       </div>
     );
   }

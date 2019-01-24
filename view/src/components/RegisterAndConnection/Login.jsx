@@ -11,6 +11,7 @@ import matchaLogo from "../../images/matcha_logo_full.png";
 import { Input, Button } from "mdbreact";
 import LoginModal from "./RegisterModal";
 import iplocation from "iplocation";
+// import { notification } from "antd";
 const publicIp = require("public-ip");
 
 const INITIAL_STATE = {
@@ -176,6 +177,21 @@ class LoginPage extends Component {
         if (res.data.success) {
           await sessionStorage.setItem("userData", res.data.username);
           await sessionStorage.setItem("userId", res.data.userId);
+          console.log("res.data", res.data.userId);
+          this.props.socket.emit(
+            "onlineUser",
+            res.data.userId,
+            this.props.socket.id
+          );
+          await this.props.socket.emit("notif", res.data.userId);
+          // this.props.socket.on("NOTIF_RECEIVED", data => {
+          //   const openNotificationWithIcon = type => {
+          //     notification[type]({
+          //       message: data.fromUser + " " + data.message
+          //     });
+          //   };
+          //   openNotificationWithIcon("info");
+          // });
           await this.setState({ redirect: true });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });

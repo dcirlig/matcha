@@ -47,7 +47,7 @@ class Like extends Component {
     const sendAt = Date.now();
     axios.post(`/api/like`, this.state).then(async res => {
       if (res.data.success) {
-        await this.setState({
+        this.setState({
           popularity_score: res.data.popularity_score
         });
         var message = " have " + res.data.status + " your profile !";

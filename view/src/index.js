@@ -13,38 +13,24 @@ import NotificationsPage from "./components/Notifications/NotificationsPage";
 import * as routes from "./constants/routes";
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
-import LogOut from "./components/RegisterAndConnection/Logout";
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "./styles/styles.scss";
 import history from "./constants/history";
 import io from "socket.io-client";
-import { notification } from "antd";
+// import { notification } from "antd";
 const socketUrl = "localhost:8081";
 const socket = io(socketUrl);
 
-if (sessionStorage.getItem("userId")) {
-  socket.on("connect", async function() {
-    console.log("connect");
+socket.on("connect", function() {
+  if (sessionStorage.getItem("userId")) {
     var userId = sessionStorage.getItem("userId");
-    await socket.emit("notif", userId);
-    socket.on("NOTIF_RECEIVED", data => {
-      const openNotificationWithIcon = type => {
-        notification[type]({
-          message: data.fromUser + " " + data.message
-        });
-      };
-      openNotificationWithIcon("info");
-    });
-    await socket.emit(
-      "onlineUser",
-      sessionStorage.getItem("userId"),
-      socket.id
-    );
-    socket.on("disconnect", function() {});
-  });
-}
+    socket.emit("notif", userId);
+    socket.emit("onlineUser", userId, socket.id);
+  }
+  socket.on("disconnect", function() {});
+});
 
 const App = () => (
   <Router history={history}>
@@ -58,7 +44,7 @@ const App = () => (
         <Route
           exact
           path={routes.SIGN_IN}
-          render={props => <LoginPage {...props} />}
+          render={props => <LoginPage {...props} socket={socket} />}
         />
         <Route
           exact
@@ -85,11 +71,7 @@ const App = () => (
           path={routes.USER_PROFIL_PAGE}
           render={props => <UserProfilPage {...props} socket={socket} />}
         />
-        <Route
-          exact
-          path={routes.LOG_OUT}
-          render={props => <LogOut {...props} socket={socket} />}
-        />
+
         <Route
           exact
           path={routes.NOT_FOUND}

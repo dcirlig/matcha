@@ -12,6 +12,7 @@ import ErrorModal from "../RegisterAndConnection/RegisterModal";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { notification } from "antd";
 
 class UserProfilPage extends Component {
   _isMounted = false;
@@ -72,6 +73,7 @@ class UserProfilPage extends Component {
     }
   }
 
+
   componentWillMount() {
     if (sessionStorage.getItem('userData')) {
       axios
@@ -85,11 +87,21 @@ class UserProfilPage extends Component {
             }
           } else {this.setState({ error: "", not_found: false})}
         });
-    }
-  }
 
   async componentDidMount() {
     this._isMounted = true;
+    var socket = this.props.socket;
+    socket.emit("notif", this.state.userId);
+    socket.on("NOTIF_RECEIVED", data => {
+      var count = data.count + this.state.count;
+      if (this._isMounted) this.setState({ count: count });
+      const openNotificationWithIcon = type => {
+        notification[type]({
+          message: data.fromUser + " " + data.message
+        });
+      };
+      if (this._isMounted) openNotificationWithIcon("info");
+    });
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
       .then(res => {
@@ -102,11 +114,6 @@ class UserProfilPage extends Component {
       .catch(err => {
         console.log(err);
       });
-    var socket = this.props.socket;
-    socket.on("NOTIF_RECEIVED", data => {
-      var count = data.count + this.state.count;
-      if (this._isMounted) this.setState({ count: count });
-    });
   }
 
   componentDidUpdate() {
@@ -240,12 +247,12 @@ class UserProfilPage extends Component {
             />
           </div>
         ) : (
-            <div>
-              {" "}
-              <Header
-                isLoggedIn={this.state.isLoggedIn}
-                notSeenNotifications={count}
-              />
+          <div>
+            {" "}
+            <Header
+              isLoggedIn={this.state.isLoggedIn}
+              notSeenNotifications={count}
+            />
               <Helmet>
                 <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
               </Helmet>
@@ -256,6 +263,11 @@ class UserProfilPage extends Component {
               </MDBRow>
             </div>
           )}
+        <ProfilePreviewModal
+          profilePreview={this.state.profilePreview}
+          closeProfilePreview={this.closeProfilePreview}
+          username={username}
+        />
       </div>
     );
   }

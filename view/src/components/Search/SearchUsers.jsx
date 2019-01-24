@@ -11,6 +11,7 @@ import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn, MDBAlert } from "mdbreact";
 import { Helmet } from "react-helmet";
 import * as routes from "../../constants/routes";
+import { notification } from "antd";
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -60,9 +61,9 @@ class SearchUsersPage extends Component {
       .post(`/api/profileComplete`, { userId: this.state.userId.userId })
       .then(res => {
         if (res.data && res.data.error)
-          this.setState({ profileComplete: false })
+          this.setState({ profileComplete: false });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
     axios
       .post(`/api/notifications`, { userId: this.state.userId.userId })
       .then(res => {
@@ -77,9 +78,16 @@ class SearchUsersPage extends Component {
   componentDidMount() {
     this._isMounted = true;
     var socket = this.props.socket;
-    socket.on("NOTIF_RECEIVED", async data => {
+    socket.emit("notif", this.state.userId.userId);
+    socket.on("NOTIF_RECEIVED", data => {
       var count = data.count + this.state.count;
       if (this._isMounted) this.setState({ count: count });
+      const openNotificationWithIcon = type => {
+        notification[type]({
+          message: data.fromUser + " " + data.message
+        });
+      };
+      if (this._isMounted) openNotificationWithIcon("info");
     });
     axios
       .post(`/api/explorer`, { userId: this.state.userId })
@@ -234,7 +242,14 @@ class SearchUsersPage extends Component {
   }
 
   render() {
-    const { searchOptions, usersList, sortBy, open, count, profileComplete } = this.state;
+    const {
+      searchOptions,
+      usersList,
+      sortBy,
+      open,
+      count,
+      profileComplete
+    } = this.state;
     var list = usersList.usersList;
 
     const userData = sessionStorage.getItem("userData");
@@ -242,7 +257,14 @@ class SearchUsersPage extends Component {
       return <Redirect to={routes.SIGN_IN} />;
     }
     if (!profileComplete) {
-      return <Redirect to={{ pathname: `/users/${sessionStorage.getItem("userData")}`, state: { completeProfile: profileComplete } }} />;
+      return (
+        <Redirect
+          to={{
+            pathname: `/users/${sessionStorage.getItem("userData")}`,
+            state: { completeProfile: profileComplete }
+          }}
+        />
+      );
     }
     return (
       <div>
@@ -350,8 +372,8 @@ class SearchUsersPage extends Component {
                   </div>
                 </div>
               ) : (
-                  ""
-                )}
+                ""
+              )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -455,8 +477,8 @@ class SearchUsersPage extends Component {
                                 ? item.profil_image.includes("unsplash")
                                   ? item.profil_image
                                   : `https://localhost:4000/${
-                                  item.profil_image
-                                  }`
+                                      item.profil_image
+                                    }`
                                 : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                             }
                           />
@@ -529,15 +551,15 @@ class SearchUsersPage extends Component {
                       </Card>
                     </div>
                   ) : (
-                      ""
-                    )
+                    ""
+                  )
                 )}
               </MDBCol>
             ) : (
-                <div className="col-md-4">
-                  <p>No user finds</p>
-                </div>
-              )}
+              <div className="col-md-4">
+                <p>No user finds</p>
+              </div>
+            )}
           </MDBRow>
         </div>
       </div>
