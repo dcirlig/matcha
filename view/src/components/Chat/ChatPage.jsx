@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
+import { MDBRow, MDBCol, MDBBtn, MDBAlert } from "mdbreact";
 import Header from "../Navigation/Navigation";
 import ChatContainer from "./ChatContainer";
 import { Helmet } from "react-helmet";
 import { ChatList } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
-import { Redirect } from "react-router-dom";
 import * as routes from "../../constants/routes";
 
 export default class ChatPage extends Component {
@@ -38,7 +37,6 @@ export default class ChatPage extends Component {
     axios
       .post(`/api/profileComplete`, { userId: this.state.userId })
       .then(res => {
-        console.log('res.data', res.data)
         if (res.data && res.data.error)
           this.setState({ profileComplete: false })
       })
@@ -360,7 +358,7 @@ export default class ChatPage extends Component {
                           onClick={this.openChat}
                         />
                       ) : (
-                          "You have no chats yet."
+                          <MDBAlert color="info" dismiss>You have no chats yet.</MDBAlert>
                         )}
                     </div>
                   ) : (
@@ -372,7 +370,7 @@ export default class ChatPage extends Component {
                             onClick={this.newChat}
                           />
                         ) : (
-                            <h4>You have no new matches.</h4>
+                            <MDBAlert color="info" dismiss>You have no new matches.</MDBAlert>
                           )}
                       </div>
                     )}
@@ -409,7 +407,7 @@ export default class ChatPage extends Component {
                             onClick={this.openChat}
                           />
                         ) : (
-                            "You have no chats yet."
+                            <MDBAlert color="info" dismiss>You have no chats yet.</MDBAlert>
                           )}
                       </div>
                     ) : (
@@ -421,7 +419,7 @@ export default class ChatPage extends Component {
                               onClick={this.newChat}
                             />
                           ) : (
-                              <h4>You have no new matches.</h4>
+                              <MDBAlert color="info" dismiss>You have no new matches.</MDBAlert>
                             )}
                         </div>
                       )}

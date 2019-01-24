@@ -36,8 +36,8 @@
 
 .onlineUsers,
 .offlineUsers {
-  margin-top: 1rem;
-
+  margin-right: 0.5rem;
+  margin-top: 0.2rem;
   width: 10px;
   height: 10px;
   box-sizing: initial;
@@ -45,8 +45,14 @@
 }
 
 .onlineUsers {
-  margin-bottom: 1rem;
   background: green;
+}
+
+.connexionInfo {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .offlineUsers {

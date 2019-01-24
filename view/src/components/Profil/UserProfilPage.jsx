@@ -6,6 +6,7 @@ import Avatar from "./UserPhoto/avatarPhoto";
 import UserProfileSettings from "./Settings/userProfileSettings";
 import UserAccountSettings from "./Settings/userAccountSettings";
 import ProfilePreview from "./Preview/profilePreview";
+import PublicProfilePreview from "./Preview/publicProfilePreview";
 import ProfilePreviewModal from "./Preview/profilePreviewModal";
 import ErrorModal from "../RegisterAndConnection/RegisterModal";
 import axios from "axios";
@@ -72,17 +73,19 @@ class UserProfilPage extends Component {
   }
 
   componentWillMount() {
-   if (this.props.location.state && !this.props.location.state.completeProfile) {
-      await this.setState({ error: "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications." })
+    if (sessionStorage.getItem('userData')) {
+      axios
+        .get(`/api/users/${this.props.match.params.username}`)
+        .then(async res => {
+          if (res.data.error || (this.props.location.state && !this.props.location.state.completeProfile)) {
+            if (res.data.error) {
+              await this.setState({ not_found: true });
+            } else {
+              this.setState({ error: "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications." })
+            }
+          } else {this.setState({ error: "", not_found: false})}
+        });
     }
-    axios
-      .get(`/api/users/${this.props.match.params.username}`)
-      .then(async res => {
-        if (res.data.error) {
-          console.log(res.data.error);
-          await this.setState({ not_found: true });
-        }
-      });
   }
 
   async componentDidMount() {
@@ -90,7 +93,6 @@ class UserProfilPage extends Component {
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
       .then(res => {
-        console.log(res.data);
         if (res.data.success) {
           if (this._isMounted) this.setState({ count: res.data.count });
         } else {
@@ -141,7 +143,6 @@ class UserProfilPage extends Component {
     if (not_found) {
       return <Redirect to={routes.NOT_FOUND} />;
     }
-    console.log(not_found);
     return (
       <div>
         {this.props.match.params.username === userData ? (
@@ -249,20 +250,12 @@ class UserProfilPage extends Component {
                 <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
               </Helmet>
               <MDBRow className="publicProfilePreview">
-                <ProfilePreview
+                <PublicProfilePreview
                   {...this.props}
-                  refresh={refresh}
-                  stopRefresh={this.stopRefresh}
-                  publicProfile={true}
                 />
               </MDBRow>
             </div>
           )}
-        <ProfilePreviewModal
-          profilePreview={this.state.profilePreview}
-          closeProfilePreview={this.closeProfilePreview}
-          username={username}
-        />
       </div>
     );
   }

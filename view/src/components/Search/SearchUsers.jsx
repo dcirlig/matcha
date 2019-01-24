@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
 import Like from "./Like";
 import Reports from "./Reports";
-import { MDBRow, MDBCol, MDBBtn } from "mdbreact";
+import { MDBRow, MDBCol, MDBBtn, MDBAlert } from "mdbreact";
 import { Helmet } from "react-helmet";
 import * as routes from "../../constants/routes";
 
@@ -59,7 +59,6 @@ class SearchUsersPage extends Component {
     axios
       .post(`/api/profileComplete`, { userId: this.state.userId.userId })
       .then(res => {
-        console.log('res.data', res.data)
         if (res.data && res.data.error)
           this.setState({ profileComplete: false })
       })
@@ -477,23 +476,25 @@ class SearchUsersPage extends Component {
                             socket={this.props.socket}
                           />
                         ) : (
-                            <h3>Incomplete profile.</h3>
+                            <MDBAlert color="warning">
+                              Incomplete profile
+                        </MDBAlert>
                           )}
                         {item.online === "online" ? (
-                          <div>
+                          <div className="connexionInfo">
                             <div className="onlineUsers" />
-                            <h4>Online</h4>
+                            <h5>Online</h5>
                           </div>
                         ) : (
-                            <div>
+                            <div className="connexionInfo">
                               <div className="offlineUsers" />
-                              {this.getDate(new Date(parseInt(item.online)))}
+                              <h5>{this.getDate(new Date(parseInt(item.online)))}</h5>
                             </div>
                           )}
                         <Meta
                           title={`${item.firstname} ${item.lastname}, ${
                             item.age
-                            } years old`}
+                            } y.o.`}
                           description={item.bio}
                         />
                         <ReactTags

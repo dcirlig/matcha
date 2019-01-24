@@ -2,18 +2,19 @@
 var models = require("../models/user");
 var imgModels = require("../models/images");
 var geolocModels = require("../models/geoloc");
+var likeModels = require("../models/like");
+var distModels = require("../models/distance");
 var escapeHtml = require("../utils/utils").escapeHtml;
 
 // Routes
 
 module.exports = {
-  userProfil: function(req, res) {
-    console.log(req.params.username);
+  userProfil: function (req, res) {
     if (req.params.username) {
       var username = escapeHtml(req.params.username);
-      models.findOne("username", username, function(find) {
+      models.findOne("username", username, function (find) {
         if (find) {
-          models.getUser("username", username, function(result) {
+          models.getUser("username", username, function (result) {
             if (result) {
               result.forEach(element => {
                 if (element.tags) {
@@ -28,7 +29,7 @@ module.exports = {
                 } else {
                   element.tags = [];
                 }
-                imgModels.getImage("userId", element.userId, function(images) {
+                imgModels.getImage("userId", element.userId, function (images) {
                   if (images) {
                     imagesUser = images;
                   } else {
@@ -37,6 +38,7 @@ module.exports = {
                   element.images = imagesUser;
                   var user = [
                     {
+                      userId: element.userId,
                       firstname: element.firstname,
                       lastname: element.lastname,
                       username: element.username,
@@ -122,5 +124,31 @@ module.exports = {
     } else {
       return res.json({ error: "This member does not exist" })
     }
+  },
+  publicProfile: function (req, res) {
+    if (req.body) {
+      var userVisiting = parseInt(req.body.userVisiting)
+      var userVisited = parseInt(req.body.userVisited)
+      likeModels.getLikes(userVisiting, userVisited, (data) => {
+        var userVisitedLikedYou = false
+        var userVisitedLiked = false
+        data.forEach(element => {
+          if (element.likeTransmitter === userVisiting && element.likedUser === userVisited) {
+            userVisitedLiked = true
+          } else if (element.likeTransmitter === userVisited && element.likedUser === userVisiting) {
+            userVisitedLikedYou = true
+          }
+        })
+        geolocModels.getLocation(userVisiting, (geoloc1) => {
+          geolocModels.getLocation(userVisited, (geoloc2) => {
+            if (geoloc1 && geoloc1.length > 0 && geoloc2 && geoloc2.length > 0) {
+              var dist = distModels.distance(geoloc1[0].latitude, geoloc1[0].longitude, geoloc2[0].latitude, geoloc2[0].longitude)
+            } else { dist = 0 }
+            var userInteractionsInfos = { likeBack: userVisitedLikedYou, liked: userVisitedLiked, dist: dist }
+            return res.json({ userInteractions: userInteractionsInfos })
+          })
+        })
+      })
+    } else { return res.json({ error: "Users not found in the database." }) }
   }
 };

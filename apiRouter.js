@@ -33,6 +33,7 @@ exports.router = (function () {
   );
   Router.get("/users/:username", profilCtrl.userProfil);
   Router.post("/profileComplete", profilCtrl.profileComplete);
+  Router.post("/publicProfile", profilCtrl.publicProfile)
   Router.post("/tags/display", tagCtrl.displayTags);
   Router.post("/tags/add", tagCtrl.addTag);
   Router.post("/tags/delete", tagCtrl.deleteTag);
