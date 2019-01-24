@@ -437,7 +437,6 @@ export default class ChatPage extends Component {
                               <MDBAlert color="info" dismiss>You have no new matches.</MDBAlert>
                             )}
                         </div>
-                    </div>
                   )}
                 </div>
               )}
