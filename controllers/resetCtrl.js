@@ -2,25 +2,33 @@
 var models = require("../models/user");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
-
+var escapeHtml = require("../utils/utils").escapeHtml;
 // Routes
 module.exports = {
-  reset: function (req, res) {
+  reset: function(req, res) {
     // Params
     var userData = {
-      email: req.body.email
+      email: escapeHtml(req.body.email)
     };
 
     var transporter = nodemailer.createTransport({
       service: "mailtrap",
       host: "smtp.mailtrap.io",
       auth: {
-        user: "08a43c661c7311",
-        pass: "8c65e78b005e6b"
+        //camille
+        // user: "08a43c661c7311",
+        // pass: "8c65e78b005e6b"
+        //doina
+        user: "cbad2ebee212cb",
+        pass: "3dcfd9fa48b900"
       }
     });
 
-    if (userData.email) {
+    if (
+      userData.email &&
+      userData.email.length >= 8 &&
+      userData.email.length < 50
+    ) {
       if (
         !userData.email.match(
           /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
@@ -30,9 +38,9 @@ module.exports = {
           error: "Invalid email!"
         });
 
-      models.findOne("email", userData.email, function (find) {
+      models.findOne("email", userData.email, function(find) {
         if (find) {
-          models.getUser("email", userData.email, function (result) {
+          models.getUser("email", userData.email, function(result) {
             if (result) {
               result.forEach(element => {
                 var secretToken = randomstring.generate();

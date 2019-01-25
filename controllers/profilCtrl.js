@@ -10,11 +10,15 @@ var escapeHtml = require("../utils/utils").escapeHtml;
 
 module.exports = {
   userProfil: function(req, res) {
-    if (req.params.username) {
+    if (
+      req.params.username &&
+      req.params.username.length < 20 &&
+      req.params.username >= 4
+    ) {
       var username = escapeHtml(req.params.username);
-      models.findOne("username", username, function (find) {
+      models.findOne("username", username, function(find) {
         if (find) {
-          models.getUser("username", username, function (result) {
+          models.getUser("username", username, function(result) {
             if (result) {
               result.forEach(element => {
                 if (element.tags) {
@@ -29,7 +33,7 @@ module.exports = {
                 } else {
                   element.tags = [];
                 }
-                imgModels.getImage("userId", element.userId, function (images) {
+                imgModels.getImage("userId", element.userId, function(images) {
                   if (images) {
                     imagesUser = images;
                   } else {
@@ -67,6 +71,10 @@ module.exports = {
           });
         }
       });
+    } else {
+      return res.json({
+        error: "username invalid or empty"
+      });
     }
   },
   profileComplete: function(req, res) {
@@ -74,34 +82,52 @@ module.exports = {
       var userId = req.body.userId;
       models.getUser("userId", userId, data => {
         if (data && data.length > 0) {
-          if (data[0].firstname && data[0].firstname.length > 0) {
+          if (
+            data[0].firstname &&
+            data[0].firstname.length >= 4 &&
+            data[0].firstname.length < 20
+          ) {
             var firstname = data[0].firstname;
           }
-          if (data[0].lastname && data[0].lastname.length > 0) {
+          if (
+            data[0].lastname &&
+            data[0].lastname.length >= 4 &&
+            data[0].lastname.length < 20
+          ) {
             var lastname = data[0].lastname;
           }
-          if (data[0].username && data[0].username.length > 0) {
+          if (
+            data[0].username &&
+            data[0].username.length >= 4 &&
+            data[0].username.length < 20
+          ) {
             var username = data[0].username;
           }
-          if (data[0].gender && data[0].gender.length > 0) {
+          if (
+            data[0].gender &&
+            (data[0].gender === "female" || data[0].gender === "male")
+          ) {
             var gender = data[0].gender;
           }
           if (data[0].age) {
             var age = data[0].age;
           }
-          if (data[0].bio && data[0].bio.length > 0) {
+          if (data[0].bio && data[0].bio.length <= 140) {
             var bio = data[0].bio;
           }
           if (data[0].tags && data[0].tags.length > 0) {
             var tags = data[0].tags;
           }
           if (
-            data[0].sexual_orientation &&
-            data[0].sexual_orientation.length > 0
+            data[0].sexual_orientation(
+              data[0].sexual_orientation === "homosexual" ||
+                data[0].sexual_orientation === "bisexual" ||
+                data[0].sexual_orientation === "heterosexual"
+            )
           ) {
             var sexual_orientation = data[0].sexual_orientation;
           }
-          if (data[0].profil_image && data[0].profil_image.length > 0) {
+          if (data[0].profil_image && data[0].profil_image != null) {
             var profil_image = data[0].profil_image;
           }
           if (
@@ -151,30 +177,54 @@ module.exports = {
       return res.json({ error: "This member does not exist" });
     }
   },
-  publicProfile: function (req, res) {
+  publicProfile: function(req, res) {
     if (req.body) {
-      var userVisiting = parseInt(req.body.userVisiting)
-      var userVisited = parseInt(req.body.userVisited)
-      likeModels.getLikes(userVisiting, userVisited, (data) => {
-        var userVisitedLikedYou = false
-        var userVisitedLiked = false
+      var userVisiting = parseInt(req.body.userVisiting);
+      var userVisited = parseInt(req.body.userVisited);
+      likeModels.getLikes(userVisiting, userVisited, data => {
+        var userVisitedLikedYou = false;
+        var userVisitedLiked = false;
         data.forEach(element => {
-          if (element.likeTransmitter === userVisiting && element.likedUser === userVisited) {
-            userVisitedLiked = true
-          } else if (element.likeTransmitter === userVisited && element.likedUser === userVisiting) {
-            userVisitedLikedYou = true
+          if (
+            element.likeTransmitter === userVisiting &&
+            element.likedUser === userVisited
+          ) {
+            userVisitedLiked = true;
+          } else if (
+            element.likeTransmitter === userVisited &&
+            element.likedUser === userVisiting
+          ) {
+            userVisitedLikedYou = true;
           }
-        })
-        geolocModels.getLocation(userVisiting, (geoloc1) => {
-          geolocModels.getLocation(userVisited, (geoloc2) => {
-            if (geoloc1 && geoloc1.length > 0 && geoloc2 && geoloc2.length > 0) {
-              var dist = distModels.distance(geoloc1[0].latitude, geoloc1[0].longitude, geoloc2[0].latitude, geoloc2[0].longitude)
-            } else { dist = 0 }
-            var userInteractionsInfos = { likeBack: userVisitedLikedYou, liked: userVisitedLiked, dist: dist }
-            return res.json({ userInteractions: userInteractionsInfos })
-          })
-        })
-      })
-    } else { return res.json({ error: "Users not found in the database." }) }
+        });
+        geolocModels.getLocation(userVisiting, geoloc1 => {
+          geolocModels.getLocation(userVisited, geoloc2 => {
+            if (
+              geoloc1 &&
+              geoloc1.length > 0 &&
+              geoloc2 &&
+              geoloc2.length > 0
+            ) {
+              var dist = distModels.distance(
+                geoloc1[0].latitude,
+                geoloc1[0].longitude,
+                geoloc2[0].latitude,
+                geoloc2[0].longitude
+              );
+            } else {
+              dist = 0;
+            }
+            var userInteractionsInfos = {
+              likeBack: userVisitedLikedYou,
+              liked: userVisitedLiked,
+              dist: dist
+            };
+            return res.json({ userInteractions: userInteractionsInfos });
+          });
+        });
+      });
+    } else {
+      return res.json({ error: "Users not found in the database." });
+    }
   }
 };

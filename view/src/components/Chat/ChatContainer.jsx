@@ -40,6 +40,7 @@ export default class Layout extends Component {
     const avatar = this.props.chatInfo.avatar;
     const myAvatar = this.props.chatInfo.myAvatar;
     var likeroom = receiverId;
+    const notif_message = " have sent a message: " + message;
     socket.emit("MESSAGE_SENT", {
       chatRoom,
       message,
@@ -53,7 +54,7 @@ export default class Layout extends Component {
     });
     socket.emit("NOTIF_SENT", {
       likeroom,
-      message,
+      message: notif_message,
       fromUser,
       senderId,
       receiverId,

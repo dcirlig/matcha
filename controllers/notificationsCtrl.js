@@ -1,7 +1,6 @@
 var connection = require("../database/dbConnection");
 var notification = require("../models/notification");
 var users = require("../models/user");
-var notif_list = [];
 var distance = require("../models/distance");
 
 module.exports = {

@@ -26,7 +26,6 @@ function findOne(field, userData, callback) {
 }
 
 function getUser(field, userData, callback) {
-  // sql = "SELECT " + field + " FROM users WHERE " + field + "= ?";
   sql = "SELECT * FROM users WHERE " + field + "=?";
   connection.query(sql, userData, function(err, result) {
     if (err) console.log(err);

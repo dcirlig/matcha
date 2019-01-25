@@ -1,5 +1,5 @@
 var models = require("../models/user");
-
+var escapeHtml = require("../utils/utils").escapeHtml;
 module.exports = {
   displayPreferences: function(req, res) {
     const userId = req.body.userId;
@@ -24,22 +24,33 @@ module.exports = {
   },
   updatePreferences: function(req, res) {
     const userId = req.body.userId;
-    const gender = req.body.data.gender;
-    const sexualOrientation = req.body.data.sexualOrientation;
-    const bio = req.body.data.bio;
-    const age = req.body.data.age;
+    const gender = escapeHtml(req.body.data.gender);
+    const sexualOrientation = escapeHtml(req.body.data.sexualOrientation);
+    const bio = escapeHtml(req.body.data.bio);
+    const age = parseInt(req.body.data.age);
     const birthdate = req.body.data.birthdate;
     var objUpdate = {};
-    if (gender) {
+    if (gender && (gender == "female" || gender === "male")) {
       objUpdate = { gender: gender };
-    } else if (sexualOrientation) {
+    } else if (
+      sexualOrientation &&
+      (sexualOrientation === "bisexual" ||
+        (sexualOrientation === "homosexual" &&
+          sexualOrientation === "heterosexual"))
+    ) {
       objUpdate = { sexual_orientation: sexualOrientation };
-    } else if (bio) {
+    } else if (bio && bio.length <= 140) {
       objUpdate = { bio: bio };
     } else if (age && birthdate) {
       objUpdate = { age: age, birthdate: birthdate };
     }
-    if (userId) {
+    // else {
+    //   return res.json({
+    //     error: "Invalid parameter!"
+    //   });
+    // }
+    console.log("objupdate", objUpdate);
+    if (userId && objUpdate) {
       models.updateUser(objUpdate, userId);
       return res.status(200).json({
         success: "Information successfully updated."

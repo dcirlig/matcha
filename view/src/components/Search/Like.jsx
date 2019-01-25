@@ -45,13 +45,13 @@ class Like extends Component {
     const senderId = sessionStorage.getItem("userId");
     const fromUser = sessionStorage.getItem("userData");
     const sendAt = Date.now();
+    this.setState({ likeTransmitter: senderId });
     axios.post(`/api/like`, this.state).then(async res => {
       if (res.data.success) {
-        this.setState({
+        await this.setState({
           popularity_score: res.data.popularity_score
         });
         var message = " have " + res.data.status + " your profile !";
-
         await socket.emit("NOTIF_SENT", {
           likeroom,
           message,
@@ -62,6 +62,17 @@ class Like extends Component {
         });
         if (res.data.match) {
           message = " likes you back. It's a match!";
+          await socket.emit("NOTIF_SENT", {
+            likeroom,
+            message,
+            fromUser,
+            senderId,
+            receiverId,
+            sendAt
+          });
+        }
+        if (res.data.isMatch) {
+          message = " has disliked you. Match over!";
           await socket.emit("NOTIF_SENT", {
             likeroom,
             message,
@@ -85,7 +96,7 @@ class Like extends Component {
             <i
               className="fas fa-heart"
               style={{
-                marginRight: '0.5rem',
+                marginRight: "0.5rem",
                 color: like == null ? (liked ? "red" : "") : like ? "red" : ""
               }}
             />

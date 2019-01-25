@@ -2,20 +2,30 @@
 var bcrypt = require("bcrypt-nodejs");
 var jwtUtils = require("../utils/utils");
 var models = require("../models/user");
-
+var escapeHtml = require("../utils/utils").escapeHtml;
 // Routes
 module.exports = {
   login: function(req, res) {
+    console.log(req.body);
     var userData = {
-      username: req.body.username,
-      passwd: req.body.passwd,
+      username: escapeHtml(req.body.username),
+      passwd: escapeHtml(req.body.passwd),
       latitude: req.body.coords.latitude,
       longitude: req.body.coords.longitude
     };
     if (userData.username != null && userData.passwd != null) {
-      if (!userData.username.match(/^[a-zA-Z0-9_]+$/)) {
+      if (
+        !userData.username.match(/^[a-zA-Z0-9_]+$/) ||
+        !userData.passwd.match(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
+        ) ||
+        (userData.username < 4 ||
+          userData.username >= 20 ||
+          userData.passwd < 8 ||
+          userData.passwd >= 20)
+      ) {
         return res.json({
-          error: "Please use your username!"
+          error: "Invalid parameters!!!"
         });
       } else {
         models.getUser("username", userData.username, function(result) {
@@ -55,7 +65,7 @@ module.exports = {
         });
       }
     } else {
-      return res.json({ error: "Missing parameters" });
+      return res.json({ error: "Missing parameters or invalid parameters" });
     }
   }
 };

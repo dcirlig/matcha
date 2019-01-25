@@ -2,7 +2,7 @@
 var bcrypt = require("bcrypt-nodejs");
 var users = require("../models/user");
 var connection = require("../database/dbConnection");
-
+var escapeHtml = require("../utils/utils").escapeHtml;
 // Routes
 
 module.exports = {
@@ -17,12 +17,12 @@ module.exports = {
       users.findOne("userId", `${userId}`, function(find) {
         if (find) {
           var userData = {
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            username: req.body.username,
-            email: req.body.email,
-            new_password: req.body.new_password,
-            confirm_new_passwd: req.body.confirm_new_passwd
+            firstname: escapeHtml(req.body.firstname),
+            lastname: escapeHtml(req.body.lastname),
+            username: escapeHtml(req.body.username),
+            email: escapeHtml(req.body.email),
+            new_password: escapeHtml(req.body.new_password),
+            confirm_new_passwd: escapeHtml(req.body.confirm_new_passwd)
           };
 
           sql = "SELECT username, email FROM users";
@@ -35,7 +35,11 @@ module.exports = {
               });
             }
 
-            if (userData.firstname && userData.firstname !== "") {
+            if (
+              userData.firstname &&
+              userData.firstname.length >= 4 &&
+              userData.firstname.length < 20
+            ) {
               if (!userData.firstname.match(/^[a-zA-Z]+$/)) {
                 return res.json({
                   error:
@@ -46,7 +50,11 @@ module.exports = {
               }
             }
 
-            if (userData.lastname && userData.lastname !== "") {
+            if (
+              userData.lastname &&
+              userData.lastname.length >= 4 &&
+              userData.lastname.length < 20
+            ) {
               if (!userData.lastname.match(/^[a-zA-Z]+$/)) {
                 return res.json({
                   error:
@@ -57,7 +65,11 @@ module.exports = {
               }
             }
 
-            if (userData.username && userData.username !== "") {
+            if (
+              userData.username &&
+              userData.username.length >= 4 &&
+              userData.username.length < 20
+            ) {
               if (!userData.username.match(/^[a-zA-Z0-9_]+$/)) {
                 return res.json({
                   error:
@@ -72,7 +84,11 @@ module.exports = {
               }
             }
 
-            if (userData.email && userData.email !== "") {
+            if (
+              userData.email &&
+              userData.email.length >= 8 &&
+              userData.email.length < 50
+            ) {
               if (
                 !userData.email.match(
                   /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
@@ -90,10 +106,14 @@ module.exports = {
               }
             }
 
-            if (userData.new_password && userData.new_password !== "") {
+            if (
+              userData.new_password &&
+              userData.new_password.length >= 8 &&
+              userData.new_password.length < 20
+            ) {
               if (
                 !userData.new_password.match(
-                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
                 )
               ) {
                 return res.json({
@@ -104,7 +124,7 @@ module.exports = {
 
               if (
                 !userData.confirm_new_passwd.match(
-                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
                 )
               )
                 return res.json({

@@ -1,4 +1,5 @@
 var models = require("../models/tags");
+var escapeHtml = require("../utils/utils").escapeHtml;
 
 module.exports = {
   displayTags: function(req, res) {
@@ -24,10 +25,10 @@ module.exports = {
   },
   addTag: function(req, res) {
     var tag = {
-      text: req.body.tag
+      text: escapeHtml(req.body.tag)
     };
     var userId = req.body.userId;
-    if (tag.text != "") {
+    if (tag.text.length >= 1 && tag.text < 20) {
       if (!tag.text.match(/^[a-zA-Z0-9_]+$/))
         return res.json({
           error:
@@ -72,7 +73,7 @@ module.exports = {
     }
   },
   deleteTag: function(req, res) {
-    if (req.body.userId && req.body.tagToDelete) {
+    if (req.body.userId && escapeHtml(req.body.tagToDelete)) {
       models.deleteTagUser(req.body.userId, req.body.tagToDelete, function(
         tags
       ) {

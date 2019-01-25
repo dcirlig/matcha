@@ -19,9 +19,18 @@ import "mdbreact/dist/css/mdb.css";
 import "./styles/styles.scss";
 import history from "./constants/history";
 import io from "socket.io-client";
-// import { notification } from "antd";
+import { notification } from "antd";
 const socketUrl = "localhost:8081";
 const socket = io(socketUrl);
+
+socket.on("NOTIF_RECEIVED", data => {
+  const openNotificationWithIcon = type => {
+    notification[type]({
+      message: data.fromUser + " " + data.message
+    });
+  };
+  openNotificationWithIcon("info");
+});
 
 socket.on("connect", function() {
   if (sessionStorage.getItem("userId")) {

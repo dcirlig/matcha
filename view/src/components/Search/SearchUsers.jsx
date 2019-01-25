@@ -11,7 +11,6 @@ import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn, MDBAlert } from "mdbreact";
 import { Helmet } from "react-helmet";
 import * as routes from "../../constants/routes";
-import { notification } from "antd";
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -78,16 +77,9 @@ class SearchUsersPage extends Component {
   componentDidMount() {
     this._isMounted = true;
     var socket = this.props.socket;
-    socket.emit("notif", this.state.userId.userId);
     socket.on("NOTIF_RECEIVED", data => {
       var count = data.count + this.state.count;
       if (this._isMounted) this.setState({ count: count });
-      const openNotificationWithIcon = type => {
-        notification[type]({
-          message: data.fromUser + " " + data.message
-        });
-      };
-      if (this._isMounted) openNotificationWithIcon("info");
     });
     axios
       .post(`/api/explorer`, { userId: this.state.userId })
@@ -498,25 +490,27 @@ class SearchUsersPage extends Component {
                             socket={this.props.socket}
                           />
                         ) : (
-                            <MDBAlert color="warning">
-                              Incomplete profile
-                        </MDBAlert>
-                          )}
+                          <MDBAlert color="warning">
+                            Incomplete profile
+                          </MDBAlert>
+                        )}
                         {item.online === "online" ? (
                           <div className="connexionInfo">
                             <div className="onlineUsers" />
                             <h5>Online</h5>
                           </div>
                         ) : (
-                            <div className="connexionInfo">
-                              <div className="offlineUsers" />
-                              <h5>{this.getDate(new Date(parseInt(item.online)))}</h5>
-                            </div>
-                          )}
+                          <div className="connexionInfo">
+                            <div className="offlineUsers" />
+                            <h5>
+                              {this.getDate(new Date(parseInt(item.online)))}
+                            </h5>
+                          </div>
+                        )}
                         <Meta
                           title={`${item.firstname} ${item.lastname}, ${
                             item.age
-                            } y.o.`}
+                          } y.o.`}
                           description={item.bio}
                         />
                         <ReactTags
