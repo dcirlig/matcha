@@ -4,7 +4,6 @@ import { Helmet } from "react-helmet";
 import * as routes from "../../constants/routes";
 import { FormErrors } from "../../constants/utils";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "../../index.css";
 import Header from "../Navigation/Navigation";
 import matchaLogo from "../../images/matcha_logo_full.png";

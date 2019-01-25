@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { MDBContainer, MDBAlert, MDBBtn } from 'mdbreact';
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import * as routes from "../../constants/routes";
 import { Link, Redirect } from "react-router-dom";
 import Header from "../Navigation/Navigation";

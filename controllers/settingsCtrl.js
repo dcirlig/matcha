@@ -6,7 +6,7 @@ var connection = require("../database/dbConnection");
 // Routes
 
 module.exports = {
-    settings: function(req, res) {
+    settings: function (req, res) {
         // Params
         var username = [];
         var email = [];
@@ -14,19 +14,19 @@ module.exports = {
 
         var userId = req.body.userId;
         if (userId) {
-            users.findOne("userId", `${userId}`, function(find) {
+            users.findOne("userId", `${userId}`, function (find) {
                 if (find) {
                     var userData = {
-                        firstname: escape(req.body.firstname),
-                        lastname: escape(req.body.lastname),
-                        username: escape(req.body.username),
-                        email: escape(req.body.email),
+                        firstname: req.body.firstname,
+                        lastname: req.body.lastname,
+                        username: req.body.username,
+                        email: req.body.email,
                         new_password: req.body.new_password,
                         confirm_new_passwd: req.body.confirm_new_passwd
                     };
 
                     sql = "SELECT username, email FROM users";
-                    connection.query(sql, function(err, result) {
+                    connection.query(sql, function (err, result) {
                         if (err) console.log(err);
                         if (result) {
                             result.forEach(element => {
