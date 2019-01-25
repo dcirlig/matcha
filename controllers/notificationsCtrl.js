@@ -4,12 +4,12 @@ var users = require("../models/user");
 var distance = require("../models/distance");
 
 module.exports = {
-  notifications: function(req, res) {
+  notifications: function (req, res) {
     var userId = req.body.userId;
     if (userId !== null) {
-      users.findOne("userId", userId, function(find) {
+      users.findOne("userId", userId, function (find) {
         if (find) {
-          notification.countNotSeenNotification([userId, 0], function(result) {
+          notification.countNotSeenNotification([userId, 0], function (result) {
             if (result) {
               result.forEach(element => {
                 count = element.COUNT;
@@ -27,20 +27,20 @@ module.exports = {
       return res.json({ error: "user null" });
     }
   },
-  getAllnotifications: function(req, res) {
+  getAllnotifications: function (req, res) {
     var userId = req.body.userId;
     if (userId) {
       var sql = "SELECT latitude, longitude from geolocation WHERE userId=?";
-      connection.query(sql, userId, function(err, result) {
+      connection.query(sql, userId, function (err, result) {
         if (err) {
           console.log("error");
         }
         if (result) {
           result.forEach(element => {
             if (userId !== null) {
-              users.findOne("userId", userId, function(find) {
+              users.findOne("userId", userId, function (find) {
                 if (find) {
-                  notification.getAllNotif(userId, function(results) {
+                  notification.getAllNotif(userId, function (results) {
                     if (results) {
                       results.forEach(user => {
                         user.dist = Math.round(
@@ -70,10 +70,10 @@ module.exports = {
       return res.json({ error: "user null" });
     }
   },
-  updateNotif: function(req, res) {
+  updateNotif: function (req, res) {
     var userId = req.body.userId;
     if (userId !== null) {
-      users.findOne("userId", userId, function(find) {
+      users.findOne("userId", userId, function (find) {
         if (find) {
           var data = { seen: 1 };
           notification.updateNotif(data, userId);

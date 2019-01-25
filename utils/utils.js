@@ -16,19 +16,4 @@ function generateTokenForUser(userData) {
   );
 }
 
-function escapeHtml(text) {
-  var map = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  };
-
-  return text.replace(/[&<>"']/g, function(m) {
-    return map[m];
-  });
-}
-
-exports.escapeHtml = escapeHtml;
 exports.generateTokenForUser = generateTokenForUser;

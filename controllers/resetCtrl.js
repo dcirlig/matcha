@@ -2,76 +2,76 @@
 var models = require("../models/user");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
-var escapeHtml = require("../utils/utils").escapeHtml;
+
 // Routes
 module.exports = {
-  reset: function(req, res) {
-    // Params
-    var userData = {
-      email: escapeHtml(req.body.email)
-    };
+    reset: function(req, res) {
+        // Params
+        var userData = {
+            email: escape(req.body.email)
+        };
 
-    var transporter = nodemailer.createTransport({
-      service: "mailtrap",
-      host: "smtp.mailtrap.io",
-      auth: {
-        //camille
-        // user: "08a43c661c7311",
-        // pass: "8c65e78b005e6b"
-        //doina
-        user: "cbad2ebee212cb",
-        pass: "3dcfd9fa48b900"
-      }
-    });
-
-    if (
-      userData.email &&
-      userData.email.length >= 8 &&
-      userData.email.length < 50
-    ) {
-      if (
-        !userData.email.match(
-          /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
-        )
-      )
-        return res.json({
-          error: "Invalid email!"
+        var transporter = nodemailer.createTransport({
+            service: "mailtrap",
+            host: "smtp.mailtrap.io",
+            auth: {
+                //camille
+                // user: "08a43c661c7311",
+                // pass: "8c65e78b005e6b"
+                //doina
+                user: "cbad2ebee212cb",
+                pass: "3dcfd9fa48b900"
+            }
         });
 
-      models.findOne("email", userData.email, function(find) {
-        if (find) {
-          models.getUser("email", userData.email, function(result) {
-            if (result) {
-              result.forEach(element => {
-                var secretToken = randomstring.generate();
-                objUpdate = { secretToken: secretToken };
-                models.updateUser(objUpdate, element.userId);
-                var url = `https://localhost:4000/password/reset/confirm/${secretToken}`;
+        if (
+            userData.email &&
+            userData.email.length >= 8 &&
+            userData.email.length < 50
+        ) {
+            if (
+                !userData.email.match(
+                    /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+                )
+            )
+                return res.json({
+                    error: "Invalid email!"
+                });
 
-                transporter.sendMail({
-                  from: "matcha@matcha.com",
-                  to: userData.email,
-                  subject: "Reset password",
-                  html: `	
+            models.findOne("email", userData.email, function(find) {
+                if (find) {
+                    models.getUser("email", userData.email, function(result) {
+                        if (result) {
+                            result.forEach(element => {
+                                var secretToken = randomstring.generate();
+                                objUpdate = { secretToken: secretToken };
+                                models.updateUser(objUpdate, element.userId);
+                                var url = `https://localhost:4000/password/reset/confirm/${secretToken}`;
+
+                                transporter.sendMail({
+                                    from: "matcha@matcha.com",
+                                    to: userData.email,
+                                    subject: "Reset password",
+                                    html: `	
                   Hi ${element.username},
                   We got a request to reset your Matcha password. <a href="${url}">${url}</a>`
-                });
-              });
-              return res.status(200).json({
-                success: "Please check your emails to reset your password!"
-              });
-            }
-          });
+                                });
+                            });
+                            return res.status(200).json({
+                                success: "Please check your emails to reset your password!"
+                            });
+                        }
+                    });
+                } else {
+                    return res.json({
+                        error: "This user does not exist!"
+                    });
+                }
+            });
         } else {
-          return res.json({
-            error: "This user does not exist!"
-          });
+            return res.json({
+                error: "Please write your email!"
+            });
         }
-      });
-    } else {
-      return res.json({
-        error: "Please write your email!"
-      });
     }
-  }
 };

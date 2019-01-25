@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { Input, Button } from "mdbreact";
+import { Input, Button, MDBAlert } from "mdbreact";
 import axios from "axios";
 import { FormErrors } from "../../constants/utils";
 import "../../index.css";
@@ -46,13 +46,13 @@ class ResetConfirmPassword extends Component {
 
     switch (fieldName) {
       case "newpasswd":
-        newPasswdValid = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
+        newPasswdValid = !!value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
         fieldValidationErrors.newpasswd = newPasswdValid
           ? ""
           : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
         break;
       case "confnewpasswd":
-        confNewPasswdValid = value.match(
+        confNewPasswdValid = !!value.match(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
         );
         fieldValidationErrors.confnewpasswd = confNewPasswdValid
@@ -62,7 +62,6 @@ class ResetConfirmPassword extends Component {
       default:
         break;
     }
-
     this.setState(
       {
         formErrors: fieldValidationErrors,
@@ -72,13 +71,6 @@ class ResetConfirmPassword extends Component {
       this.validateForm
     );
   }
-
-  response = (err, success) => {
-    var res = null;
-    if (err) res = err;
-    else res = success;
-    return res;
-  };
 
   validateForm() {
     this.setState({
@@ -169,7 +161,8 @@ class ResetConfirmPassword extends Component {
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              <p>{this.response(error, success)}</p>
+              {error && <MDBAlert color="danger" dismiss>{error}</MDBAlert>}
+              {success && <MDBAlert color="success" dismiss>{success}</MDBAlert>}
             </div>
             <Button
               disabled={!this.state.formValid}

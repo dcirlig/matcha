@@ -1,10 +1,10 @@
 var models = require("../models/user");
-var escapeHtml = require("../utils/utils").escapeHtml;
+
 module.exports = {
-  displayPreferences: function(req, res) {
+  displayPreferences: function (req, res) {
     const userId = req.body.userId;
     if (userId) {
-      models.getUser("userId", userId, function(result) {
+      models.getUser("userId", userId, function (result) {
         if (result) {
           return res.status(200).json({
             success: "User found and information successfully extracted.",
@@ -22,11 +22,11 @@ module.exports = {
       });
     }
   },
-  updatePreferences: function(req, res) {
+  updatePreferences: function (req, res) {
     const userId = req.body.userId;
-    const gender = escapeHtml(req.body.data.gender);
-    const sexualOrientation = escapeHtml(req.body.data.sexualOrientation);
-    const bio = escapeHtml(req.body.data.bio);
+    const gender = escape(req.body.data.gender);
+    const sexualOrientation = escape(req.body.data.sexualOrientation);
+    const bio = escape(req.body.data.bio);
     const age = parseInt(req.body.data.age);
     const birthdate = req.body.data.birthdate;
     var objUpdate = {};
@@ -35,11 +35,13 @@ module.exports = {
     } else if (
       sexualOrientation &&
       (sexualOrientation === "bisexual" ||
-        (sexualOrientation === "homosexual" &&
+        (sexualOrientation === "homosexual" ||
           sexualOrientation === "heterosexual"))
     ) {
       objUpdate = { sexual_orientation: sexualOrientation };
-    } else if (bio && bio.length <= 140) {
+    } else if (bio && bio.length <= 140 && bio.match(
+      /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
+    )) {
       objUpdate = { bio: bio };
     } else if (age && birthdate) {
       objUpdate = { age: age, birthdate: birthdate };
@@ -49,7 +51,7 @@ module.exports = {
     //     error: "Invalid parameter!"
     //   });
     // }
-    console.log("objupdate", objUpdate);
+    // console.log("objupdate", objUpdate);
     if (userId && objUpdate) {
       models.updateUser(objUpdate, userId);
       return res.status(200).json({

@@ -2,14 +2,14 @@
 var bcrypt = require("bcrypt-nodejs");
 var jwtUtils = require("../utils/utils");
 var models = require("../models/user");
-var escapeHtml = require("../utils/utils").escapeHtml;
+
 // Routes
 module.exports = {
-  login: function(req, res) {
-    console.log(req.body);
+  login: function (req, res) {
+    // console.log(req.body);
     var userData = {
-      username: escapeHtml(req.body.username),
-      passwd: escapeHtml(req.body.passwd),
+      username: escape(req.body.username),
+      passwd: req.body.passwd,
       latitude: req.body.coords.latitude,
       longitude: req.body.coords.longitude
     };
@@ -21,20 +21,20 @@ module.exports = {
         ) ||
         (userData.username < 4 ||
           userData.username >= 20 ||
-          userData.passwd < 8 ||
-          userData.passwd >= 20)
+          userData.passwd.length < 8 ||
+          userData.passwd.length >= 20)
       ) {
         return res.json({
           error: "Invalid parameters!!!"
         });
       } else {
-        models.getUser("username", userData.username, function(result) {
+        models.getUser("username", userData.username, function (result) {
           if (result && result.length > 0) {
-            result.forEach(function(element) {
+            result.forEach(function (element) {
               if (element.emailVerified == false && element.secretToken != "") {
                 return res.json({ error: "Please verify your email" });
               } else {
-                bcrypt.compare(userData.passwd, element.passwd, function(
+                bcrypt.compare(userData.passwd, element.passwd, function (
                   errBycrypt,
                   resBycrypt
                 ) {

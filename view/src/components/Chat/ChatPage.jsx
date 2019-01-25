@@ -48,7 +48,7 @@ export default class ChatPage extends Component {
         if (res.data.success && this.state.profileComplete) {
           this.setState({ count: res.data.count });
         } else {
-          // console.log("error");
+          console.log("error");
         }
       });
   }

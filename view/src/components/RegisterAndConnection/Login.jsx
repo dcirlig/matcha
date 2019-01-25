@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../index.css";
 import Header from "../Navigation/Navigation";
 import matchaLogo from "../../images/matcha_logo_full.png";
-import { Input, Button } from "mdbreact";
+import { Input, Button, MDBAlert } from "mdbreact";
 import LoginModal from "./RegisterModal";
 import iplocation from "iplocation";
 const publicIp = require("public-ip");
@@ -133,7 +133,7 @@ class LoginPage extends Component {
           : "Forbidden characters! It must contain only letters, numbers or '_'! Length between 4 and 20.";
         break;
       case "passwd":
-        passwdValid = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
+        passwdValid = !!value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
         fieldValidationErrors.passwd = passwdValid
           ? ""
           : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
@@ -153,13 +153,6 @@ class LoginPage extends Component {
     }
   }
 
-  response = (err, success) => {
-    var res = null;
-    if (err) res = err;
-    else res = success;
-    return res;
-  };
-
   validateForm() {
     if (this._isMounted) {
       this.setState({
@@ -176,21 +169,12 @@ class LoginPage extends Component {
         if (res.data.success) {
           await sessionStorage.setItem("userData", res.data.username);
           await sessionStorage.setItem("userId", res.data.userId);
-          console.log("res.data", res.data.userId);
           this.props.socket.emit(
             "onlineUser",
             res.data.userId,
             this.props.socket.id
           );
           await this.props.socket.emit("notif", res.data.userId);
-          // this.props.socket.on("NOTIF_RECEIVED", data => {
-          //   const openNotificationWithIcon = type => {
-          //     notification[type]({
-          //       message: data.fromUser + " " + data.message
-          //     });
-          //   };
-          //   openNotificationWithIcon("info");
-          // });
           await this.setState({ redirect: true });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
@@ -278,7 +262,8 @@ class LoginPage extends Component {
             />
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              <p>{this.response(error, success)}</p>
+              {error && <MDBAlert color="danger" dismiss>{error}</MDBAlert>}
+              {success && <MDBAlert color="success" dismiss>{success}</MDBAlert>}
             </div>
             <Button
               disabled={!this.state.formValid}

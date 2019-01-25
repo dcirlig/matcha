@@ -4,14 +4,13 @@ var likes = require("../models/like");
 var chat = require("../models/chat");
 var randomstring = require("randomstring");
 var moment = require("moment");
-var escapeHtml = require("../utils/utils").escapeHtml;
 
 module.exports = {
   like: function(req, res) {
     var bodyLike = {
       likeTransmitter: parseInt(req.body.likeTransmitter),
       likedUser: parseInt(req.body.likedUser),
-      liked: escapeHtml(req.body.like)
+      liked: escape(req.body.like)
     };
     var popularity_score = parseInt(req.body.popularity_score);
     if (bodyLike.likeTransmitter) {
