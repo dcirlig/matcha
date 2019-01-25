@@ -177,7 +177,7 @@ class ResetConfirmPassword extends Component {
           </form>
         </div>
         <ResetModal
-          errorMessage={error ? error : success}
+          errorMessage={error}
           handleClearErrorMessage={this.handleClearErrorMessage}
         />
       </div>

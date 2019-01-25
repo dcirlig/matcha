@@ -17,9 +17,9 @@ module.exports = {
           }
         }
       })
-      return res.json({ success: "This user has been successfully blocked." })
+      return res.json({ success: "This user has been successfully blocked." });
     }
-    else { return res.json({ error: "Something went wrong" }) }
+    else { return res.json({ error: "Something went wrong" }); }
   },
   reportUser: function (req, res) {
     if (req.body.userReporter && req.body.userReported) {
@@ -36,8 +36,8 @@ module.exports = {
           }
         }
       })
-      return res.json({ success: "This user has been successfully reported as a fake." })
+      return res.json({ success: "This user has been successfully reported as a fake." });
     }
-    else { return res.json({ error: "Something went wrong." }) }
+    else { return res.json({ error: "Something went wrong." }); }
   }
 }

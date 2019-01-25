@@ -35,22 +35,23 @@ module.exports = {
       return res.json({
         error: "Invalid latitude or/and longitude value(s)."
       });
-    }
-    if (userData) {
-      modelsLoc.doesExist(userData, function (find) {
-        if (find) {
-          modelsLoc.updateLocation(locationData, userData.userId);
-        } else {
-          modelsLoc.createLocation(locationData);
-        }
-        modelsUser.updateUser(locationUser, userData.userId);
-        return res.status(200).json({
-          fullAddress: locationUser.localisation,
-          success: "User address successfully created or updated."
-        });
-      });
     } else {
-      return res.json({ error: "user null" });
+      if (userData) {
+        modelsLoc.doesExist(userData, function (find) {
+          if (find) {
+            modelsLoc.updateLocation(locationData, userData.userId);
+          } else {
+            modelsLoc.createLocation(locationData);
+          }
+          modelsUser.updateUser(locationUser, userData.userId);
+          return res.status(200).json({
+            fullAddress: locationUser.localisation,
+            success: "User address successfully created or updated."
+          });
+        });
+      } else {
+        return res.json({ error: "user null" });
+      }
     }
   },
   displayAddress: function (req, res) {

@@ -64,7 +64,7 @@ class Reports extends Component {
           updateUsersListAfterReport={this.updateUsersListAfterReport}
         />
       </div>
-    )
+    );
   }
 }
 

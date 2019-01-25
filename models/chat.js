@@ -55,17 +55,17 @@ function deleteChat(chatRoom) {
   connection.query(sql, chatRoom, function (err, result) {
     if (err) {
       console.log(err)
-      return false
+      return false;
     }
   })
   sql = "DELETE FROM `chats` WHERE room = ?"
   connection.query(sql, chatRoom, function (err, result) {
     if (err) {
       console.log(err)
-      return false
+      return false;
     }
   })
-  return true
+  return true;
 }
 
 exports.createChat = createChat
