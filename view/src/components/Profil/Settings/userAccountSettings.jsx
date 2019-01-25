@@ -6,7 +6,7 @@ import RegisterModal from "../../RegisterAndConnection/RegisterModal";
 import history from "../../../constants/history";
 
 const INITIAL_STATE = {
-  userId: sessionStorage.getItem("userId"),
+  userId: "",
   firstname: "",
   lastname: "",
   email: "",
@@ -120,8 +120,13 @@ class SettingsPage extends Component {
     });
   }
 
-  onSubmit = event => {
-    var username = this.state.usernameValid[0];
+  onSubmit = async event => {
+    event.preventDefault();
+    let username = "";
+    if (this.state.usernameValid) {
+      username = this.state.username;
+    }
+    await this.setState({ userId: sessionStorage.getItem('userId') })
     axios
       .post(`/api/settings`, this.state)
       .then(async res => {
@@ -138,7 +143,7 @@ class SettingsPage extends Component {
       })
       .catch(err => { });
     this.setState({ ...INITIAL_STATE });
-    event.preventDefault();
+
   };
 
   errorClass(error) {

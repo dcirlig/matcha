@@ -24,27 +24,22 @@ module.exports = {
   },
   updatePreferences: function (req, res) {
     const userId = req.body.userId;
-    const gender = escape(req.body.data.gender);
-    const sexualOrientation = escape(req.body.data.sexualOrientation);
-    const bio = escape(req.body.data.bio);
-    const age = parseInt(req.body.data.age);
-    const birthdate = req.body.data.birthdate;
     var objUpdate = {};
-    if (gender && (gender == "female" || gender === "male")) {
-      objUpdate = { gender: gender };
+    if (req.body.data.gender && (escape(req.body.data.gender) == "female" || escape(req.body.data.gender) === "male")) {
+      objUpdate = { gender: escape(req.body.data.gender) };
     } else if (
-      sexualOrientation &&
-      (sexualOrientation === "bisexual" ||
-        (sexualOrientation === "homosexual" ||
-          sexualOrientation === "heterosexual"))
+      req.body.data.sexualOrientation &&
+      (escape(req.body.data.sexualOrientation) === "bisexual" ||
+        (escape(req.body.data.sexualOrientation) === "homosexual" ||
+          escape(req.body.data.sexualOrientation) === "heterosexual"))
     ) {
-      objUpdate = { sexual_orientation: sexualOrientation };
-    } else if (bio && bio.length <= 140 && bio.match(
+      objUpdate = { sexual_orientation: escape(req.body.data.sexualOrientation) };
+    } else if (req.body.data.bio && req.body.data.bio.toString().length <= 140 && req.body.data.bio.toString().match(
       /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
     )) {
-      objUpdate = { bio: bio };
-    } else if (age && birthdate) {
-      objUpdate = { age: age, birthdate: birthdate };
+      objUpdate = { bio: req.body.data.bio.toString() };
+    } else if (req.body.data.age && req.body.data.birthdate) {
+      objUpdate = { age: req.body.data.age, birthdate: req.body.data.birthdate };
     }
     // else {
     //   return res.json({

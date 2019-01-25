@@ -32,13 +32,13 @@ socket.on("NOTIF_RECEIVED", data => {
   openNotificationWithIcon("info");
 });
 
-socket.on("connect", function() {
+socket.on("connect", function () {
   if (sessionStorage.getItem("userId")) {
     var userId = sessionStorage.getItem("userId");
     socket.emit("notif", userId);
     socket.emit("onlineUser", userId, socket.id);
   }
-  socket.on("disconnect", function() {});
+  socket.on("disconnect", function () { });
 });
 
 const App = () => (

@@ -4,7 +4,7 @@ import "antd/dist/antd.css";
 import axios from "axios";
 import { Card, Select, Slider } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
 import Like from "./Like";
 import Reports from "./Reports";
@@ -544,9 +544,9 @@ class SearchUsersPage extends Component {
                 )}
               </MDBCol>
             ) : (
-                <div className="col-md-4">
+                <MDBCol size="8">
                   <p>No user finds</p>
-                </div>
+                </MDBCol>
               )}
           </MDBRow>
         </div>

@@ -5,7 +5,7 @@ const randomstring = require("randomstring");
 
 // Routes
 module.exports = {
-    reset: function(req, res) {
+    reset: function (req, res) {
         // Params
         var userData = {
             email: escape(req.body.email)
@@ -16,11 +16,11 @@ module.exports = {
             host: "smtp.mailtrap.io",
             auth: {
                 //camille
-                // user: "08a43c661c7311",
-                // pass: "8c65e78b005e6b"
+                user: "08a43c661c7311",
+                pass: "8c65e78b005e6b"
                 //doina
-                user: "cbad2ebee212cb",
-                pass: "3dcfd9fa48b900"
+                // user: "cbad2ebee212cb",
+                // pass: "3dcfd9fa48b900"
             }
         });
 
@@ -38,9 +38,9 @@ module.exports = {
                     error: "Invalid email!"
                 });
 
-            models.findOne("email", userData.email, function(find) {
+            models.findOne("email", userData.email, function (find) {
                 if (find) {
-                    models.getUser("email", userData.email, function(result) {
+                    models.getUser("email", userData.email, function (result) {
                         if (result) {
                             result.forEach(element => {
                                 var secretToken = randomstring.generate();
