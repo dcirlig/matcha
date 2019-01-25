@@ -154,7 +154,7 @@ class geolocationComponent extends React.Component {
     return (
       <div className="geolocationBlock">
         <p className="tagIntro warm-flame-gradient">Meet people around you:</p>
-        {fullAddress && <p>{fullAddress}</p>}
+        {fullAddress && <h3 style={{ textAlign: 'center' }}>{fullAddress}</h3>}
         <Geocoder
           accessToken={accessToken}
           onSelect={this.onSelect}

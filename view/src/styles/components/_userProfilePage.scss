@@ -19,14 +19,18 @@
 // }
 
 .numberCircle {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   box-sizing: initial;
+  position: absolute;
+  margin-left: 1.3rem;
+  margin-top: -0.5rem;
 
   background: #fff;
-  border: 0.1em solid #666;
-  color: #666;
+  border: 0.1em solid $red;
+  color: $red;
   text-align: center;
+  font-size: 1rem;
   border-radius: 50%;
 
   line-height: 1.5em;
@@ -57,11 +61,6 @@
 
 .offlineUsers {
   background: gray;
-}
-
-#notifications {
-  width: 40px;
-  height: 40px;
 }
 
 .btn .fa {

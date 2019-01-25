@@ -198,7 +198,7 @@ class profilePreview extends React.Component {
                     )
                 ) : (
                     <span>
-                      <i className="fas fa-heart" style={{ color: "red" }} />
+                      <i className="fas fa-heart" style={{ color: "red", marginRight: "1rem" }} />
                       {item.popularityScore} <br />
                     </span>
                   )}

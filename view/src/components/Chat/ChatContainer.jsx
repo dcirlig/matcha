@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { MessageBox } from "react-chat-elements";
-import { MDBBtn } from "mdbreact";
+import { MDBBtn, MDBIcon } from "mdbreact";
 import "react-chat-elements/dist/main.css";
+import matchaLogo from "../../images/matcha_logo_full.png";
 
 export default class Layout extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class Layout extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { message, socket } = this.state;
+    var { message, socket } = this.state;
     const chatRoom = this.props.chatInfo.chatRoom;
     const receiverId = this.props.chatInfo.receiverId;
     const senderId = sessionStorage.getItem("userId");
@@ -51,6 +52,8 @@ export default class Layout extends Component {
       avatar,
       myAvatar
     });
+    // Q si on envoie le contenu du message ou le message de notif general
+    message = " has sent you a new message!"
     socket.emit("NOTIF_SENT", {
       likeroom,
       message,
@@ -104,35 +107,35 @@ export default class Layout extends Component {
             <div className="chatMessages">
               {chatMessages !== "Empty chat"
                 ? chatMessages.map((item, i) => {
-                    var position;
-                    if (parseInt(item.senderId) === parseInt(thisUserId)) {
-                      position = "right";
-                    } else {
-                      position = "left";
-                    }
-                    return (
-                      <div
-                        key={
-                          item.chatRoom +
-                          Math.random()
-                            .toString(36)
-                            .substring(2, 15) +
-                          Math.random()
-                            .toString(36)
-                            .substring(2, 15) +
-                          item.content
-                        }
-                      >
-                        <MessageBox
-                          position={position}
-                          type={"text"}
-                          title={item.senderUsername}
-                          text={item.content}
-                          date={new Date(parseInt(item.time))}
-                        />
-                      </div>
-                    );
-                  })
+                  var position;
+                  if (parseInt(item.senderId) === parseInt(thisUserId)) {
+                    position = "right";
+                  } else {
+                    position = "left";
+                  }
+                  return (
+                    <div
+                      key={
+                        item.chatRoom +
+                        Math.random()
+                          .toString(36)
+                          .substring(2, 15) +
+                        Math.random()
+                          .toString(36)
+                          .substring(2, 15) +
+                        item.content
+                      }
+                    >
+                      <MessageBox
+                        position={position}
+                        type={"text"}
+                        title={item.senderUsername}
+                        text={item.content}
+                        date={new Date(parseInt(item.time))}
+                      />
+                    </div>
+                  );
+                })
                 : ""}
             </div>
             <div className="message-input">
@@ -159,8 +162,13 @@ export default class Layout extends Component {
             </div>
           </div>
         ) : (
-          "Choose somebody to chat with"
-        )}
+            <div>
+              <img id="logoChatContainer" src={matchaLogo} alt={"logo"} />
+              <MDBIcon className="waitingIcon" icon="gratipay" spin size="3x" fixed />
+              <span className="sr-only">Loading...</span>
+              <h1 className="selectConv">Select a conversation to start chatting!</h1>
+            </div>
+          )}
       </div>
     );
   }

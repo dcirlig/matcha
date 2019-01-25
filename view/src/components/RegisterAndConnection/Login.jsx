@@ -11,7 +11,6 @@ import matchaLogo from "../../images/matcha_logo_full.png";
 import { Input, Button } from "mdbreact";
 import LoginModal from "./RegisterModal";
 import iplocation from "iplocation";
-// import { notification } from "antd";
 const publicIp = require("public-ip");
 
 const INITIAL_STATE = {
@@ -75,7 +74,7 @@ class LoginPage extends Component {
             await sessionStorage.setItem("latitude", res.latitude);
             await sessionStorage.setItem("longitude", res.longitude);
           })
-          .catch(err => {});
+          .catch(err => { });
       }
     );
   }
@@ -94,7 +93,7 @@ class LoginPage extends Component {
             this.setState({ coords });
           }
         })
-        .catch(err => {});
+        .catch(err => { });
     });
   }
 
@@ -128,16 +127,16 @@ class LoginPage extends Component {
 
     switch (fieldName) {
       case "username":
-        usernameValid = value.match(/^[a-zA-Z0-9_]+$/);
+        usernameValid = value.match(/^[a-zA-Z0-9_]+$/) && this.state.username.length <= 20 && this.state.username.length >= 4;
         fieldValidationErrors.username = usernameValid
           ? ""
-          : "Forbidden characters! Your username can only contain letters, numbers or '_'!";
+          : "Forbidden characters! It must contain only letters, numbers or '_'! Length between 4 and 20.";
         break;
       case "passwd":
-        passwdValid = value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/);
+        passwdValid = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
         fieldValidationErrors.passwd = passwdValid
           ? ""
-          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter and the length >= 4";
+          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
         break;
       default:
         break;
@@ -197,7 +196,7 @@ class LoginPage extends Component {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
     event.preventDefault();
   };
 

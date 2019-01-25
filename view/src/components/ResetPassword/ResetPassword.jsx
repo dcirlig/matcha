@@ -43,8 +43,8 @@ class ResetPassword extends Component {
       case "email":
         emailValid = value.match(
           /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+.([A-Za-z]{2,4})$/
-        );
-        fieldValidationErrors.email = emailValid ? "" : "Invalid Email!";
+        ) && this.state.email.length <= 50 && this.state.email.length > 8;
+        fieldValidationErrors.email = emailValid ? "" : "Invalid Email! Length between 8 and 50.";
         break;
       default:
         break;

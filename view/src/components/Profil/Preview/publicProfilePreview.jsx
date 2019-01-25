@@ -178,7 +178,7 @@ class profilePreview extends React.Component {
                 {dist || dist === 0
                   ? dist <= 1
                     ? "<1 km away"
-                    : dist + "km away"
+                    : Math.round(dist) + "km away"
                   : item.location}{" "}
                 <br />
                 {item.gender === "male" ? "Man" : "Woman"},{" "}

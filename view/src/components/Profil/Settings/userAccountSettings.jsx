@@ -59,42 +59,42 @@ class SettingsPage extends Component {
 
     switch (fieldName) {
       case "firstname":
-        firstNameValid = value.match(/^[a-zA-Z]+$/);
+        firstNameValid = value.match(/^[a-zA-Z]+$/) && this.state.firstname.length <= 20 && this.state.firstname.length >= 4;
         fieldValidationErrors.firstname = firstNameValid
           ? ""
-          : "Invalid first name! Your first name must contain only upper and lower case letters!";
+          : "Invalid first name! It must contain only upper and lower case letters! Length between 4 and 20.";
         break;
       case "lastname":
-        lastNameValid = value.match(/^[a-zA-Z]+$/);
+        lastNameValid = value.match(/^[a-zA-Z]+$/) && this.state.lastname.length <= 20 && this.state.lastname.length >= 4;
         fieldValidationErrors.lastname = lastNameValid
           ? ""
-          : "Invalid last name! Your last name must contain only upper and lower case letters!";
+          : "Invalid last name! It must contain only upper and lower case letters! Length between 4 and 20";
         break;
       case "email":
         emailValid = value.match(
           /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+.([A-Za-z]{2,4})$/
-        );
-        fieldValidationErrors.email = emailValid ? "" : "Invalid Email!";
+        ) && this.state.email.length <= 50 && this.state.email.length > 8;
+        fieldValidationErrors.email = emailValid ? "" : "Invalid Email! Length between 8 and 50.";
         break;
       case "username":
-        usernameValid = value.match(/^[a-zA-Z0-9_]+$/);
+        usernameValid = value.match(/^[a-zA-Z0-9_]+$/) && this.state.username.length <= 20 && this.state.username.length >= 4;
         fieldValidationErrors.username = usernameValid
           ? ""
-          : "Forbidden characters! Your username can only contain letters, numbers or '_'!";
+          : "Forbidden characters! It must contain only letters, numbers or '_'! Length between 4 and 20.";
         break;
       case "new_password":
-        newPasswdValid = value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/);
+        newPasswdValid = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
         fieldValidationErrors.new_password = newPasswdValid
           ? ""
-          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter and the length must be >= 4";
+          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
         break;
       case "confirm_new_passwd":
         confNewPasswdValid = value.match(
-          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
         );
         fieldValidationErrors.confirm_new_passwd = confNewPasswdValid
           ? ""
-          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter and the length must be >= 4";
+          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
         break;
       default:
         break;

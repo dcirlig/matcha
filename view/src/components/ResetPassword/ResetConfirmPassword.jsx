@@ -46,18 +46,18 @@ class ResetConfirmPassword extends Component {
 
     switch (fieldName) {
       case "newpasswd":
-        newPasswdValid = value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/);
+        newPasswdValid = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
         fieldValidationErrors.newpasswd = newPasswdValid
           ? ""
-          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter and the length >= 4";
+          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
         break;
       case "confnewpasswd":
         confNewPasswdValid = value.match(
-          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$/
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
         );
         fieldValidationErrors.confnewpasswd = confNewPasswdValid
           ? ""
-          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter and the length >= 4";
+          : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
         break;
       default:
         break;
@@ -100,7 +100,7 @@ class ResetConfirmPassword extends Component {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
     this.setState({ ...INITIAL_STATE });
   };
 

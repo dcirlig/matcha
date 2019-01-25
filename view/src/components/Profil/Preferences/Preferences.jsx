@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MDBBtn, MDBIcon, MDBInput } from "mdbreact";
+import { MDBBtn, MDBIcon, MDBInput, MDBAlert } from "mdbreact";
 import "antd/dist/antd.css";
 import { Calendar } from "antd";
 import Select from "react-select";
@@ -160,9 +160,9 @@ class Preferences extends Component {
         value = value.match(
           /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s:,;?.!()[\]"'/]+$/
         );
-        if (value && e.target.value.length >= 500) {
+        if (value && e.target.value.length >= 140) {
           await this.setState({
-            formError: "Too long! Your bio must contain 500 characters maximum."
+            formError: "Too long! Your bio must contain 140 characters maximum."
           });
           return;
         }
@@ -182,13 +182,15 @@ class Preferences extends Component {
     if (e.key === "Enter") {
       if (
         this.state.formError ===
-        "Too long! Your bio must contain 500 characters maximum." ||
+        "Too long! Your bio must contain 140 characters maximum." ||
         this.state.formError ===
         "Your bio must contain only upper and lower case letters, numbers, punctuation and spaces."
       ) {
       } else {
         const biography = { bio: this.state.bio };
-        this.updateDatabase(biography);
+        if (biography.bio && biography.bio[0].length > 0) {
+          this.updateDatabase(biography);
+        }
         e.preventDefault();
       }
     }
@@ -242,7 +244,7 @@ class Preferences extends Component {
             classNamePrefix="sexual-orientation-select"
           />
         </div>
-        <p className="userAge">{age} y.o.</p>
+        <h3 className="userAge">{age} y.o.</h3>
         {age ? (
           <div>
             <MDBBtn
@@ -297,7 +299,7 @@ class Preferences extends Component {
             Express yourself, set your interests!
           </p>
           <div className="bio-Field">
-            {this.state.formError ? this.state.formError : ""}
+            {this.state.formError ? <MDBAlert color="warning" dismiss>{this.state.formError}</MDBAlert> : ""}
             <MDBInput
               name="bio"
               type="textarea"
