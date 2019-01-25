@@ -10,7 +10,7 @@
 #logoLogin {
     max-width: 20rem;
     display: block;
-    padding-top: 5rem;
+    padding-top: 7rem;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: $xl-size;
@@ -26,3 +26,18 @@
     margin-bottom: $xl-size;
     margin-top: $xl-size;
 };
+
+#logoChatContainer {
+    max-width: 30rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.waitingIcon {
+    display: block;
+    color: lighten($light-pink, 15%);
+    margin-top: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+}

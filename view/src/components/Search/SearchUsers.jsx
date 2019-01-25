@@ -364,8 +364,8 @@ class SearchUsersPage extends Component {
                   </div>
                 </div>
               ) : (
-                ""
-              )}
+                  ""
+                )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -469,8 +469,8 @@ class SearchUsersPage extends Component {
                                 ? item.profil_image.includes("unsplash")
                                   ? item.profil_image
                                   : `https://localhost:4000/${
-                                      item.profil_image
-                                    }`
+                                  item.profil_image
+                                  }`
                                 : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                             }
                           />
@@ -545,15 +545,15 @@ class SearchUsersPage extends Component {
                       </Card>
                     </div>
                   ) : (
-                    ""
-                  )
+                      ""
+                    )
                 )}
               </MDBCol>
             ) : (
-              <div className="col-md-4">
-                <p>No user finds</p>
-              </div>
-            )}
+                <div className="col-md-4">
+                  <p>No user finds</p>
+                </div>
+              )}
           </MDBRow>
         </div>
       </div>

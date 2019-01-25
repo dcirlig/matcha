@@ -391,25 +391,25 @@ export default class ChatPage extends Component {
                     )}
                 </div>
               ) : (
-                <div className="sideBarContent">
-                  <h3 className="welcomeChat">Welcome to your private chat!</h3>
-                  <MDBRow>
-                    <MDBCol>
-                      <MDBBtn
-                        gradient="peach"
-                        className="chatMenuButton"
-                        onClick={this.openMessages}
-                      >
-                        Your messages
+                  <div className="sideBarContent">
+                    <h3 className="welcomeChat">Welcome to your private chat!</h3>
+                    <MDBRow>
+                      <MDBCol>
+                        <MDBBtn
+                          gradient="peach"
+                          className="chatMenuButton"
+                          onClick={this.openMessages}
+                        >
+                          Your messages
                       </MDBBtn>
-                    </MDBCol>
-                    <MDBCol>
-                      <MDBBtn
-                        gradient="peach"
-                        className="chatMenuButton"
-                        onClick={this.openMatches}
-                      >
-                        Your matches
+                      </MDBCol>
+                      <MDBCol>
+                        <MDBBtn
+                          gradient="peach"
+                          className="chatMenuButton"
+                          onClick={this.openMatches}
+                        >
+                          Your matches
                       </MDBBtn>
                       </MDBCol>
                     </MDBRow>
@@ -437,17 +437,23 @@ export default class ChatPage extends Component {
                               <MDBAlert color="info" dismiss>You have no new matches.</MDBAlert>
                             )}
                         </div>
-                  )}
-                </div>
-              )}
+                      )}
+                  </div>
+                )}
             </MDBCol>
-            <MDBCol size="8" className="chatContainer">
+            {activeConv ? <MDBCol size="8" className="chatContainer">
               <ChatContainer
                 socket={socket}
-                chatInfo={activeConv ? activeConv : "Select a conv"}
+                chatInfo={activeConv}
                 chatMessages={messages ? messages : "Empty chat"}
               />
-            </MDBCol>
+            </MDBCol> : <MDBCol size="8" className="chatContainer" style={{ overflow: 'visible' }}>
+                <ChatContainer
+                  socket={socket}
+                  chatInfo={"Select a conv"}
+                  chatMessages={messages ? messages : "Empty chat"}
+                />
+              </MDBCol>}
           </MDBRow>
         </div>
       </div>

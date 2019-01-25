@@ -64,14 +64,11 @@ class LoginHeader extends React.Component {
           </NavbarBrand>
           {!this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
           <Collapse isOpen={this.state.collapse} navbar>
-
             <NavbarNav right>
               <NavItem>
                 <NavLink to={routes.NOTIFICATION} activeClassName="is-active">
-                  <div id="notifications">
-                    <div className="numberCircle">{notSeenNotifications}</div>
-                    <MDBIcon icon="bell" size="lg" className="iconProfile" />
-                  </div>
+                  <div className="numberCircle">{notSeenNotifications}</div>
+                  <MDBIcon icon="bell" size="lg" className="iconProfile" />
                 </NavLink>
               </NavItem>
               <NavItem>

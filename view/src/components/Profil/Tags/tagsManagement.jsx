@@ -1,5 +1,6 @@
 import React from "react";
 import { WithContext as ReactTags } from "react-tag-input";
+import { MDBAlert } from "mdbreact";
 import axios from "axios";
 import RegisterModal from "../../RegisterAndConnection/RegisterModal";
 
@@ -64,7 +65,7 @@ class tagsManager extends React.Component {
   validateField(value) {
     let tagValid = this.state.tagValid;
     tagValid = value.match(/^[a-zA-Z0-9_]+$/);
-    if (tagValid) {
+    if (tagValid && value.length > 0 && value.length <= 20) {
       this.setState({
         formError: "",
         tagValid: tagValid
@@ -78,7 +79,7 @@ class tagsManager extends React.Component {
       } else {
         this.setState({
           formError:
-            "error: Forbidden characters! Your tag can only contain letters, numbers or '_'!",
+            "error: Forbidden characters! It can only contain letters, numbers or '_'! Max length: 20.",
           tagValid: ""
         });
       }
@@ -111,7 +112,7 @@ class tagsManager extends React.Component {
     let tagValid = this.state.tagValid;
     tagValid = tag.text.match(/^[a-zA-Z0-9_]+$/);
     sessionStorage.setItem("tag", tag.text);
-    if (tagValid) {
+    if (tagValid && tag.text.length > 0 && tag.text.length <= 20) {
       this.props.getNewTags()
       axios
         .post(`/api/tags/add`, sessionStorage)
@@ -129,7 +130,7 @@ class tagsManager extends React.Component {
         formError: ""
       }));
     } else {
-      this.setState({ formError: "error" });
+      this.setState({ formError: "Error while adding your tag." });
     }
   }
 
@@ -152,7 +153,7 @@ class tagsManager extends React.Component {
           allowDragDrop={false}
         />
         {this.state.formError && (
-          <p className="error">{this.state.formError}</p>
+          <MDBAlert color="warning" dismiss className="error">{this.state.formError}</MDBAlert>
         )}
         <RegisterModal
           errorMessage={this.state.error}

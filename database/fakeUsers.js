@@ -10,7 +10,7 @@ function calculateAge(birthday) {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-const password = bcrypt.hashSync("to1A");
+const password = bcrypt.hashSync("to1A@abc");
 var allTags = [];
 let cleanArray = [];
 
@@ -22,7 +22,7 @@ const getPhotos = cb => {
   photos.man = [];
   axios
     .get(
-      `https://api.unsplash.com/photos/random?query=man&count=30&client_id=796be43f455c2e6a64a0d3f9913fa8ddc53cf095461784782a2aa08015c17e85`
+      `https://api.unsplash.com/photos/random?collections=628604&count=30&client_id=796be43f455c2e6a64a0d3f9913fa8ddc53cf095461784782a2aa08015c17e85`
     )
     .then(res => {
       if (res.data) {
@@ -32,7 +32,7 @@ const getPhotos = cb => {
       }
       axios
         .get(
-          "https://api.unsplash.com/photos/random?query=woman&count=30&client_id=796be43f455c2e6a64a0d3f9913fa8ddc53cf095461784782a2aa08015c17e85"
+          "https://api.unsplash.com/photos/random?collections=472913&count=30&client_id=796be43f455c2e6a64a0d3f9913fa8ddc53cf095461784782a2aa08015c17e85"
         )
         .then(res => {
           if (res.data) {

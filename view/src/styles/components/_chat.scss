@@ -7,6 +7,11 @@ input[type=text]:focus:not([readonly]) {
   box-shadow: 0 2px 0 0 $light-pink; 
 }
 
+.selectConv {
+  margin-top: 3rem;
+  text-align: center;
+}
+
 .chatContainer {
   height: 87vh;
   margin-top: 10rem;
