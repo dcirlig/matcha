@@ -490,27 +490,27 @@ class SearchUsersPage extends Component {
                             socket={this.props.socket}
                           />
                         ) : (
-                          <MDBAlert color="warning">
-                            Incomplete profile
+                            <MDBAlert color="warning">
+                              Incomplete profile
                           </MDBAlert>
-                        )}
+                          )}
                         {item.online === "online" ? (
                           <div className="connexionInfo">
                             <div className="onlineUsers" />
                             <h5>Online</h5>
                           </div>
                         ) : (
-                          <div className="connexionInfo">
-                            <div className="offlineUsers" />
-                            <h5>
-                              {this.getDate(new Date(parseInt(item.online)))}
-                            </h5>
-                          </div>
-                        )}
+                            <div className="connexionInfo">
+                              <div className="offlineUsers" />
+                              <h5>
+                                {this.getDate(new Date(parseInt(item.online)))}
+                              </h5>
+                            </div>
+                          )}
                         <Meta
                           title={`${item.firstname} ${item.lastname}, ${
                             item.age
-                          } y.o.`}
+                            } y.o.`}
                           description={item.bio}
                         />
                         <ReactTags
@@ -530,13 +530,7 @@ class SearchUsersPage extends Component {
 
                         <Link
                           to={{
-                            pathname: `/users/${item.username}`,
-                            state: {
-                              distance: item.dist,
-                              userId: item.userId,
-                              profileComplete: item.profil_image,
-                              item: item
-                            }
+                            pathname: `/users/${item.username}`
                           }}
                           onClick={e => this.sendVisitNotification(item)}
                         >

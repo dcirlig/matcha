@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { MDBAlert } from "mdbreact";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FormErrors } from "../../constants/utils";
@@ -59,13 +60,6 @@ class ResetPassword extends Component {
     );
   }
 
-  response = (err, success) => {
-    var res = null;
-    if (err) res = err;
-    else res = success;
-    return res;
-  };
-
   validateForm() {
     this.setState({
       formValid: this.state.emailValid
@@ -120,7 +114,8 @@ class ResetPassword extends Component {
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              <p>{this.response(error, success)}</p>
+              {error && <MDBAlert color="danger" dismiss>{error}</MDBAlert>}
+              {success && <MDBAlert color="success" dismiss>{success}</MDBAlert>}
             </div>
             <Button
               disabled={!this.state.formValid}

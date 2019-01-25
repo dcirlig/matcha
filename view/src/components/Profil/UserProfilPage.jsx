@@ -118,15 +118,6 @@ class UserProfilPage extends Component {
       });
   }
 
-  componentDidUpdate() {
-    const userData = sessionStorage.getItem("userData");
-    if (this.props.match.params.username === userData) {
-      window.scrollTo(0, 0);
-      var myDiv = document.getElementById("lateralScroll");
-      myDiv.scrollTop = 0;
-    }
-  }
-
   handleClearErrorMessage() {
     this.setState({ error: undefined });
   }
@@ -265,11 +256,6 @@ class UserProfilPage extends Component {
               </MDBRow>
             </div>
           )}
-        <ProfilePreviewModal
-          profilePreview={this.state.profilePreview}
-          closeProfilePreview={this.closeProfilePreview}
-          username={username}
-        />
       </div>
     );
   }

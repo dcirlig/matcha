@@ -86,7 +86,7 @@ class RegisterPage extends Component {
           : "Forbidden characters! It must contain only letters, numbers or '_'! Length between 4 and 20.";
         break;
       case "passwd":
-        passwdValid = value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
+        passwdValid = !!value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
         fieldValidationErrors.passwd = passwdValid
           ? ""
           : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
@@ -94,7 +94,6 @@ class RegisterPage extends Component {
       default:
         break;
     }
-
     this.setState(
       {
         formErrors: fieldValidationErrors,
@@ -107,13 +106,6 @@ class RegisterPage extends Component {
       this.validateForm
     );
   }
-
-  response = (err, success) => {
-    var res = null;
-    if (err) res = err;
-    else res = success;
-    return res;
-  };
 
   validateForm() {
     this.setState({
@@ -269,8 +261,8 @@ class RegisterPage extends Component {
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              {error && <MDBAlert color="danger" dismiss>{this.response(error, success)}</MDBAlert>}
-              {success && <MDBAlert color="success" dismiss>{this.response(error, success)}</MDBAlert>}
+              {error && <MDBAlert color="danger" dismiss>{error}</MDBAlert>}
+              {success && <MDBAlert color="success" dismiss>{success}</MDBAlert>}
             </div>
             <Button
               disabled={!this.state.formValid}

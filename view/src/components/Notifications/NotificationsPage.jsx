@@ -139,13 +139,7 @@ class NotificationsPage extends Component {
                     <div key={index}>
                       <Link
                         to={{
-                          pathname: `/users/${item.username}`,
-                          state: {
-                            distance: item.dist,
-                            userId: item.userId,
-                            profileComplete: item.profil_image,
-                            item: item
-                          }
+                          pathname: `/users/${item.username}`
                         }}
                         onClick={e => this.sendVisitNotification(item)}
                       >
@@ -159,7 +153,7 @@ class NotificationsPage extends Component {
                           title={""}
                           subtitle={item.username + " " + item.content}
                           date={new Date(parseInt(item.time))}
-                          //   unread={0}
+                        //   unread={0}
                         />
                       </Link>
                     </div>
@@ -170,13 +164,13 @@ class NotificationsPage extends Component {
             </MDBContainer>
           </div>
         ) : (
-          <div>
-            <Header
-              isLoggedIn={this.state.isLoggedIn}
-              notSeenNotifications={count}
-            />
-          </div>
-        )}
+            <div>
+              <Header
+                isLoggedIn={this.state.isLoggedIn}
+                notSeenNotifications={count}
+              />
+            </div>
+          )}
       </div>
     );
   }

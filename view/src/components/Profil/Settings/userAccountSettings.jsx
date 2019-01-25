@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { FormErrors } from "../../../constants/utils";
-import { Input, Button } from "mdbreact";
+import { Input, Button, MDBAlert } from "mdbreact";
 import RegisterModal from "../../RegisterAndConnection/RegisterModal";
 import history from "../../../constants/history";
 
@@ -113,13 +113,6 @@ class SettingsPage extends Component {
       this.validateForm
     );
   }
-
-  response = (err, success) => {
-    var res = null;
-    if (err) res = err;
-    else res = success;
-    return res;
-  };
 
   validateForm() {
     this.setState({
@@ -260,7 +253,8 @@ class SettingsPage extends Component {
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              <p>{this.response(error, success)}</p>
+              {error && <MDBAlert color="danger" dismiss>{error}</MDBAlert>}
+              {success && <MDBAlert color="success" dismiss>{success}</MDBAlert>}
             </div>
             <Button
               disabled={!this.state.formValid}
