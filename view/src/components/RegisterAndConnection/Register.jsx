@@ -62,31 +62,47 @@ class RegisterPage extends Component {
 
     switch (fieldName) {
       case "firstname":
-        firstNameValid = value.match(/^[a-zA-Z]+$/) && this.state.firstname.length <= 20 && this.state.firstname.length >= 4;
+        firstNameValid =
+          value.match(/^[a-zA-Z]+$/) &&
+          this.state.firstname.length <= 20 &&
+          this.state.firstname.length >= 4;
         fieldValidationErrors.firstname = firstNameValid
           ? ""
           : "Invalid first name! It must contain only upper and lower case letters! Length between 4 and 20.";
         break;
       case "lastname":
-        lastNameValid = value.match(/^[a-zA-Z]+$/) && this.state.lastname.length <= 20 && this.state.lastname.length >= 4;
+        lastNameValid =
+          value.match(/^[a-zA-Z]+$/) &&
+          this.state.lastname.length <= 20 &&
+          this.state.lastname.length >= 4;
         fieldValidationErrors.lastname = lastNameValid
           ? ""
           : "Invalid last name! It must contain only upper and lower case letters! Length between 4 and 20";
         break;
       case "email":
-        emailValid = value.match(
-          /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+.([A-Za-z]{2,4})$/
-        ) && this.state.email.length <= 50 && this.state.email.length > 8;
-        fieldValidationErrors.email = emailValid ? "" : "Invalid Email! Length between 8 and 50.";
+        emailValid =
+          value.match(
+            /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+.([A-Za-z]{2,4})$/
+          ) &&
+          this.state.email.length <= 50 &&
+          this.state.email.length > 8;
+        fieldValidationErrors.email = emailValid
+          ? ""
+          : "Invalid Email! Length between 8 and 50.";
         break;
       case "username":
-        usernameValid = value.match(/^[a-zA-Z0-9_]+$/) && this.state.username.length <= 20 && this.state.username.length >= 4;
+        usernameValid =
+          value.match(/^[a-zA-Z0-9_]+$/) &&
+          this.state.username.length <= 20 &&
+          this.state.username.length >= 4;
         fieldValidationErrors.username = usernameValid
           ? ""
           : "Forbidden characters! It must contain only letters, numbers or '_'! Length between 4 and 20.";
         break;
       case "passwd":
-        passwdValid = !!value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/);
+        passwdValid = !!value.match(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
+        );
         fieldValidationErrors.passwd = passwdValid
           ? ""
           : "Your password must contain at least 1 number, 1 lowercase, 1 upper case letter, 1 special character and the length must be >= 8 and <=20";
@@ -101,7 +117,8 @@ class RegisterPage extends Component {
         lastNameValid: lastNameValid,
         emailValid: emailValid,
         usernameValid: usernameValid,
-        passwdValid: passwdValid
+        passwdValid: passwdValid,
+        success: ""
       },
       this.validateForm
     );
@@ -124,13 +141,12 @@ class RegisterPage extends Component {
       .post(`/api/users/register`, this.state)
       .then(res => {
         if (res.data.success) {
-          this.setState({ success: res.data.success });
+          this.setState({ ...INITIAL_STATE, success: res.data.success });
         } else if (res.data.error) {
           this.setState({ error: res.data.error });
         }
       })
-      .catch(err => { });
-    this.setState({ ...INITIAL_STATE });
+      .catch(err => {});
     event.preventDefault();
   };
 
@@ -261,8 +277,16 @@ class RegisterPage extends Component {
             </div>
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
-              {error && <MDBAlert color="danger" dismiss>{error}</MDBAlert>}
-              {success && <MDBAlert color="success" dismiss>{success}</MDBAlert>}
+              {error && (
+                <MDBAlert color="danger" dismiss>
+                  {error}
+                </MDBAlert>
+              )}
+              {success && (
+                <MDBAlert color="success" dismiss>
+                  {success}
+                </MDBAlert>
+              )}
             </div>
             <Button
               disabled={!this.state.formValid}
