@@ -21,7 +21,6 @@ class UserProfilPage extends Component {
     this.state = {
       isLoggedIn: true,
       userId: sessionStorage.getItem("userId"),
-      username: sessionStorage.getItem("userData"),
       userUrl: "",
       profileSettings: true,
       accountSettings: false,
@@ -97,12 +96,12 @@ class UserProfilPage extends Component {
     socket.on("NOTIF_RECEIVED", data => {
       var count = data.count + this.state.count;
       if (this._isMounted) this.setState({ count: count });
-      const openNotificationWithIcon = type => {
-        notification[type]({
-          message: data.fromUser + " " + data.message
-        });
-      };
-      if (this._isMounted) openNotificationWithIcon("info");
+      // const openNotificationWithIcon = type => {
+      //   notification[type]({
+      //     message: data.fromUser + " " + data.message
+      //   });
+      // };
+      // if (this._isMounted) openNotificationWithIcon("info");
     });
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
@@ -132,11 +131,9 @@ class UserProfilPage extends Component {
       accountSettings,
       refresh,
       count,
-      username,
       not_found
     } = this.state;
     const userData = sessionStorage.getItem("userData");
-
     if (!this._isMounted && !sessionStorage.getItem("userData")) {
       return <Redirect to={routes.SIGN_IN} />;
     }
@@ -232,7 +229,7 @@ class UserProfilPage extends Component {
             <ProfilePreviewModal
               profilePreview={this.state.profilePreview}
               closeProfilePreview={this.closeProfilePreview}
-              username={username}
+              username={userData}
             />
             <ErrorModal
               errorMessage={this.state.error}

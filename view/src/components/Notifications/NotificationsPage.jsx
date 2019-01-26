@@ -51,12 +51,12 @@ class NotificationsPage extends Component {
     socket.on("NOTIF_RECEIVED", async data => {
       var count = data.count + this.state.count;
       if (this._isMounted) this.setState({ count: count });
-      const openNotificationWithIcon = type => {
-        notification[type]({
-          message: data.fromUser + " " + data.message
-        });
-      };
-      if (this._isMounted) openNotificationWithIcon("info");
+      // const openNotificationWithIcon = type => {
+      //   notification[type]({
+      //     message: data.fromUser + " " + data.message
+      //   });
+      // };
+      // if (this._isMounted) openNotificationWithIcon("info");
       axios
         .post(`/api/getAllnotifications`, {
           userId: this.state.userId
