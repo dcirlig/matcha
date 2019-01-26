@@ -6,7 +6,6 @@ import axios from "axios";
 import { Redirect, Link } from "react-router-dom";
 import "react-chat-elements/dist/main.css";
 import { ChatItem } from "react-chat-elements";
-import { notification } from "antd";
 
 class NotificationsPage extends Component {
   _isMounted = false;

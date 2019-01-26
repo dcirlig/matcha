@@ -8,7 +8,6 @@ import { Helmet } from "react-helmet";
 import { ChatList } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
 import * as routes from "../../constants/routes";
-import { notification } from "antd";
 
 export default class ChatPage extends Component {
   _isMounted = false;

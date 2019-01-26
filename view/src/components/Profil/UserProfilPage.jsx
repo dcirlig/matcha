@@ -12,7 +12,6 @@ import ErrorModal from "../RegisterAndConnection/RegisterModal";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { notification } from "antd";
 
 class UserProfilPage extends Component {
   _isMounted = false;
