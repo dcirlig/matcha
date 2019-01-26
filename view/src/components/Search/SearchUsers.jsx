@@ -544,8 +544,8 @@ class SearchUsersPage extends Component {
                 )}
               </MDBCol>
             ) : (
-                <MDBCol size="8">
-                  <p>No user finds</p>
+                <MDBCol size="8" className="explorer-container">
+                  <h1>No users found</h1>
                 </MDBCol>
               )}
           </MDBRow>

@@ -8,7 +8,6 @@ import { Helmet } from "react-helmet";
 import { ChatList } from "react-chat-elements";
 import "react-chat-elements/dist/main.css";
 import * as routes from "../../constants/routes";
-import { notification } from "antd";
 
 export default class ChatPage extends Component {
   _isMounted = false;
@@ -62,12 +61,12 @@ export default class ChatPage extends Component {
       if (this._isMounted) {
         this.setState({ count: count });
       }
-      const openNotificationWithIcon = type => {
-        notification[type]({
-          message: data.fromUser + " " + data.message
-        });
-      };
-      if (this._isMounted) openNotificationWithIcon("info");
+      // const openNotificationWithIcon = type => {
+      //   notification[type]({
+      //     message: data.fromUser + " " + data.message
+      //   });
+      // };
+      // if (this._isMounted) openNotificationWithIcon("info");
     });
     axios
       .post(`/api/chat/getRooms`, sessionStorage)

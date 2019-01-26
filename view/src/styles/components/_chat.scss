@@ -13,7 +13,7 @@ input[type=text]:focus:not([readonly]) {
 }
 
 .chatContainer {
-  height: 87vh;
+  height: 80vh;
   margin-top: 10rem;
   display: flex;
   flex-direction: row;
@@ -51,6 +51,8 @@ input[type=text]:focus:not([readonly]) {
   .chatContainer {
     min-width:100% !important;
     margin-top:0;
+    height: 70vh;
+    overflow-y:scroll;
   }
   // .messagesColMenu {
   //   display: none;
