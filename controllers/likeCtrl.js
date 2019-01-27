@@ -10,7 +10,7 @@ module.exports = {
     var bodyLike = {
       likeTransmitter: parseInt(req.body.likeTransmitter),
       likedUser: parseInt(req.body.likedUser),
-      liked: escape(req.body.like)
+      liked: req.body.like
     };
     var popularity_score = parseInt(req.body.popularity_score);
     if (bodyLike.likeTransmitter) {
@@ -70,7 +70,7 @@ module.exports = {
                 chat.deleteChat(data[0].chatRoom);
                 return res.json({
                   isMatch: true,
-                  success: "You have disliked  this user!",
+                  success: "You have disliked this user!",
                   popularity_score: popularity_score - 1,
                   status: "disliked",
                   match: false
@@ -78,7 +78,7 @@ module.exports = {
               }
             } else {
               return res.json({
-                success: "You have disliked  this user!",
+                success: "You have disliked this user!",
                 popularity_score: popularity_score - 1,
                 status: "disliked",
                 match: false

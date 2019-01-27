@@ -40,16 +40,15 @@ export default class ChatPage extends Component {
         if (res.data && res.data.error)
           this.setState({ profileComplete: false });
       })
-      .catch(err => console.log(err));
+      .catch();
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
       .then(res => {
         if (res.data.success && this.state.profileComplete) {
           this.setState({ count: res.data.count });
-        } else {
-          console.log("error");
         }
-      });
+      })
+      .catch();
   }
 
   componentDidMount() {
@@ -139,9 +138,7 @@ export default class ChatPage extends Component {
                   }
                 }
               })
-              .catch(err => {
-                console.log(err);
-              });
+              .catch();
           });
         }
         socket.on("MESSAGE_RECEIVED", async data => {
@@ -211,9 +208,7 @@ export default class ChatPage extends Component {
           }
         });
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch();
   }
 
   async newChat(item) {
@@ -263,9 +258,7 @@ export default class ChatPage extends Component {
           }
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch();
     if (this._isMounted === true) {
       await this.setState({ activeConv: item });
     }

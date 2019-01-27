@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { MDBAlert } from 'mdbreact';
 import axios from "axios";
 import "antd/dist/antd.css";
@@ -19,9 +20,23 @@ class profilePreview extends React.Component {
     this.state = {
       isLoggedIn: true,
       user: [],
-      username: ""
+      username: "",
+      profileComplete: true
     };
     this.redirectToExplorer = this.redirectToExplorer.bind(this);
+  }
+
+  async componentWillMount() {
+    await this.setState({
+      userId: { userId: sessionStorage.getItem("userId") }
+    });
+    axios
+      .post(`/api/profileComplete`, { userId: this.state.userId.userId })
+      .then(async res => {
+        if (res.data && res.data.error)
+          await this.setState({ profileComplete: false });
+      })
+      .catch();
   }
 
   componentDidMount() {
@@ -44,13 +59,41 @@ class profilePreview extends React.Component {
                 await this.setState({ user: data, username: data[0].username, likeBack: likeBack, liked: liked, dist: dist });
               }
             })
-            .catch(err => { console.log(err) })
+            .catch();
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch();
   }
+
+  getDate = date => {
+    var Days = ["Mon", "Tu", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var Months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Dec"
+    ];
+    var day = Days[date.getDay()];
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var dd = date.getDate();
+    var mm = Months[date.getMonth()];
+    var yyyy = date.getFullYear();
+
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+
+    var data =
+      day + ", " + dd + " " + mm + " " + yyyy + ", " + hour + ":" + minutes;
+    return data;
+  };
 
   redirectToExplorer() {
     this.props.history.push("/explorer");
@@ -61,8 +104,18 @@ class profilePreview extends React.Component {
   }
 
   render() {
-    const { dist, likeBack, liked, user, username } = this.state;
+    const { dist, likeBack, liked, user, username, profileComplete } = this.state;
     if (user[0]) { var profil_image = user[0].profilImage; var popularity_score = parseInt(user[0].popularityScore) }
+    if (!profileComplete) {
+      return (
+        <Redirect
+          to={{
+            pathname: `/users/${sessionStorage.getItem("userData")}`,
+            state: { completeProfile: profileComplete }
+          }}
+        />
+      );
+    }
     return (
       <div className="public-profile-preview-page">
         {user.map((item, index) => (
@@ -174,6 +227,19 @@ class profilePreview extends React.Component {
               </MDBAlert>
                     )
                 }
+                {item.online === "online" ? (
+                  <div className="connexionInfo">
+                    <div className="onlineUsers" />
+                    <h5>Online</h5>
+                  </div>
+                ) : (
+                    <div className="connexionInfo">
+                      <div className="offlineUsers" />
+                      <h5>
+                        {this.getDate(new Date(parseInt(item.online)))}
+                      </h5>
+                    </div>
+                  )}
                 {item.firstname} {item.lastname} -{" "}
                 {dist || dist === 0
                   ? dist <= 1
@@ -186,8 +252,16 @@ class profilePreview extends React.Component {
                 {item.age} y.o.
               </b>
 
-              <Meta title={"@" + item.username} description={item.bio} />
-              <ReactTags tags={item.tags} readOnly={true} />
+              <Meta title={"@" + item.username} description={item.bio} style={{ wordBreak: 'break-all' }} />
+              <ReactTags 
+                classNames={{
+                  tags: "tagsContainer",
+                  selected: "selectedSearchTags",
+                  tag: "allSearchTags"
+                }}
+                tags={item.tags}
+                readOnly={true}
+              />
             </Card>
           </div>
         ))}

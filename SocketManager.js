@@ -17,7 +17,7 @@ module.exports = function (socket) {
     io.emit("disconnect");
   });
 
-  socket.on("onlineUser", async function(userId, socketId) {
+  socket.on("onlineUser", async function (userId, socketId) {
     var data = { online: "online", socket_id: socketId };
     await user.updateUser(data, userId);
   });

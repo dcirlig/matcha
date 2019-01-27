@@ -9,12 +9,12 @@ module.exports = {
     register: function (req, res) {
         // Params
         var userData = {
-            firstname: escape(req.body.firstname),
-            lastname: escape(req.body.lastname),
-            email: escape(req.body.email),
-            username: escape(req.body.username),
-            passwd: escape(req.body.passwd),
-            gender: escape(req.body.gender),
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email,
+            username: req.body.username,
+            passwd: req.body.passwd,
+            gender: req.body.gender,
             online: "noOnline"
         };
 
@@ -30,14 +30,13 @@ module.exports = {
                 // pass: "3dcfd9fa48b900"
             }
         });
-
         if (
-            userData.firstname != "" &&
-            userData.lastname != "" &&
-            userData.email != "" &&
-            userData.username != "" &&
-            userData.passwd != "" &&
-            userData.gender != ""
+            userData.firstname &&
+            userData.lastname &&
+            userData.email &&
+            userData.username &&
+            userData.passwd &&
+            userData.gender
         ) {
             if (
                 !userData.firstname.match(/^[a-zA-Z]+$/) ||

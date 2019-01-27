@@ -33,9 +33,7 @@ class profilePreview extends React.Component {
           await this.setState({ user: data, username: data[0].username });
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch();
   }
 
   async componentDidUpdate(prevProps) {
@@ -52,9 +50,7 @@ class profilePreview extends React.Component {
             this.props.stopRefresh();
           }
         })
-        .catch(err => {
-          console.log(err);
-        });
+        .catch();
     }
   }
 
@@ -214,8 +210,16 @@ class profilePreview extends React.Component {
                 {item.age} y.o.
               </b>
 
-              <Meta title={"@" + item.username} description={item.bio} />
-              <ReactTags tags={item.tags} readOnly={true} />
+              <Meta title={"@" + item.username} description={item.bio} style={{ wordBreak: 'break-all' }} />
+              <ReactTags
+                classNames={{
+                  tags: "tagsContainer",
+                  selected: "selectedSearchTags",
+                  tag: "allSearchTags"
+                }}
+                tags={item.tags}
+                readOnly={true}
+              />
             </Card>
           </div>
         ))}

@@ -11,15 +11,6 @@ import Reports from "./Reports";
 import { MDBRow, MDBCol, MDBBtn, MDBAlert, MDBIcon } from "mdbreact";
 import { Helmet } from "react-helmet";
 import * as routes from "../../constants/routes";
-import InfiniteScroll from "react-infinite-scroll-component";
-
-// const style = {
-//   height: 30,
-//   border: "1px solid green",
-//   margin: 6,
-//   padding: 8
-// };
-
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -45,7 +36,7 @@ const INITIAL_STATE = {
   count: "",
   profileComplete: true,
   loading: true,
-  items: [],
+  items: Array.from({ length: 20 }),
   hasMore: true
 };
 
@@ -100,14 +91,7 @@ class SearchUsersPage extends Component {
             const usersList = Object.assign({}, this.state.usersList, {
               usersList: res.data.user_list,
             });
-            var arr1 = Array.from({
-              length: 12
-            },
-              function (list, k) {
-                return res.data.user_list[k];
-              }
-            );
-            await this.setState({ usersList, loading: false, items: arr1 });
+            await this.setState({ usersList, loading: false });
           }
         }
       })
@@ -157,17 +141,7 @@ class SearchUsersPage extends Component {
           const usersList = Object.assign({}, this.state.usersList, {
             usersList: res.data.user_list
           });
-          var index
-          if (res.data.user_list && res.data.user_list.length < 12) { index = res.data.user_list.length }
-          else { index = 12 }
-          var arr1 = Array.from({
-            length: index
-          },
-            function (list, k) {
-              return res.data.user_list[k];
-            }
-          );
-          this.setState({ usersList, items: arr1 });
+          this.setState({ usersList });
         }
       })
       .catch();
@@ -177,7 +151,7 @@ class SearchUsersPage extends Component {
     await this.setState({ open: !this.state.open });
   }
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
     axios
       .post(`/api/explorer`, {
@@ -192,17 +166,7 @@ class SearchUsersPage extends Component {
           const sortBy = Object.assign({}, this.state.sortBy, {
             sortBy: "Default"
           });
-          var index
-          if (res.data.user_list && res.data.user_list.length < 12) { index = res.data.user_list.length }
-          else { index = 12 }
-          var arr1 = Array.from({
-            length: index
-          },
-            function (list, k) {
-              return res.data.user_list[k];
-            }
-          );
-          this.setState({ usersList, sortBy, items: arr1 });
+          this.setState({ usersList, sortBy });
         }
       })
       .catch();
@@ -264,35 +228,6 @@ class SearchUsersPage extends Component {
     return data;
   };
 
-  fetchMoreData = async () => {
-    let index;
-    let usersListLength = this.state.usersList.usersList.length;
-    let itemsLength = this.state.items.length;
-
-    if (itemsLength >= usersListLength) {
-      await this.setState({ hasMore: false });
-      return;
-    }
-    if (usersListLength - itemsLength < 12) {
-      index = usersListLength - itemsLength
-    } else { index = 12 }
-
-    let usersList = this.state.usersList.usersList
-    let previousIndex = itemsLength
-    var arr1 = Array.from({
-      length: index
-    },
-      function (list, k) {
-        return usersList[k + previousIndex];
-      }
-    );
-    setTimeout(() => {
-      this.setState({
-        items: this.state.items.concat(arr1)
-      });
-    }, 500);
-  };
-
   componentWillUnmount() {
     this._isMounted = false;
   }
@@ -300,13 +235,15 @@ class SearchUsersPage extends Component {
   render() {
     const {
       searchOptions,
+      usersList,
       sortBy,
       open,
       count,
       profileComplete,
-      loading,
-      items
+      loading
     } = this.state;
+    var list = usersList.usersList;
+
     const userData = sessionStorage.getItem("userData");
     if (!this._isMounted && !userData) {
       return <Redirect to={routes.SIGN_IN} />;
@@ -512,113 +449,100 @@ class SearchUsersPage extends Component {
                 </div>
               </div>
             </MDBCol>
-            {items && items.length > 0 ? (
-              <MDBCol size="8">
-                <InfiniteScroll
-                  dataLength={this.state.items.length}
-                  next={this.fetchMoreData}
-                  hasMore={this.state.hasMore}
-                  loader={<div><MDBIcon className="searchPageIcon" icon="spinner" pulse size="3x" fixed />
-                    <span className="sr-only">Loading...</span></div>}
-                  height={'80vh'}
-                  endMessage={
-                    <p style={{ textAlign: "center" }}>
-                      <b>Yay! You have seen it all</b>
-                    </p>
-                  }
-                >
-                  {items.map((item, index) =>
-                    !item.blocked ? (
-                      <div
-                        className="searchCardContainer"
-                        style={{ maxWidth: 240 }}
-                        key={index}
-                      >
-                        <Card
-                          hoverable
-                          style={{ overflow: "visible" }}
-                          cover={
-                            <img
-                              alt="example"
-                              src={
-                                item.profil_image
-                                  ? item.profil_image.includes("unsplash")
-                                    ? item.profil_image
-                                    : `https://localhost:4000/${
-                                    item.profil_image
-                                    }`
-                                  : `https://localhost:4000/profilPhoto/avatar-default.jpg`
-                              }
-                            />
-                          }
-                        >
-                          <Reports
-                            item={item}
-                            updateUsersListAfterReport={
-                              this.updateUsersListAfterReport
+            {list.length > 0 ? (
+              <MDBCol size="8" className="explorer-container">
+                {list.map((item, index) =>
+                  !item.blocked ? (
+                    <div
+                      className="searchCardContainer"
+                      style={{ maxWidth: 240 }}
+                      key={index}
+                    >
+                      <Card
+                        hoverable
+                        style={{ overflow: "visible" }}
+                        cover={
+                          <img
+                            alt="example"
+                            src={
+                              item.profil_image
+                                ? item.profil_image.includes("unsplash")
+                                  ? item.profil_image
+                                  : `https://localhost:4000/${
+                                  item.profil_image
+                                  }`
+                                : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                             }
                           />
-                          {item.profil_image ? (
-                            <Like
-                              item={item}
-                              popularity_score={item.popularity_score}
-                              liked={item.liked}
-                              socket={this.props.socket}
-                            />
-                          ) : (
-                              <MDBAlert color="warning">
-                                Incomplete profile
-                            </MDBAlert>
-                            )}
-                          {item.online === "online" ? (
+                        }
+                      >
+                        <Reports
+                          item={item}
+                          updateUsersListAfterReport={
+                            this.updateUsersListAfterReport
+                          }
+                        />
+                        {item.profil_image ? (
+                          <Like
+                            item={item}
+                            popularity_score={item.popularity_score}
+                            liked={item.liked}
+                            socket={this.props.socket}
+                          />
+                        ) : (
+                            <MDBAlert color="warning">
+                              Incomplete profile
+                          </MDBAlert>
+                          )}
+                        {item.online === "online" ? (
+                          <div className="connexionInfo">
+                            <div className="onlineUsers" />
+                            <h5>Online</h5>
+                          </div>
+                        ) : (
                             <div className="connexionInfo">
-                              <div className="onlineUsers" />
-                              <h5>Online</h5>
+                              <div className="offlineUsers" />
+                              <h5>
+                                {this.getDate(new Date(parseInt(item.online)))}
+                              </h5>
                             </div>
-                          ) : (
-                              <div className="connexionInfo">
-                                <div className="offlineUsers" />
-                                <h5>
-                                  {this.getDate(new Date(parseInt(item.online)))}
-                                </h5>
-                              </div>
-                            )}
-                          <Meta
-                            title={`${item.firstname} ${item.lastname}, ${
-                              item.age
-                              } y.o.`}
-                            style={{ wordBreak: 'break-all' }}
-                          />
-                          <ReactTags
-                            classNames={{
-                              tags: "tagsContainer",
-                              selected: "selectedSearchTags",
-                              tag: "allSearchTags"
-                            }}
-                            tags={item.tags}
-                            readOnly={true}
-                          />
-                          <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
-                          <p>
-                            {item.gender === "male" ? "Man" : "Woman"},{" "}
-                            {item.sexual_orientation}
-                          </p>
+                          )}
+                        <Meta
+                          title={`${item.firstname} ${item.lastname}, ${
+                            item.age
+                            } y.o.`}
+                          description={item.bio}
+                          style={{ wordBreak: 'break-all' }}
+                        />
+                        <ReactTags
+                          classNames={{
+                            tags: "tagsContainer",
+                            selected: "selectedSearchTags",
+                            tag: "allSearchTags"
+                          }}
+                          tags={item.tags}
+                          readOnly={true}
+                        />
+                        <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
+                        <p>
+                          {item.gender === "male" ? "Man" : "Woman"},{" "}
+                          {item.sexual_orientation}
+                        </p>
 
-                          <Link
-                            to={{
-                              pathname: `/users/${item.username}`
-                            }}
-                            onClick={e => this.sendVisitNotification(item)}
-                          >
-                            Show more...
-                          </Link>
-                        </Card>
-                      </div>
-                    ) : (
-                        ""
-                      )
-                  )}
-                </InfiniteScroll>
+                        <Link
+                          to={{
+                            pathname: `/users/${item.username}`
+                          }}
+                          onClick={e => this.sendVisitNotification(item)}
+                        >
+                          Show more...
+                        </Link>
+                      </Card>
+                    </div>
+                  ) : (
+                      ""
+                    )
+                )}
               </MDBCol>
             ) : (
                 <MDBCol size="8" className="explorer-container">

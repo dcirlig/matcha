@@ -13,8 +13,8 @@ module.exports = {
                     models.getUser("secretToken", token, function(result) {
                         if (result) {
                             result.forEach(element => {
-                                var password = escape(req.body.newpasswd);
-                                var confirmpassword = escape(req.body.confnewpasswd);
+                                var password = req.body.newpasswd;
+                                var confirmpassword = req.body.confnewpasswd;
                                 if (password && confirmpassword) {
                                     if (
                                         !password.match(

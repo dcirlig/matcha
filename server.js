@@ -34,7 +34,7 @@ var app = https.createServer(options, server);
 app.listen(8081, () => {
   console.log("Server en ecoute");
 });
-// var io = (module.exports.io = require("socket.io").listen(app));
+
 var io = (module.exports.io = require('socket.io')(app, { pingTimeout: 5000, pingInterval: 10000, transports: ['polling'] }))
 
 const SocketManager = require("./SocketManager.js");
