@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "antd/dist/antd.css";
-import { Upload, Icon, Modal } from "antd";
+import { Upload, Icon, Modal, message } from "antd";
 
 const dummyRequest = ({ file, onSuccess }) => {
   setTimeout(() => {
@@ -64,12 +64,7 @@ class UploadPhoto extends Component {
     var status = e.file.status;
     var uid = e.file.uid;
     var fileList = e.fileList;
-    if (file.type === "image/jpeg" || file.type === "image/png") {
-      await this.setState({
-        fileList: fileList
-      });
-    }
-    if (status === "done") {
+    if (status === "uploading") {
       const formData = new FormData();
       formData.append("myImage", file.originFileObj);
       formData.set("status", status);
@@ -83,7 +78,15 @@ class UploadPhoto extends Component {
       axios
         .post("/api/uploadPhoto", formData, config)
         .then(response => {
-          this.props.getImages();
+          if (response.data.success) {
+            this.props.getImages();
+            file.status = "done";
+            this.setState({
+              fileList: fileList
+            });
+          } else {
+            message.error(response.data.error);
+          }
         })
         .catch(error => {
           console.log("error=", error);
@@ -108,7 +111,7 @@ class UploadPhoto extends Component {
   }
 
   render() {
-    const { previewVisible, previewImage, fileList } = this.state;
+    const { previewVisible, previewImage, fileList, error } = this.state;
 
     const uploadButton = (
       <div>
@@ -125,7 +128,7 @@ class UploadPhoto extends Component {
             onPreview={this.handlePreview}
             onChange={this.handleChange}
             fileList={fileList}
-            // accept="image/*"
+            accept="image/*"
           >
             {fileList.length >= 4 ? null : uploadButton}
           </Upload>

@@ -88,6 +88,8 @@ class Avatar extends Component {
             }`;
             this.setState({ imageUrl: imageUrl });
             this.props.getInfos();
+          } else {
+            message.error(response.data.error);
           }
         })
         .catch(error => {

@@ -21,6 +21,7 @@
     "express": "^4.16.4",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.3.0",
+    "mmmagic": "^0.5.2",
     "moment": "^2.24.0",
     "multer": "^1.4.1",
     "mysql": "^2.16.0",

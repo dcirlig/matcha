@@ -2,6 +2,8 @@
 var multer = require("multer");
 const path = require("path");
 var fs = require("fs");
+var mmm = require("mmmagic"),
+  Magic = mmm.Magic;
 var images = require("../models/images");
 // Routes
 
@@ -21,20 +23,24 @@ module.exports = {
   uploadPhoto: function(req, res) {
     upload(req, res, err => {
       if (req.file) {
-        if (!req.file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-          res.json({ error: "Only image files are allowed!" });
-        } else {
-          var filepath = req.file.path.replace("view/public/", "");
-          var userData = {
-            url: filepath,
-            userId: req.body.userId,
-            uid: req.body.uid
-          };
-          if (req.body.status == "done") {
-            images.insertImage(userData);
-            return res.json({ success: "you have add photo" });
+        var magic = new Magic(mmm.MAGIC_MIME_TYPE);
+        magic.detectFile(req.file.path, function(err, result) {
+          if (result !== "image/jpeg" && result !== "image/png") {
+            fs.unlink(req.file.path, function(err) {});
+            return res.json({ error: "Only image files are allowed!" });
+          } else {
+            var filepath = req.file.path.replace("view/public/", "");
+            var userData = {
+              url: filepath,
+              userId: req.body.userId,
+              uid: req.body.uid
+            };
+            if (req.body.status == "uploading") {
+              images.insertImage(userData);
+              return res.json({ success: "you have add photo" });
+            }
           }
-        }
+        });
       } else {
         return res.json({ error: "Error upload photo" });
       }
