@@ -8,7 +8,7 @@ module.exports = {
     reset: function (req, res) {
         // Params
         var userData = {
-            email: escape(req.body.email)
+            email: req.body.email
         };
 
         var transporter = nodemailer.createTransport({

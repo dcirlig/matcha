@@ -7,15 +7,6 @@ function createChat(chatData) {
   });
 }
 
-// function getRooms(userId, callback) {
-//   sql = "SELECT chats.room, chats.userId1, chats.userId2, messages.chatRoom as existingChat, a.username as username1, b.username as username2 FROM chats LEFT JOIN messages ON chats.room = messages.chatRoom LEFT JOIN users a ON chats.userId1 = a.userId LEFT JOIN users b ON chats.userId2 = b.userId WHERE chats.userId1 = ? OR chats.userId2 = ?"
-//   connection.query(sql, [userId, userId], function (err, result) {
-//     if (err) console.log(err)
-//     if (result) callback(result)
-//     else if (!result) callback('Not found')
-//   })
-// }
-
 function getRooms(userId, callback) {
   sql = "SELECT chats.room, chats.time, chats.userId1, chats.userId2, a.username as username1, a.profil_image as profil_image1, b.profil_image as profil_image2, b.username as username2 FROM chats LEFT JOIN users a ON chats.userId1 = a.userId LEFT JOIN users b ON chats.userId2 = b.userId WHERE chats.userId1 = ? OR chats.userId2 = ?"
   connection.query(sql, [userId, userId], function (err, result) {

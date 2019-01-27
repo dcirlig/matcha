@@ -58,7 +58,7 @@ class Avatar extends Component {
           }
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   async handleChange(e) {
@@ -85,14 +85,12 @@ class Avatar extends Component {
           if (response.data.imageUrl) {
             var imageUrl = `${window.location.origin}/${
               response.data.imageUrl
-            }`;
+              }`;
             this.setState({ imageUrl: imageUrl });
             this.props.getInfos();
           }
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch();
     }
   }
 
@@ -114,6 +112,7 @@ class Avatar extends Component {
           showUploadList={false}
           beforeUpload={beforeUpload}
           onChange={this.handleChange}
+          accept="image/jpg"
         >
           {imageUrl ? (
             <img
@@ -123,8 +122,8 @@ class Avatar extends Component {
               alt="avatar"
             />
           ) : (
-            uploadButton
-          )}
+              uploadButton
+            )}
         </Upload>
       </div>
     );

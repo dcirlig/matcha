@@ -9,7 +9,6 @@ var distModels = require("../models/distance");
 
 module.exports = {
   userProfil: function (req, res) {
-    // console.log('req.params', req.params.username)
     if (
       req.params.username &&
       req.params.username.length < 20 &&
@@ -54,7 +53,8 @@ module.exports = {
                       sexualOrientation: element.sexual_orientation,
                       profilImage: element.profil_image,
                       images: imagesUser,
-                      popularityScore: element.popularity_score
+                      popularityScore: element.popularity_score,
+                      online: element.online
                     }
                   ];
                   return res.json({ success: user });

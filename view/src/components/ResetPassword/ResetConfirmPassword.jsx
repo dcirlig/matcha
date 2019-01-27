@@ -172,7 +172,7 @@ class ResetConfirmPassword extends Component {
               className="big-button"
               onClick={this.onSubmit}
             >
-              Register
+              Reset
             </Button>
           </form>
         </div>

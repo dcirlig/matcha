@@ -303,7 +303,7 @@ class Preferences extends Component {
             <MDBInput
               name="bio"
               type="textarea"
-              label="Tell people more about you"
+              label="Tell people more about you and press Enter to validate"
               rows="2"
               icon="pencil"
               onKeyPress={this.handleKeyPress}

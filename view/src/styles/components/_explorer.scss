@@ -11,6 +11,19 @@
   overflow-x: hidden;
 }
 
+.infinite-scroll-component {
+  height: 90vh;
+  margin-top: 10rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: stretch;
+  margin-bottom: 10rem;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
 .notif-container {
   margin-top: 10rem;
 }
@@ -65,7 +78,7 @@
     display: none;
   }
   .ant-card.ant-card-bordered.ant-card-hoverable {
-    height: 800px;
+    height: 850px;
     max-width: 100% !important;
   }
 }

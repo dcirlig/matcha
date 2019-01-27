@@ -30,8 +30,8 @@ module.exports = {
     } else if (
       req.body.data.sexualOrientation &&
       (escape(req.body.data.sexualOrientation) === "bisexual" ||
-        (escape(req.body.data.sexualOrientation) === "homosexual" ||
-          escape(req.body.data.sexualOrientation) === "heterosexual"))
+        escape(req.body.data.sexualOrientation) === "homosexual" ||
+        escape(req.body.data.sexualOrientation) === "heterosexual")
     ) {
       objUpdate = { sexual_orientation: escape(req.body.data.sexualOrientation) };
     } else if (req.body.data.bio && req.body.data.bio.toString().length <= 140 && req.body.data.bio.toString().match(

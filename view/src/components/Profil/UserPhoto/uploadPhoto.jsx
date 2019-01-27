@@ -85,9 +85,7 @@ class UploadPhoto extends Component {
         .then(response => {
           this.props.getImages();
         })
-        .catch(error => {
-          console.log("error=", error);
-        });
+        .catch();
     } else if (status === "removed") {
       var userData = {
         uid: uid,
@@ -101,9 +99,7 @@ class UploadPhoto extends Component {
         .then(response => {
           this.props.getImages();
         })
-        .catch(error => {
-          console.log("error=", error);
-        });
+        .catch();
     }
   }
 

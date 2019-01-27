@@ -28,7 +28,7 @@ class NotificationsPage extends Component {
         if (res.data && res.data.error)
           this.setState({ profileComplete: false });
       })
-      .catch(err => console.log(err));
+      .catch();
     await this.setState({ userId: sessionStorage.getItem("userId"), count: 0 });
     axios
       .post(`/api/updateNotif`, {
@@ -37,10 +37,9 @@ class NotificationsPage extends Component {
       .then(async res => {
         if (res.data.success && this.state.profileComplete) {
           await this.setState({ count: res.data.count });
-        } else {
-          console.log("error");
         }
-      });
+      })
+      .catch();
   }
 
   componentDidMount() {
@@ -64,10 +63,9 @@ class NotificationsPage extends Component {
           if (res.data.success) {
             if (this._isMounted)
               await this.setState({ list_notif: res.data.list_notif });
-          } else {
-            console.log("error");
           }
-        });
+        })
+        .catch();
     });
     axios
       .post(`/api/getAllnotifications`, {
@@ -77,10 +75,9 @@ class NotificationsPage extends Component {
         if (res.data.success) {
           if (this._isMounted)
             await this.setState({ list_notif: res.data.list_notif });
-        } else {
-          console.log("error");
         }
-      });
+      })
+      .catch();
   }
 
   componentWillUnmount() {
@@ -95,7 +92,7 @@ class NotificationsPage extends Component {
     const senderId = this.state.userId;
     const fromUser = sessionStorage.getItem("userData");
     const sendAt = Date.now();
-    const message = "have visited your profile";
+    const message = "has visited your profile";
     socket.emit("NOTIF_SENT", {
       likeroom,
       message,

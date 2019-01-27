@@ -107,13 +107,9 @@ class UserProfilPage extends Component {
       .then(res => {
         if (res.data.success) {
           if (this._isMounted) this.setState({ count: res.data.count });
-        } else {
-          console.log("error");
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch();
   }
 
   handleClearErrorMessage() {

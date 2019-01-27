@@ -8,12 +8,12 @@ module.exports = {
   login: function (req, res) {
     // console.log(req.body);
     var userData = {
-      username: escape(req.body.username),
+      username: req.body.username,
       passwd: req.body.passwd,
       latitude: req.body.coords.latitude,
       longitude: req.body.coords.longitude
     };
-    if (userData.username != null && userData.passwd != null) {
+    if (userData.username && userData.passwd) {
       if (
         !userData.username.match(/^[a-zA-Z0-9_]+$/) ||
         !userData.passwd.match(
@@ -59,7 +59,7 @@ module.exports = {
             });
           } else {
             return res.json({
-              error: "User not found! Please create a account"
+              error: "Wrong username or password"
             });
           }
         });

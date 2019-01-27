@@ -51,7 +51,7 @@ class Like extends Component {
         await this.setState({
           popularity_score: res.data.popularity_score
         });
-        var message = " have " + res.data.status + " your profile !";
+        var message = " has " + res.data.status + " your profile !";
         await socket.emit("NOTIF_SENT", {
           likeroom,
           message,

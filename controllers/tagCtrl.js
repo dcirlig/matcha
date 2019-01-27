@@ -24,11 +24,12 @@ module.exports = {
     },
     addTag: function (req, res) {
         var tag = {
-            text: escape(req.body.tag)
+            text: req.body.tag
         };
         var userId = req.body.userId;
         if (userId && tag) {
-            if (tag.text.length >= 1 && tag.text.length < 20 && tag.text.match(/^[a-zA-Z0-9_]+$/)) {
+            console.log('tag.text', tag.text)
+            if (tag.text.length >= 1 && tag.text.length <= 20 && tag.text.match(/^[a-zA-Z0-9_]+$/)) {
                 models.findTags(userId, function (tags) {
                     if ((tags && tags.split(", ").length <= 9) || !tags) {
                         if (!tags) {
@@ -69,7 +70,7 @@ module.exports = {
         }
     },
     deleteTag: function (req, res) {
-        if (req.body.userId && escape(req.body.tagToDelete)) {
+        if (req.body.userId && req.body.tagToDelete) {
             models.deleteTagUser(req.body.userId, req.body.tagToDelete, function (
                 tags
             ) {
