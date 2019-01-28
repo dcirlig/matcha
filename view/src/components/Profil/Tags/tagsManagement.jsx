@@ -157,11 +157,6 @@ class tagsManager extends React.Component {
           }
         })
         .catch(err => {});
-      // await this.setState(state => ({
-      //   tagsDB: [...state.tagsDB, { id: tag.text, text: "#" + tag.text }],
-      //   suggestions: [...state.suggestions, { id: tag.text, text: tag.text }],
-      //   formError: ""
-      // }));
     } else {
       this.setState({
         formError:

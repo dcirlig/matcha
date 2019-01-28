@@ -49,12 +49,6 @@ class NotificationsPage extends Component {
     socket.on("NOTIF_RECEIVED", async data => {
       var count = data.count + this.state.count;
       if (this._isMounted) this.setState({ count: count });
-      // const openNotificationWithIcon = type => {
-      //   notification[type]({
-      //     message: data.fromUser + " " + data.message
-      //   });
-      // };
-      // if (this._isMounted) openNotificationWithIcon("info");
       axios
         .post(`/api/getAllnotifications`, {
           userId: this.state.userId
@@ -85,7 +79,6 @@ class NotificationsPage extends Component {
   }
 
   sendVisitNotification = e => {
-    // e.preventDefault();
     var socket = this.props.socket;
     const likeroom = e.senderId;
     const receiverId = e.senderId;
@@ -149,7 +142,6 @@ class NotificationsPage extends Component {
                           title={""}
                           subtitle={item.username + " " + item.content}
                           date={new Date(parseInt(item.time))}
-                        //   unread={0}
                         />
                       </Link>
                     </div>

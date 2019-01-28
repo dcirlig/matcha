@@ -4,7 +4,6 @@ import "antd/dist/antd.css";
 import axios from "axios";
 import { Card, Select, Slider } from "antd";
 import { WithContext as ReactTags } from "react-tag-input";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../Navigation/Navigation";
 import Like from "./Like";
 import Reports from "./Reports";
@@ -12,13 +11,6 @@ import { MDBRow, MDBCol, MDBBtn, MDBAlert, MDBIcon } from "mdbreact";
 import { Helmet } from "react-helmet";
 import * as routes from "../../constants/routes";
 import InfiniteScroll from "react-infinite-scroll-component";
-
-// const style = {
-//   height: 30,
-//   border: "1px solid green",
-//   margin: 6,
-//   padding: 8
-// };
 
 const { Meta } = Card;
 const Option = Select.Option;
@@ -166,7 +158,7 @@ class SearchUsersPage extends Component {
             {
               length: index
             },
-            function(list, k) {
+            function (list, k) {
               return res.data.user_list[k];
             }
           );
@@ -285,7 +277,7 @@ class SearchUsersPage extends Component {
       {
         length: index
       },
-      function(list, k) {
+      function (list, k) {
         return usersList[k + previousIndex];
       }
     );
@@ -431,8 +423,8 @@ class SearchUsersPage extends Component {
                   </div>
                 </div>
               ) : (
-                ""
-              )}
+                  ""
+                )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -560,8 +552,8 @@ class SearchUsersPage extends Component {
                                   ? item.profil_image.includes("unsplash")
                                     ? item.profil_image
                                     : `https://localhost:4000/${
-                                        item.profil_image
-                                      }`
+                                    item.profil_image
+                                    }`
                                   : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                               }
                             />
@@ -581,27 +573,27 @@ class SearchUsersPage extends Component {
                               socket={this.props.socket}
                             />
                           ) : (
-                            <MDBAlert color="warning">
-                              Incomplete profile
+                              <MDBAlert color="warning">
+                                Incomplete profile
                             </MDBAlert>
-                          )}
+                            )}
                           {item.online === "online" ? (
                             <div className="connexionInfo">
                               <div className="onlineUsers" />
                               <h5>Online</h5>
                             </div>
                           ) : (
-                            <div className="connexionInfo">
-                              <div className="offlineUsers" />
-                              <h5>
-                                {this.getDate(new Date(parseInt(item.online)))}
-                              </h5>
-                            </div>
-                          )}
+                              <div className="connexionInfo">
+                                <div className="offlineUsers" />
+                                <h5>
+                                  {this.getDate(new Date(parseInt(item.online)))}
+                                </h5>
+                              </div>
+                            )}
                           <Meta
                             title={`${item.firstname} ${item.lastname}, ${
                               item.age
-                            } y.o.`}
+                              } y.o.`}
                             style={{ wordBreak: "break-all" }}
                           />
                           <ReactTags
@@ -630,29 +622,29 @@ class SearchUsersPage extends Component {
                         </Card>
                       </div>
                     ) : (
-                      ""
-                    )
+                        ""
+                      )
                   )}
                 </InfiniteScroll>
               </MDBCol>
             ) : (
-              <MDBCol size="8" className="explorer-container">
-                {loading ? (
-                  <div>
-                    <MDBIcon
-                      className="searchPageIcon"
-                      icon="spinner"
-                      pulse
-                      size="5x"
-                      fixed
-                    />
-                    <span className="sr-only">Loading...</span>
-                  </div>
-                ) : (
-                  <h1>No users found</h1>
-                )}
-              </MDBCol>
-            )}
+                <MDBCol size="8" className="explorer-container">
+                  {loading ? (
+                    <div>
+                      <MDBIcon
+                        className="searchPageIcon"
+                        icon="spinner"
+                        pulse
+                        size="5x"
+                        fixed
+                      />
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  ) : (
+                      <h1>No users found</h1>
+                    )}
+                </MDBCol>
+              )}
           </MDBRow>
         </div>
       </div>

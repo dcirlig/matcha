@@ -60,12 +60,6 @@ export default class ChatPage extends Component {
       if (this._isMounted) {
         this.setState({ count: count });
       }
-      // const openNotificationWithIcon = type => {
-      //   notification[type]({
-      //     message: data.fromUser + " " + data.message
-      //   });
-      // };
-      // if (this._isMounted) openNotificationWithIcon("info");
     });
     axios
       .post(`/api/chat/getRooms`, sessionStorage)

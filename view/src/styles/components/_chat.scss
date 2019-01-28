@@ -54,30 +54,14 @@ input[type=text]:focus:not([readonly]) {
     height: 70vh;
     overflow-y:scroll;
   }
-  // .messagesColMenu {
-  //   display: none;
-  // }
-  // .matchesColMenu {
-  //   display: none;
-  // }
+
   .sideBarContent {
     display: none;
   }
-  // .btn.peach-gradient.btn-lg.btn-rounded.Ripple-parent.small-button.explorer {
-  //   margin-top:10rem;
-  //   display: block !important;
-  //   margin-left: auto;
-  //   margin-right: auto;
-  // }
-  // .explorer-container {
-  //   margin-top:0;
-  // }
+
   .sideBarContentMobile {
     max-width: 90% !important;
   }
-  // .searchCardContainer {
-  //   min-width: 100%;
-  // }
 }
 
 @media screen and (min-width: 1001px) {

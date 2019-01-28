@@ -103,12 +103,6 @@ class UserProfilPage extends Component {
     socket.on("NOTIF_RECEIVED", data => {
       var count = data.count + this.state.count;
       if (this._isMounted) this.setState({ count: count });
-      // const openNotificationWithIcon = type => {
-      //   notification[type]({
-      //     message: data.fromUser + " " + data.message
-      //   });
-      // };
-      // if (this._isMounted) openNotificationWithIcon("info");
     });
     axios
       .post(`/api/notifications`, { userId: this.state.userId })
@@ -240,20 +234,20 @@ class UserProfilPage extends Component {
             />
           </div>
         ) : (
-          <div>
-            {" "}
-            <Header
-              isLoggedIn={this.state.isLoggedIn}
-              notSeenNotifications={count}
-            />
-            <Helmet>
-              <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
-            </Helmet>
-            <MDBRow className="publicProfilePreview">
-              <PublicProfilePreview {...this.props} />
-            </MDBRow>
-          </div>
-        )}
+            <div>
+              {" "}
+              <Header
+                isLoggedIn={this.state.isLoggedIn}
+                notSeenNotifications={count}
+              />
+              <Helmet>
+                <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
+              </Helmet>
+              <MDBRow className="publicProfilePreview">
+                <PublicProfilePreview {...this.props} />
+              </MDBRow>
+            </div>
+          )}
       </div>
     );
   }

@@ -15,12 +15,8 @@ module.exports = {
             service: "mailtrap",
             host: "smtp.mailtrap.io",
             auth: {
-                //camille
                 user: "08a43c661c7311",
                 pass: "8c65e78b005e6b"
-                //doina
-                // user: "cbad2ebee212cb",
-                // pass: "3dcfd9fa48b900"
             }
         });
 

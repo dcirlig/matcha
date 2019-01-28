@@ -3,7 +3,7 @@ var connection = require("../database/dbConnection");
 var distance = require("../models/distance");
 
 module.exports = {
-  explorer: function(req, res) {
+  explorer: function (req, res) {
     if (req.body.sortBy) {
       var sortBy = escape(req.body.sortBy.sortBy);
       var list_sort_users = req.body.usersList.usersList;
@@ -80,11 +80,11 @@ module.exports = {
       FROM users
       INNER JOIN geolocation ON users.userId = geolocation.userId
       WHERE`;
-        users.findOne("userId", userId, function(find) {
+        users.findOne("userId", userId, function (find) {
           if (find) {
             condition = ` users.userId=?`;
             sql = sql_start + condition;
-            connection.query(sql, userId, function(err, result) {
+            connection.query(sql, userId, function (err, result) {
               if (err) console.log(err);
               if (JSON.parse(JSON.stringify(result)).length > 0) {
                 result.forEach(element => {
@@ -129,11 +129,11 @@ module.exports = {
                       objData = [userId, "female", "heterosexual", "bisexual"];
                     }
                   }
-                  connection.query(sql, objData, function(error, results) {
+                  connection.query(sql, objData, function (error, results) {
                     if (error) console.log(error);
                     var sql =
                       "SELECT * FROM blocked WHERE blockTransmitter=? OR blockedUser = ?";
-                    connection.query(sql, [userId, userId], function(
+                    connection.query(sql, [userId, userId], function (
                       err,
                       dataReports
                     ) {
@@ -146,7 +146,7 @@ module.exports = {
                         });
                       }
                       var sql = "SELECT  * FROM likes WHERE likeTransmitter=?";
-                      connection.query(sql, userId, function(err, result) {
+                      connection.query(sql, userId, function (err, result) {
                         var likedUsersList = [];
                         if (err) console.log(err);
                         if (result) {
@@ -210,12 +210,12 @@ module.exports = {
                                     if (user.tags !== null) {
                                       var regex = new RegExp(
                                         "(^" +
-                                          tag +
-                                          ", | " +
-                                          tag +
-                                          ",|, " +
-                                          tag +
-                                          "$)"
+                                        tag +
+                                        ", | " +
+                                        tag +
+                                        ",|, " +
+                                        tag +
+                                        "$)"
                                       );
                                       if (user.tags.search(regex) !== -1) {
                                         count += 1;
