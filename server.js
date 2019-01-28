@@ -15,7 +15,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json({ limit: "1Mb" }));
 
 // Configure routes
-server.get("/", function (req, res) {
+server.get("/", function(req, res) {
   res.setHeader("Content-Type", "text/html");
   res.status(200).send("<h1>Bonjour sur mon serveur<h1/>");
 });
@@ -35,7 +35,13 @@ app.listen(8081, () => {
   console.log("Server en ecoute");
 });
 
-var io = (module.exports.io = require('socket.io')(app, { pingTimeout: 5000, pingInterval: 10000, transports: ['polling'] }))
+var io = (module.exports.io = require("socket.io")(app, {
+  pingTimeout: 5000,
+  pingInterval: 10000,
+  transports: ["polling"]
+}));
 
 const SocketManager = require("./SocketManager.js");
 io.on("connection", SocketManager);
+
+module.exports.app = app;
