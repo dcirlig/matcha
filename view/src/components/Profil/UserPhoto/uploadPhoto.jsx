@@ -46,7 +46,7 @@ class UploadPhoto extends Component {
           });
         }
       })
-      .catch(err => {});
+      .catch(err => { });
   }
 
   handleCancel = () => this.setState({ previewVisible: false });
@@ -107,7 +107,7 @@ class UploadPhoto extends Component {
   }
 
   render() {
-    const { previewVisible, previewImage, fileList, error } = this.state;
+    const { previewVisible, previewImage, fileList } = this.state;
 
     const uploadButton = (
       <div>

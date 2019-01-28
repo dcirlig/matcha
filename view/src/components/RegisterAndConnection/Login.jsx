@@ -43,36 +43,36 @@ class LoginPage extends Component {
     this.handleClearErrorMessage = this.handleClearErrorMessage.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this._isMounted = true;
-  }
-
-  getGeolocation() {
-    navigator.geolocation.getCurrentPosition(
+    await navigator.geolocation.getCurrentPosition(
       async location => {
         const coords = Object.assign({}, this.state.coords, {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude
         });
         if (this._isMounted === true) {
-          this.setState({ coords });
+          this.setState({ coords, geoloc: 1 });
         }
         await sessionStorage.setItem("latitude", location.coords.latitude);
         await sessionStorage.setItem("longitude", location.coords.longitude);
       },
       error => {
-        iplocation(this.state.ip)
-          .then(async res => {
-            const coords = Object.assign({}, this.state.coords, {
-              latitude: res.latitude,
-              longitude: res.longitude
-            });
-            if (this._isMounted === true) {
-              this.setState({ coords });
-            }
-            await sessionStorage.setItem("latitude", res.latitude);
-            await sessionStorage.setItem("longitude", res.longitude);
-          })
+        publicIp.v4().then(ip => {
+          iplocation(ip)
+            .then(async res => {
+              await sessionStorage.setItem("latitude", res.latitude);
+              await sessionStorage.setItem("longitude", res.longitude);
+              const coords = Object.assign({}, this.state.coords, {
+                latitude: res.latitude,
+                longitude: res.longitude
+              });
+              if (this._isMounted === true) {
+                this.setState({ coords, geoloc: 1 });
+              }
+            })
+            .catch(err => { });
+        })
           .catch(err => { });
       }
     );
@@ -89,7 +89,7 @@ class LoginPage extends Component {
             longitude: res.longitude
           });
           if (this._isMounted === true) {
-            this.setState({ coords });
+            this.setState({ coords, geoloc: 1 });
           }
         })
         .catch(err => { });
@@ -99,19 +99,6 @@ class LoginPage extends Component {
   onChange = e => {
     const name = e.target.name;
     var value = e.target.value;
-    const { geoloc } = this.state;
-
-    if (name === "checkbox") {
-      if (this._isMounted === true) {
-        this.setState({ geoloc: 1 });
-      }
-
-      value = e.target.checked;
-      this.getGeolocation();
-    }
-    if (geoloc === 0) {
-      this.getIpLocation();
-    }
     if (this._isMounted === true) {
       this.setState({ [name]: value }, () => {
         this.validateField(name, value);
@@ -153,6 +140,9 @@ class LoginPage extends Component {
   }
 
   validateForm() {
+    if (this.state.geoloc !== 1) {
+      this.getIpLocation()
+    }
     if (this._isMounted) {
       this.setState({
         formValid: this.state.usernameValid && this.state.passwdValid
@@ -251,14 +241,6 @@ class LoginPage extends Component {
                 />
               </label>
             </div>
-            <Input
-              label="Authorize geolocation"
-              type="checkbox"
-              id="checkbox2"
-              onChange={e => this.onChange(e)}
-              checked={this.state.checkbox}
-              name="checkbox"
-            />
             <div className="panel panel-default">
               <FormErrors formErrors={this.state.formErrors} />
               {error && <MDBAlert color="danger" dismiss>{error}</MDBAlert>}
