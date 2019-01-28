@@ -45,14 +45,14 @@ class tagsManager extends React.Component {
           this.setState({ tagsDB: newTags });
         }
         var tab = [];
-        res.data.globalTags.forEach(function (element) {
+        res.data.globalTags.forEach(function(element) {
           tab = tab.concat([{ id: element.content, text: element.content }]);
         });
         await this.setState({
           suggestions: [...this.state.suggestions, ...tab]
         });
       })
-      .catch(err => { });
+      .catch(err => {});
   }
 
   onChange = e => {
@@ -104,39 +104,69 @@ class tagsManager extends React.Component {
         } else if (res.data.empty) {
           this.setState({ tagsDB: [] });
         }
-        this.props.getNewTags()
+        this.props.getNewTags();
       })
-      .catch(err => { });
+      .catch(err => {});
   }
 
   async handleAddition(tag) {
     let tagValid = this.state.tagValid;
     tagValid = tag.text.match(/^[a-zA-Z0-9_]+$/);
     sessionStorage.setItem("tag", tag.text);
-    if (tagValid && tag.text.length > 0 && tag.text.length <= 20 && this.state.tagsDB.length <= 9) {
+    if (
+      tagValid &&
+      tag.text.length > 0 &&
+      tag.text.length <= 20 &&
+      this.state.tagsDB.length <= 9
+    ) {
       axios
         .post(`/api/tags/add`, sessionStorage)
         .then(res => {
           if (res.data.success) {
-            let pos = this.state.suggestions.map(function (e) { return e.id; }).indexOf(tag.text);
-            this.props.getNewTags()
+            let pos = this.state.suggestions
+              .map(function(e) {
+                return e.id;
+              })
+              .indexOf(tag.text);
+            this.props.getNewTags();
             if (pos !== -1) {
-              this.setState({ success: res.data.success, tagsDB: [...this.state.tagsDB, { id: tag.text, text: "#" + tag.text }], formError: "" });
+              this.setState({
+                success: res.data.success,
+                tagsDB: [
+                  ...this.state.tagsDB,
+                  { id: tag.text, text: "#" + tag.text }
+                ],
+                formError: ""
+              });
             } else {
-              this.setState({ success: res.data.success, tagsDB: [...this.state.tagsDB, { id: tag.text, text: "#" + tag.text }], suggestions: [...this.state.suggestions, { id: tag.text, text: tag.text }], formError: "" });
+              this.setState({
+                success: res.data.success,
+                tagsDB: [
+                  ...this.state.tagsDB,
+                  { id: tag.text, text: "#" + tag.text }
+                ],
+                suggestions: [
+                  ...this.state.suggestions,
+                  { id: tag.text, text: tag.text }
+                ],
+                formError: ""
+              });
             }
           } else if (res.data.error) {
             this.setState({ error: res.data.error, formError: "" });
           }
         })
-        .catch(err => { });
+        .catch(err => {});
       // await this.setState(state => ({
       //   tagsDB: [...state.tagsDB, { id: tag.text, text: "#" + tag.text }],
       //   suggestions: [...state.suggestions, { id: tag.text, text: tag.text }],
       //   formError: ""
       // }));
     } else {
-      this.setState({ formError: "Error while adding your tag. Forbidden characters, tag too long or limit of 10 tags reached." });
+      this.setState({
+        formError:
+          "Error while adding your tag. Forbidden characters, tag too long or limit of 10 tags reached."
+      });
     }
   }
 
@@ -159,7 +189,9 @@ class tagsManager extends React.Component {
           allowDragDrop={false}
         />
         {this.state.formError && (
-          <MDBAlert color="warning" dismiss className="error">{this.state.formError}</MDBAlert>
+          <MDBAlert color="warning" dismiss className="error">
+            {this.state.formError}
+          </MDBAlert>
         )}
         <RegisterModal
           errorMessage={this.state.error}

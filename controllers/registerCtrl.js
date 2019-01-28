@@ -41,7 +41,7 @@ module.exports = {
       if (
         !userData.firstname.match(/^[a-zA-Z-]+$/) ||
         userData.firstname.length < 4 ||
-        userData.firstname.length >= 20
+        userData.firstname.length > 20
       )
         return res.json({
           error:
@@ -51,7 +51,7 @@ module.exports = {
       if (
         !userData.lastname.match(/^[a-zA-Z ]+$/) ||
         userData.lastname.length < 4 ||
-        userData.lastname.length >= 20
+        userData.lastname.length > 20
       )
         return res.json({
           error:
@@ -63,7 +63,7 @@ module.exports = {
           /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
         ) ||
         userData.email.length < 8 ||
-        userData.email.length >= 50
+        userData.email.length > 50
       )
         return res.json({
           error: "Invalid email!"
@@ -72,7 +72,7 @@ module.exports = {
       if (
         !userData.username.match(/^[a-zA-Z0-9_]+$/) ||
         userData.username.length < 4 ||
-        userData.username.length >= 20
+        userData.username.length > 20
       )
         return res.json({
           error:
@@ -84,7 +84,7 @@ module.exports = {
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
         ) ||
         userData.passwd.length < 8 ||
-        userData.passwd.length >= 20
+        userData.passwd.length > 20
       )
         return res.json({
           error:

@@ -8,16 +8,16 @@ var distModels = require("../models/distance");
 // Routes
 
 module.exports = {
-  userProfil: function (req, res) {
+  userProfil: function(req, res) {
     if (
       req.params.username &&
-      req.params.username.length < 20 &&
+      req.params.username.length <= 20 &&
       req.params.username.length >= 4
     ) {
-      var username = escape(req.params.username);
-      models.findOne("username", username, function (find) {
+      var username = req.params.username;
+      models.findOne("username", username, function(find) {
         if (find) {
-          models.getUser("username", username, function (result) {
+          models.getUser("username", username, function(result) {
             if (result) {
               result.forEach(element => {
                 if (element.tags) {
@@ -32,7 +32,7 @@ module.exports = {
                 } else {
                   element.tags = [];
                 }
-                imgModels.getImage("userId", element.userId, function (images) {
+                imgModels.getImage("userId", element.userId, function(images) {
                   if (images) {
                     imagesUser = images;
                   } else {
@@ -77,29 +77,21 @@ module.exports = {
       });
     }
   },
-  profileComplete: function (req, res) {
+  profileComplete: function(req, res) {
     if (req.body.userId) {
       var userId = req.body.userId;
       models.getUser("userId", userId, data => {
         if (data && data.length > 0) {
-          if (
-            data[0].firstname
-          ) {
+          if (data[0].firstname) {
             var firstname = data[0].firstname;
           }
-          if (
-            data[0].lastname
-          ) {
+          if (data[0].lastname) {
             var lastname = data[0].lastname;
           }
-          if (
-            data[0].username
-          ) {
+          if (data[0].username) {
             var username = data[0].username;
           }
-          if (
-            data[0].gender
-          ) {
+          if (data[0].gender) {
             var gender = data[0].gender;
           }
           if (data[0].age) {
@@ -111,8 +103,7 @@ module.exports = {
           if (data[0].tags) {
             var tags = data[0].tags;
           }
-          if (
-            data[0].sexual_orientation) {
+          if (data[0].sexual_orientation) {
             var sexual_orientation = data[0].sexual_orientation;
           }
           if (data[0].profil_image && data[0].profil_image != null) {
@@ -165,7 +156,7 @@ module.exports = {
       return res.json({ error: "This member does not exist" });
     }
   },
-  publicProfile: function (req, res) {
+  publicProfile: function(req, res) {
     if (req.body) {
       var userVisiting = parseInt(req.body.userVisiting);
       var userVisited = parseInt(req.body.userVisited);
