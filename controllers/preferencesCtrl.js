@@ -41,12 +41,6 @@ module.exports = {
     } else if (req.body.data.age && req.body.data.birthdate) {
       objUpdate = { age: req.body.data.age, birthdate: req.body.data.birthdate };
     }
-    // else {
-    //   return res.json({
-    //     error: "Invalid parameter!"
-    //   });
-    // }
-    // console.log("objupdate", objUpdate);
     if (userId && objUpdate) {
       models.updateUser(objUpdate, userId);
       return res.status(200).json({
