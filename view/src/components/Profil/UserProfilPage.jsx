@@ -71,19 +71,27 @@ class UserProfilPage extends Component {
     }
   }
 
-
   componentWillMount() {
-    if (sessionStorage.getItem('userData')) {
+    if (sessionStorage.getItem("userData")) {
       axios
         .get(`/api/users/${this.props.match.params.username}`)
         .then(async res => {
-          if (res.data.error || (this.props.location.state && !this.props.location.state.completeProfile)) {
+          if (
+            res.data.error ||
+            (this.props.location.state &&
+              !this.props.location.state.completeProfile)
+          ) {
             if (res.data.error) {
               await this.setState({ not_found: true });
             } else {
-              this.setState({ error: "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications." })
+              this.setState({
+                error:
+                  "Your profile is incomplete. Please fill in everything before accessing the chat, the explorer or your notifications."
+              });
             }
-          } else { this.setState({ error: "", not_found: false }) }
+          } else {
+            this.setState({ error: "", not_found: false });
+          }
         });
     }
   }
@@ -232,22 +240,20 @@ class UserProfilPage extends Component {
             />
           </div>
         ) : (
-            <div>
-              {" "}
-              <Header
-                isLoggedIn={this.state.isLoggedIn}
-                notSeenNotifications={count}
-              />
-              <Helmet>
-                <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
-              </Helmet>
-              <MDBRow className="publicProfilePreview">
-                <PublicProfilePreview
-                  {...this.props}
-                />
-              </MDBRow>
-            </div>
-          )}
+          <div>
+            {" "}
+            <Header
+              isLoggedIn={this.state.isLoggedIn}
+              notSeenNotifications={count}
+            />
+            <Helmet>
+              <style>{"body { overflow-x: hidden, overflow-y: auto }"}</style>
+            </Helmet>
+            <MDBRow className="publicProfilePreview">
+              <PublicProfilePreview {...this.props} />
+            </MDBRow>
+          </div>
+        )}
       </div>
     );
   }

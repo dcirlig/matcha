@@ -38,7 +38,7 @@ module.exports = {
             if (
               userData.firstname &&
               userData.firstname.length >= 4 &&
-              userData.firstname.length < 20
+              userData.firstname.length <= 20
             ) {
               if (!userData.firstname.match(/^[a-zA-Z-]+$/)) {
                 return res.json({
@@ -53,7 +53,7 @@ module.exports = {
             if (
               userData.lastname &&
               userData.lastname.length >= 4 &&
-              userData.lastname.length < 20
+              userData.lastname.length <= 20
             ) {
               if (!userData.lastname.match(/^[a-zA-Z ]+$/)) {
                 return res.json({
@@ -68,7 +68,7 @@ module.exports = {
             if (
               userData.username &&
               userData.username.length >= 4 &&
-              userData.username.length < 20
+              userData.username.length <= 20
             ) {
               if (!userData.username.match(/^[a-zA-Z0-9_]+$/)) {
                 return res.json({
@@ -87,7 +87,7 @@ module.exports = {
             if (
               userData.email &&
               userData.email.length >= 8 &&
-              userData.email.length < 50
+              userData.email.length <= 50
             ) {
               if (
                 !userData.email.match(
@@ -109,7 +109,7 @@ module.exports = {
             if (
               userData.new_password &&
               userData.new_password.length >= 8 &&
-              userData.new_password.length < 20
+              userData.new_password.length <= 20
             ) {
               if (
                 !userData.new_password.match(

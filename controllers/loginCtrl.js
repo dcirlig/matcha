@@ -5,8 +5,7 @@ var models = require("../models/user");
 
 // Routes
 module.exports = {
-  login: function (req, res) {
-    // console.log(req.body);
+  login: function(req, res) {
     var userData = {
       username: req.body.username,
       passwd: req.body.passwd,
@@ -20,21 +19,21 @@ module.exports = {
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/
         ) ||
         (userData.username < 4 ||
-          userData.username >= 20 ||
+          userData.username > 20 ||
           userData.passwd.length < 8 ||
-          userData.passwd.length >= 20)
+          userData.passwd.length > 20)
       ) {
         return res.json({
           error: "Invalid parameters!!!"
         });
       } else {
-        models.getUser("username", userData.username, function (result) {
+        models.getUser("username", userData.username, function(result) {
           if (result && result.length > 0) {
-            result.forEach(function (element) {
+            result.forEach(function(element) {
               if (element.emailVerified == false && element.secretToken != "") {
                 return res.json({ error: "Please verify your email" });
               } else {
-                bcrypt.compare(userData.passwd, element.passwd, function (
+                bcrypt.compare(userData.passwd, element.passwd, function(
                   errBycrypt,
                   resBycrypt
                 ) {
