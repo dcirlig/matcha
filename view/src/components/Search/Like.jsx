@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import axios from "axios";
-// import "bootstrap/dist/css/bootstrap.min.css";
 
 const INITIAL_STATE = {
   likeTransmitter: sessionStorage.getItem("userId"),
@@ -16,14 +15,6 @@ class Like extends Component {
     this.state = { ...INITIAL_STATE };
     this.handleLike = this.handleLike.bind(this);
   }
-
-  // openNotificationWithIcon = type => {
-  //   notification[type]({
-  //     message: "Notification Title",
-  //     description:
-  //       "This is the content of the notification. This is the content of the notification. This is the content of the notification."
-  //   });
-  // };
 
   handleLike = async e => {
     var socket = this.props.socket;

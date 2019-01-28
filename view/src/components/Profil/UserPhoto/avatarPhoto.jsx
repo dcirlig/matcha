@@ -120,7 +120,6 @@ class Avatar extends Component {
             <img
               className="avatarPic"
               src={this.state.imageUrl}
-              // src={this.state.imageUrl}
               alt="avatar"
             />
           ) : (

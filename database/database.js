@@ -240,5 +240,3 @@ con.connect(function (err) {
     });
   });
 });
-
-// fakeUsers.fakeUsers();

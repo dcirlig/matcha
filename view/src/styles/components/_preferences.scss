@@ -23,7 +23,6 @@
 .sexualOrientation {
   position: relative !important;
   z-index: 289 !important;
-  // margin-top: $m-size;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: $l-size;
@@ -31,15 +30,9 @@
 }
 
 .sexual-orientation-select__control {
-  //   background-color: red;
-
   border: 1px solid $light-pink !important;
   box-shadow: none !important;
 }
-
-// .sexual-orientation-select__value-container {
-
-// }
 
 .sexual-orientation-select__indicator-separator {
   background-color: $light-pink !important;
@@ -143,10 +136,6 @@
 .ant-radio-button-wrapper-checked:hover {
   color: $coral;
 }
-
-// list[aria-expanded="true"] {
-//   background-color: #42dca3;
-// }
 
 .ant-fullcalendar-selected-day .ant-fullcalendar-value {
   background-color: $coral !important;

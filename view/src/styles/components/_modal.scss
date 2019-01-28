@@ -37,13 +37,7 @@
     margin: 0 0 $l-size 0;
     font-size: $m-size;
     font-weight: 300;
-    // word-break: word-wrap;
 }
-
-// .profilePreviewModal.ReactModalPortal > div {
-//     opacity: 100;
-//     z-index:1000 !important;
-// }
 
 .profilePreviewOverlay {
     position: fixed; 
@@ -58,10 +52,6 @@
     align-items: flex-start;
     display: inline-block !important;
 }
-
-// .profilePreviewModal {
-//     background-color: rgb(0, 0, 0);
-// }
 
 .profilePreviewModal.ReactModalPortal .ReactModal__Overlay {
     transition: opacity 200ms ease-in-out;
@@ -100,7 +90,6 @@
     margin: 0 0 $l-size 0;
     font-size: $m-size;
     font-weight: 300;
-    // word-break: word-wrap;
 }
 
 .modalButton {
