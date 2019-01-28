@@ -101,7 +101,7 @@ class SearchUsersPage extends Component {
               usersList: res.data.user_list,
             });
             var arr1 = Array.from({
-              length: 12
+              length: 13
             },
               function (list, k) {
                 return res.data.user_list[k];
@@ -158,8 +158,8 @@ class SearchUsersPage extends Component {
             usersList: res.data.user_list
           });
           var index
-          if (res.data.user_list && res.data.user_list.length < 12) { index = res.data.user_list.length }
-          else { index = 12 }
+          if (res.data.user_list && res.data.user_list.length < 13) { index = res.data.user_list.length }
+          else { index = 13 }
           var arr1 = Array.from({
             length: index
           },
@@ -193,8 +193,8 @@ class SearchUsersPage extends Component {
             sortBy: "Default"
           });
           var index
-          if (res.data.user_list && res.data.user_list.length < 12) { index = res.data.user_list.length }
-          else { index = 12 }
+          if (res.data.user_list && res.data.user_list.length < 13) { index = res.data.user_list.length }
+          else { index = 13 }
           var arr1 = Array.from({
             length: index
           },
@@ -273,9 +273,9 @@ class SearchUsersPage extends Component {
       await this.setState({ hasMore: false });
       return;
     }
-    if (usersListLength - itemsLength < 12) {
+    if (usersListLength - itemsLength < 13) {
       index = usersListLength - itemsLength
-    } else { index = 12 }
+    } else { index = 13 }
 
     let usersList = this.state.usersList.usersList
     let previousIndex = itemsLength
@@ -513,7 +513,7 @@ class SearchUsersPage extends Component {
               </div>
             </MDBCol>
             {items && items.length > 0 ? (
-              <MDBCol size="8">
+              <MDBCol size="8" className="infiniteScrollCol">
                 <InfiniteScroll
                   dataLength={this.state.items.length}
                   next={this.fetchMoreData}
@@ -598,7 +598,7 @@ class SearchUsersPage extends Component {
                             tags={item.tags}
                             readOnly={true}
                           />
-                          <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
+                          <p>{item.dist <= 1 ? "< 1" : item.dist} km</p>
                           <p>
                             {item.gender === "male" ? "Man" : "Woman"},{" "}
                             {item.sexual_orientation}

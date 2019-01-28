@@ -47,6 +47,16 @@
   .explorer-container {
     min-width: 100% !important;
     height: 75vh !important;
+    margin-top: 0;
+  }
+  .infinite-scroll-component {
+    min-width: 100% !important;
+    height: 75vh !important;
+    margin-top: 0;
+  }
+  .infiniteScrollCol {
+    max-width: 100% !important;
+    flex: 0 0 100%;
   }
   .searchOptions {
     display: none;
@@ -56,9 +66,6 @@
     display: block !important;
     margin-left: auto;
     margin-right: auto;
-  }
-  .explorer-container {
-    margin-top: 0;
   }
   .searchOptionsMobile {
     max-width: 90% !important;
