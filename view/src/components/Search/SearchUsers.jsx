@@ -20,7 +20,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 //   padding: 8
 // };
 
-
 const { Meta } = Card;
 const Option = Select.Option;
 
@@ -98,12 +97,13 @@ class SearchUsersPage extends Component {
         if (res.data.user_list) {
           if (this._isMounted) {
             const usersList = Object.assign({}, this.state.usersList, {
-              usersList: res.data.user_list,
+              usersList: res.data.user_list
             });
-            var arr1 = Array.from({
-              length: 12
-            },
-              function (list, k) {
+            var arr1 = Array.from(
+              {
+                length: 12
+              },
+              function(list, k) {
                 return res.data.user_list[k];
               }
             );
@@ -157,13 +157,17 @@ class SearchUsersPage extends Component {
           const usersList = Object.assign({}, this.state.usersList, {
             usersList: res.data.user_list
           });
-          var index
-          if (res.data.user_list && res.data.user_list.length < 12) { index = res.data.user_list.length }
-          else { index = 12 }
-          var arr1 = Array.from({
-            length: index
-          },
-            function (list, k) {
+          var index;
+          if (res.data.user_list && res.data.user_list.length < 12) {
+            index = res.data.user_list.length;
+          } else {
+            index = 12;
+          }
+          var arr1 = Array.from(
+            {
+              length: index
+            },
+            function(list, k) {
               return res.data.user_list[k];
             }
           );
@@ -192,13 +196,17 @@ class SearchUsersPage extends Component {
           const sortBy = Object.assign({}, this.state.sortBy, {
             sortBy: "Default"
           });
-          var index
-          if (res.data.user_list && res.data.user_list.length < 12) { index = res.data.user_list.length }
-          else { index = 12 }
-          var arr1 = Array.from({
-            length: index
-          },
-            function (list, k) {
+          var index;
+          if (res.data.user_list && res.data.user_list.length < 12) {
+            index = res.data.user_list.length;
+          } else {
+            index = 12;
+          }
+          var arr1 = Array.from(
+            {
+              length: index
+            },
+            function(list, k) {
               return res.data.user_list[k];
             }
           );
@@ -274,15 +282,18 @@ class SearchUsersPage extends Component {
       return;
     }
     if (usersListLength - itemsLength < 12) {
-      index = usersListLength - itemsLength
-    } else { index = 12 }
+      index = usersListLength - itemsLength;
+    } else {
+      index = 12;
+    }
 
-    let usersList = this.state.usersList.usersList
-    let previousIndex = itemsLength
-    var arr1 = Array.from({
-      length: index
-    },
-      function (list, k) {
+    let usersList = this.state.usersList.usersList;
+    let previousIndex = itemsLength;
+    var arr1 = Array.from(
+      {
+        length: index
+      },
+      function(list, k) {
         return usersList[k + previousIndex];
       }
     );
@@ -423,12 +434,13 @@ class SearchUsersPage extends Component {
                       <Option value="popularity">Popularity score</Option>
                       <Option value="tags">Common tags</Option>
                       <Option value="default">Default</Option>
+                      <Option value="like">Not liked users only</Option>
                     </Select>
                   </div>
                 </div>
               ) : (
-                  ""
-                )}
+                ""
+              )}
               <div className="searchOptions">
                 <form>
                   <h4>Age</h4>
@@ -508,6 +520,7 @@ class SearchUsersPage extends Component {
                     <Option value="popularity">Popularity score</Option>
                     <Option value="tags">Common tags</Option>
                     <Option value="default">Default</Option>
+                    <Option value="like">Not liked users only</Option>
                   </Select>
                 </div>
               </div>
@@ -518,9 +531,19 @@ class SearchUsersPage extends Component {
                   dataLength={this.state.items.length}
                   next={this.fetchMoreData}
                   hasMore={this.state.hasMore}
-                  loader={<div><MDBIcon className="searchPageIcon" icon="spinner" pulse size="3x" fixed />
-                    <span className="sr-only">Loading...</span></div>}
-                  height={'80vh'}
+                  loader={
+                    <div>
+                      <MDBIcon
+                        className="searchPageIcon"
+                        icon="spinner"
+                        pulse
+                        size="3x"
+                        fixed
+                      />
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  }
+                  height={"80vh"}
                   endMessage={
                     <p style={{ textAlign: "center" }}>
                       <b>Yay! You have seen it all</b>
@@ -545,8 +568,8 @@ class SearchUsersPage extends Component {
                                   ? item.profil_image.includes("unsplash")
                                     ? item.profil_image
                                     : `https://localhost:4000/${
-                                    item.profil_image
-                                    }`
+                                        item.profil_image
+                                      }`
                                   : `https://localhost:4000/profilPhoto/avatar-default.jpg`
                               }
                             />
@@ -566,28 +589,28 @@ class SearchUsersPage extends Component {
                               socket={this.props.socket}
                             />
                           ) : (
-                              <MDBAlert color="warning">
-                                Incomplete profile
+                            <MDBAlert color="warning">
+                              Incomplete profile
                             </MDBAlert>
-                            )}
+                          )}
                           {item.online === "online" ? (
                             <div className="connexionInfo">
                               <div className="onlineUsers" />
                               <h5>Online</h5>
                             </div>
                           ) : (
-                              <div className="connexionInfo">
-                                <div className="offlineUsers" />
-                                <h5>
-                                  {this.getDate(new Date(parseInt(item.online)))}
-                                </h5>
-                              </div>
-                            )}
+                            <div className="connexionInfo">
+                              <div className="offlineUsers" />
+                              <h5>
+                                {this.getDate(new Date(parseInt(item.online)))}
+                              </h5>
+                            </div>
+                          )}
                           <Meta
                             title={`${item.firstname} ${item.lastname}, ${
                               item.age
-                              } y.o.`}
-                            style={{ wordBreak: 'break-all' }}
+                            } y.o.`}
+                            style={{ wordBreak: "break-all" }}
                           />
                           <ReactTags
                             classNames={{
@@ -598,7 +621,9 @@ class SearchUsersPage extends Component {
                             tags={item.tags}
                             readOnly={true}
                           />
-                          <p>{item.dist <= 1 ? "<" + item.dist : item.dist} km</p>
+                          <p>
+                            {item.dist <= 1 ? "<" + item.dist : item.dist} km
+                          </p>
                           <p>
                             {item.gender === "male" ? "Man" : "Woman"},{" "}
                             {item.sexual_orientation}
@@ -615,17 +640,29 @@ class SearchUsersPage extends Component {
                         </Card>
                       </div>
                     ) : (
-                        ""
-                      )
+                      ""
+                    )
                   )}
                 </InfiniteScroll>
               </MDBCol>
             ) : (
-                <MDBCol size="8" className="explorer-container">
-                  {loading ? <div><MDBIcon className="searchPageIcon" icon="spinner" pulse size="5x" fixed />
-                    <span className="sr-only">Loading...</span></div> : <h1>No users found</h1>}
-                </MDBCol>
-              )}
+              <MDBCol size="8" className="explorer-container">
+                {loading ? (
+                  <div>
+                    <MDBIcon
+                      className="searchPageIcon"
+                      icon="spinner"
+                      pulse
+                      size="5x"
+                      fixed
+                    />
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                ) : (
+                  <h1>No users found</h1>
+                )}
+              </MDBCol>
+            )}
           </MDBRow>
         </div>
       </div>

@@ -63,7 +63,7 @@ class RegisterPage extends Component {
     switch (fieldName) {
       case "firstname":
         firstNameValid =
-          value.match(/^[a-zA-Z]+$/) &&
+          value.match(/^[a-zA-Z-]+$/) &&
           this.state.firstname.length <= 20 &&
           this.state.firstname.length >= 4;
         fieldValidationErrors.firstname = firstNameValid
@@ -72,7 +72,7 @@ class RegisterPage extends Component {
         break;
       case "lastname":
         lastNameValid =
-          value.match(/^[a-zA-Z]+$/) &&
+          value.match(/^[a-zA-Z ]+$/) &&
           this.state.lastname.length <= 20 &&
           this.state.lastname.length >= 4;
         fieldValidationErrors.lastname = lastNameValid

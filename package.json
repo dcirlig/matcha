@@ -4,13 +4,12 @@
   "description": "matcha",
   "main": "server.js",
   "scripts": {
-    "test": "./test/test.js mocha — timeout 10000",
     "server": "node server.js"
   },
   "keywords": [
     "server.http.api.rest"
   ],
-  "author": "dcirlig",
+  "author": "cnairi_dcirlig",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
@@ -30,10 +29,5 @@
     "randomstring": "^1.1.5",
     "request-ip": "^2.1.3",
     "socket.io": "^2.2.0"
-  },
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^5.2.0",
-    "supertest": "^3.4.2"
   }
 }
