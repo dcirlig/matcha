@@ -426,7 +426,7 @@ class SearchUsersPage extends Component {
                       <Option value="popularity">Popularity score</Option>
                       <Option value="tags">Common tags</Option>
                       <Option value="default">Default</Option>
-                      <Option value="like">Not liked users only</Option>
+                      <Option value="like">Not liked / liked</Option>
                     </Select>
                   </div>
                 </div>
@@ -512,7 +512,7 @@ class SearchUsersPage extends Component {
                     <Option value="popularity">Popularity score</Option>
                     <Option value="tags">Common tags</Option>
                     <Option value="default">Default</Option>
-                    <Option value="like">Not liked users only</Option>
+                    <Option value="like">Not liked / liked</Option>
                   </Select>
                 </div>
               </div>
