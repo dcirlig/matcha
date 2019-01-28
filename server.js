@@ -43,5 +43,3 @@ var io = (module.exports.io = require("socket.io")(app, {
 
 const SocketManager = require("./SocketManager.js");
 io.on("connection", SocketManager);
-
-module.exports.app = app;
