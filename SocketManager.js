@@ -5,7 +5,6 @@ const notification = require("./models/notification");
 const user = require("./models/user");
 module.exports = function (socket) {
   socket.on("disconnect", async function () {
-    console.log("disconnect")
     sql = "UPDATE users SET ? WHERE socket_id=?";
     await connection.query(sql, [{ online: Date.now() }, socket.id], function (
       err,
